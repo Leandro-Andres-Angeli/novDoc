@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -7,6 +9,9 @@ import {
   Dimensions,
   useWindowDimensions,
 } from 'react-native';
+import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
+import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
+import AppButton from 'src/ui/Button';
 import styled from 'styled-components/native';
 
 const Container = styled.View`
@@ -177,6 +182,8 @@ const WelcomeComponent = ({
   isLandscape: boolean;
   width: number;
 }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   return (
     <Container>
       <Header>
@@ -232,11 +239,18 @@ const WelcomeComponent = ({
       <Footer isLandscape={isLandscape}>
         <ButtonContainer isLandscape={isLandscape}>
           <GetStartedButton activeOpacity={0.9} isLandscape={isLandscape}>
-            <ButtonText>Comenzar</ButtonText>
+            <ButtonText
+              onPress={() =>
+                navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_UP, {})
+              }
+            >
+              Comenzar
+            </ButtonText>
           </GetStartedButton>
         </ButtonContainer>
+
         <FooterText>
-          ¿Ya tienes una cuenta?<LinkText>Iniciar Sesión</LinkText>
+          ¿Ya tienes una cuenta? <LinkText>Iniciar Sesión</LinkText>
         </FooterText>
       </Footer>
     </Container>

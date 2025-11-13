@@ -36,27 +36,22 @@ const LoginScreen = () => {
 export default LoginScreen; */
 
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Text,
-  Dimensions,
-  StyleProp,
-  ViewStyle,
-  ColorValue,
-  FlexStyle,
-  AppState,
-  View,
-  Image,
-} from 'react-native';
+import { Dimensions, FlexStyle, AppState } from 'react-native';
 import styled from 'styled-components/native';
 import { AuthContext } from '../appContext/AuthContext';
-import { collection, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { collection, onSnapshot, query } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-import * as ScreenOrientation from 'expo-screen-orientation';
+
 import WelcomeComponent from '../components/Welcome';
 
 const { width } = Dimensions.get('window');
 interface FlexContainerProps {
   flexDirection: FlexStyle['flexDirection'];
+}
+interface IntoScreenViewProps {
+  rotation: number;
+  left?: number;
+  right?: number;
 }
 const Container = styled.View`
   flex: 1;
@@ -120,10 +115,10 @@ const Card = styled.View<{ rotation: number; left?: number; right?: number }>`
   shadow-opacity: 0.15;
   shadow-radius: 12px;
   elevation: 8;
-  transform: rotate(${(props: IntoScreenProps) => props.rotation}deg);
-  ${(props: IntoScreenProps) =>
+  transform: rotate(${(props: IntoScreenViewProps) => props.rotation}deg);
+  ${(props: IntoScreenViewProps) =>
     props.left !== undefined && `left: ${props.left}px;`}
-  ${(props: IntoScreenProps) =>
+  ${(props: IntoScreenViewProps) =>
     props.right !== undefined && `right: ${props.right}px;`}
   top: 32px;
 `;
@@ -199,12 +194,13 @@ const LogoIcon = styled.Text`
   font-size: 28px;
   color: #2d3748;
 `;
-interface IntoScreenProps {
-  rotation: number;
-  left?: number;
-  right?: number;
-}
 
+// interface IntoScreenProps
+//   extends NativeStackScreenProps<
+//     publicNavigatorRootStack,
+//     PUBLIC_NAVIGATOR_ROUTES.INTRO
+//   > {}
+//   { navigation }: IntoScreenProps
 const IntroScreen = () => {
   const { login, authState, logout } = useContext(AuthContext);
   const coll = collection(db, 'test');
