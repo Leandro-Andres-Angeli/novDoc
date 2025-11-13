@@ -73,59 +73,74 @@ const SignUp = () => {
     onSubmit: () => console.log('submit form'),
   });
   const { setFieldValue, handleChange, handleBlur, setFieldTouched } = formik;
-
+  const handleInputValue = <T extends keyof SignUpForm>(
+    key: T,
+    value: SignUpForm[T]
+  ) => {
+    setFieldValue(key, value);
+  };
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    <>
+      <Text>{JSON.stringify(formik.values, null, 3)}</Text>
+      <View
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
         >
-          <ReactNativePaperSelect<string>
-            theme={theme}
-            hideSearchBox={true}
-            textInputStyle={{ backgroundColor: theme.colors.background }}
-            onSelect={f}
-            dialogStyle={{ backgroundColor: theme.colors.background }}
-            checkboxProps={{
-              checkboxColor: theme.colors.primary,
-            }}
-            label='Perfil'
-            dialogDoneButtonText='Ok'
-            dialogCloseButtonText='Cancelar'
-            multiEnable={false}
-            onSelection={() => {}}
-            selectedArrayList={[]}
-            arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
-            value={''}
-          ></ReactNativePaperSelect>
-          {/* Segmented Buttons */}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={{ paddingVertical: 10 }}>
+              <ReactNativePaperSelect<Role>
+                theme={theme}
+                hideSearchBox={true}
+                textInputStyle={{ backgroundColor: theme.colors.background }}
+                onSelect={f}
+                dialogStyle={{ backgroundColor: theme.colors.background }}
+                checkboxProps={{
+                  checkboxColor: theme.colors.primary,
+                }}
+                label='Perfil'
+                dialogDoneButtonText='Ok'
+                dialogCloseButtonText='Cancelar'
+                multiEnable={false}
+                onSelection={({ selectedList }) => {
+                  const parsed = selectedList.at(0)?.value as Role;
 
-          <View style={styles.contentContainer}>
-            {/* Text Input Fields */}
-            <View style={styles.inputsContainer}>
-              <TextInput
-                label='Full Name'
-                value={formik.values.firstName}
-                onChangeText={formik.handleChange}
-                placeholder='e.g. Jane Doe'
-                mode='flat'
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.colors.surface },
+                  handleInputValue('role', parsed);
+                }}
+                selectedArrayList={[
+                  { _id: formik.values.role, value: formik.values.role },
                 ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
+                arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
+                value={formik.values.role}
+              ></ReactNativePaperSelect>
+            </View>
+            {/* Segmented Buttons */}
 
-              {/*   <TextInput
+            <View style={styles.contentContainer}>
+              {/* Text Input Fields */}
+              <View style={styles.inputsContainer}>
+                <TextInput
+                  label='Full Name'
+                  value={formik.values.firstName}
+                  onChangeText={(val) => setFieldValue('firstName', val)}
+                  placeholder='e.g. Jane Doe'
+                  mode='flat'
+                  style={[
+                    styles.input,
+                    { backgroundColor: theme.colors.surface },
+                  ]}
+                  activeUnderlineColor={theme.colors.primary}
+                  underlineColor='transparent'
+                />
+
+                {/*   <TextInput
                 label='Headline'
                 value={headline}
                 onChangeText={setHeadline}
@@ -139,7 +154,7 @@ const SignUp = () => {
                 underlineColor='transparent'
               />
  */}
-              {/*      <TextInput
+                {/*      <TextInput
                 label='Location'
                 value={location}
                 onChangeText={setLocation}
@@ -153,7 +168,7 @@ const SignUp = () => {
                 underlineColor='transparent'
               /> */}
 
-              {/*         <TextInput
+                {/*         <TextInput
                 label='About Me'
                 value={aboutMe}
                 onChangeText={setAboutMe}
@@ -170,34 +185,36 @@ const SignUp = () => {
                 underlineColor='transparent'
               />
              */}
+              </View>
+              {/* Bottom spacing for button */}
+              <View style={{ height: 100 }} />
             </View>
-            {/* Bottom spacing for button */}
-            <View style={{ height: 100 }} />
-          </View>
-        </ScrollView>
+          </ScrollView>
 
-        {/* Floating Action Button */}
-        <View
-          style={[
-            styles.fabContainer,
-            {
-              backgroundColor: theme.colors.background,
-            },
-          ]}
-        >
-          <Button
-            mode='contained'
-            style={styles.fab}
-            contentStyle={styles.fabContent}
-            labelStyle={styles.fabLabel}
-            onPress={() => formik.handleSubmit}
+          {/* Floating Action Button */}
+          <View
+            style={[
+              styles.fabContainer,
+              {
+                backgroundColor: theme.colors.background,
+              },
+            ]}
           >
-            Crear cuenta
-          </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+            <Button
+              mode='contained'
+              style={styles.fab}
+              contentStyle={styles.fabContent}
+              labelStyle={styles.fabLabel}
+              onPress={() => formik.handleSubmit}
+            >
+              Crear cuenta
+            </Button>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+    </>
   );
+
   /*   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}

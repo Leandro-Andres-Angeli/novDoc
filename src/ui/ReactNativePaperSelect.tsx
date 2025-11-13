@@ -3,11 +3,9 @@ import React from 'react';
 import { PaperSelect } from 'react-native-paper-select';
 import { PaperSelectProps } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import { useTheme } from 'react-native-paper';
-interface ReactNativePaperSelectProps<T = string> extends PaperSelectProps {
-  onSelect: (key: T) => void;
-}
+interface ReactNativePaperSelectProps<T = string> extends PaperSelectProps {}
 const ReactNativePaperSelect = <T,>(props: ReactNativePaperSelectProps<T>) => {
-  const { onSelect, ...defaultProps } = props;
+  const { ...defaultProps } = props;
 
   return <PaperSelect {...defaultProps}></PaperSelect>;
 };
