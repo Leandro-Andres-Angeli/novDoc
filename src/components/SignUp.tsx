@@ -7,21 +7,18 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
+  Keyboard,
 } from 'react-native';
 import {
-  Appbar,
   TextInput,
   Button,
-  SegmentedButtons,
-  Avatar,
   Text,
   useTheme,
-  MD3LightTheme,
-  MD3DarkTheme,
+  TextInputProps,
 } from 'react-native-paper';
 import { Role, rolesList } from 'src/types/authContextTypes/userRole';
 import { useFormik } from 'formik';
+import { FormInputWithHelper } from '../ui/FormInputs';
 
 export interface SignUpForm {
   email: string;
@@ -72,150 +69,28 @@ const SignUp = () => {
 
     onSubmit: () => console.log('submit form'),
   });
-  const { setFieldValue, handleChange, handleBlur, setFieldTouched } = formik;
+  const {
+    setFieldValue,
+    handleChange,
+    handleBlur,
+    setFieldTouched,
+    dirty,
+    isValid,
+    values,
+    touched,
+    errors,
+  } = formik;
   const handleInputValue = <T extends keyof SignUpForm>(
     key: T,
     value: SignUpForm[T]
   ) => {
     setFieldValue(key, value);
   };
+  const handleTextInputBlur = (key: keyof SignUpForm) => {
+    handleBlur(key);
+    Keyboard.dismiss();
+  };
   return (
-    <>
-      <Text>{JSON.stringify(formik.values, null, 3)}</Text>
-      <View
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
-      >
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-        >
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={{ paddingVertical: 10 }}>
-              <ReactNativePaperSelect<Role>
-                theme={theme}
-                hideSearchBox={true}
-                textInputStyle={{ backgroundColor: theme.colors.background }}
-                onSelect={f}
-                dialogStyle={{ backgroundColor: theme.colors.background }}
-                checkboxProps={{
-                  checkboxColor: theme.colors.primary,
-                }}
-                label='Perfil'
-                dialogDoneButtonText='Ok'
-                dialogCloseButtonText='Cancelar'
-                multiEnable={false}
-                onSelection={({ selectedList }) => {
-                  const parsed = selectedList.at(0)?.value as Role;
-
-                  handleInputValue('role', parsed);
-                }}
-                selectedArrayList={[
-                  { _id: formik.values.role, value: formik.values.role },
-                ]}
-                arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
-                value={formik.values.role}
-              ></ReactNativePaperSelect>
-            </View>
-            {/* Segmented Buttons */}
-
-            <View style={styles.contentContainer}>
-              {/* Text Input Fields */}
-              <View style={styles.inputsContainer}>
-                <TextInput
-                  label='Full Name'
-                  value={formik.values.firstName}
-                  onChangeText={(val) => setFieldValue('firstName', val)}
-                  placeholder='e.g. Jane Doe'
-                  mode='flat'
-                  style={[
-                    styles.input,
-                    { backgroundColor: theme.colors.surface },
-                  ]}
-                  activeUnderlineColor={theme.colors.primary}
-                  underlineColor='transparent'
-                />
-
-                {/*   <TextInput
-                label='Headline'
-                value={headline}
-                onChangeText={setHeadline}
-                placeholder='e.g. Senior iOS Engineer'
-                mode='flat'
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
- */}
-                {/*      <TextInput
-                label='Location'
-                value={location}
-                onChangeText={setLocation}
-                placeholder='e.g. San Francisco, CA'
-                mode='flat'
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              /> */}
-
-                {/*         <TextInput
-                label='About Me'
-                value={aboutMe}
-                onChangeText={setAboutMe}
-                placeholder='Tell us a little about yourself...'
-                mode='flat'
-                multiline
-                numberOfLines={4}
-                style={[
-                  styles.input,
-                  styles.textArea,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
-             */}
-              </View>
-              {/* Bottom spacing for button */}
-              <View style={{ height: 100 }} />
-            </View>
-          </ScrollView>
-
-          {/* Floating Action Button */}
-          <View
-            style={[
-              styles.fabContainer,
-              {
-                backgroundColor: theme.colors.background,
-              },
-            ]}
-          >
-            <Button
-              mode='contained'
-              style={styles.fab}
-              contentStyle={styles.fabContent}
-              labelStyle={styles.fabLabel}
-              onPress={() => formik.handleSubmit}
-            >
-              Crear cuenta
-            </Button>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-    </>
-  );
-
-  /*   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
@@ -229,94 +104,76 @@ const SignUp = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <ReactNativePaperSelect<string>
-            theme={theme}
-            hideSearchBox={true}
-            onSelect={f}
-            dialogStyle={{ backgroundColor: theme.colors.background }}
-            checkboxProps={{
-              checkboxColor: theme.colors.primary,
-            }}
-            label='Perfil'
-            dialogDoneButtonText='Ok'
-            dialogCloseButtonText='Cancelar'
-            multiEnable={false}
-            onSelection={() => {}}
-            selectedArrayList={[]}
-            arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
-            value={''}
-          ></ReactNativePaperSelect>
-         
+          <View style={{ padding: 15 }}>
+            <ReactNativePaperSelect<Role>
+              theme={theme}
+              hideSearchBox={true}
+              textInputStyle={{
+                backgroundColor: theme.colors.background,
+                borderWidth: 0.5,
+                borderColor: 'black',
+                textTransform: 'capitalize',
+              }}
+              dialogStyle={{ backgroundColor: theme.colors.background }}
+              checkboxProps={{
+                checkboxColor: theme.colors.primary,
+              }}
+              label='Perfil'
+              dialogDoneButtonText='Ok'
+              dialogCloseButtonText='Cancelar'
+              multiEnable={false}
+              onSelection={({ selectedList }) => {
+                const parsed = selectedList.at(0)?.value as Role;
+
+                handleInputValue('role', parsed);
+              }}
+              selectedArrayList={[
+                { _id: formik.values.role, value: formik.values.role },
+              ]}
+              arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
+              value={formik.values.role}
+            ></ReactNativePaperSelect>
+          </View>
+          {/* Segmented Buttons */}
 
           <View style={styles.contentContainer}>
-            
+            {/* Text Input Fields */}
             <View style={styles.inputsContainer}>
-              <TextInput
-                label='Full Name'
-                value={formik.values.firstName}
-                onChangeText={formik.handleChange}
-                placeholder='e.g. Jane Doe'
-                mode='flat'
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
-
-              <TextInput
-                label='Headline'
-                value={headline}
-                onChangeText={setHeadline}
-                placeholder='e.g. Senior iOS Engineer'
-                mode='flat'
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
-
-              <TextInput
-                label='Location'
-                value={location}
-                onChangeText={setLocation}
-                placeholder='e.g. San Francisco, CA'
-                mode='flat'
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
-
-              <TextInput
-                label='About Me'
-                value={aboutMe}
-                onChangeText={setAboutMe}
-                placeholder='Tell us a little about yourself...'
-                mode='flat'
-                multiline
-                numberOfLines={4}
-                style={[
-                  styles.input,
-                  styles.textArea,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-                activeUnderlineColor={theme.colors.primary}
-                underlineColor='transparent'
-              />
+              <FormInputWithHelper<SignUpForm>
+                formKey='email'
+                value={values.email}
+                placeholder='Escribí tu correo electrónico'
+                key={'email'}
+                label='Correo electrónico'
+                onBlur={() => handleTextInputBlur('email')}
+                onFocus={() => setFieldTouched('email', true)}
+                onChangeText={handleChange('email')}
+                keyboardType='email-address'
+                errorCondition={Boolean(touched.email && errors.email) || false}
+                errorMessage={errors.email ?? ''}
+              ></FormInputWithHelper>
+              <FormInputWithHelper<SignUpForm>
+                formKey='password'
+                value={values.password}
+                placeholder='Escribí tu contraseña'
+                secureTextEntry={true}
+                key={'password'}
+                label='Contraseña'
+                onBlur={() => handleTextInputBlur('password')}
+                onFocus={() => setFieldTouched('password', true)}
+                onChangeText={handleChange('password')}
+                errorCondition={
+                  Boolean(touched.password && errors.password) || false
+                }
+                errorMessage={errors.password ?? ''}
+              ></FormInputWithHelper>
             </View>
-
-           
+            {/* Bottom spacing for button */}
             <View style={{ height: 100 }} />
           </View>
         </ScrollView>
 
-       
+        {/* Floating Action Button */}
         <View
           style={[
             styles.fabContainer,
@@ -325,19 +182,38 @@ const SignUp = () => {
             },
           ]}
         >
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Email Address</Text>
+            <TextInput
+              mode='outlined'
+              placeholder='Enter your email'
+              keyboardType='email-address'
+              autoCapitalize='none'
+              style={styles.input}
+              outlineColor='#d4d4d8'
+              activeOutlineColor={theme.colors.primary}
+              theme={{
+                colors: {
+                  //   background: '#f4f4f5',
+                },
+              }}
+            />
+          </View>
+
           <Button
             mode='contained'
             style={styles.fab}
             contentStyle={styles.fabContent}
             labelStyle={styles.fabLabel}
             onPress={() => formik.handleSubmit}
+            disabled={(dirty && !isValid) || !dirty}
           >
             Crear cuenta
           </Button>
         </View>
       </KeyboardAvoidingView>
     </View>
-  ); */
+  );
 };
 
 const styles = StyleSheet.create({
@@ -407,6 +283,15 @@ const styles = StyleSheet.create({
   },
   input: {
     borderRadius: 8,
+  },
+  inputGroup: {
+    marginBottom: 24,
+  },
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#3f3f46',
+    marginBottom: 8,
   },
   textArea: {
     minHeight: 120,

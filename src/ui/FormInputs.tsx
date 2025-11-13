@@ -122,7 +122,7 @@ export const FormInputWithHelper = <T,>(
       {errorCondition && (
         <View style={localStyles.errorView}>
           <Icon source='alert-circle-outline' size={20} />
-          <Text style={localStyles.errorText}>{errorMessage}</Text>
+          <Text style={localStyles.errorText}> {errorMessage}</Text>
         </View>
       )}
     </>
@@ -136,6 +136,7 @@ export const FormInputWithHelper = <T,>(
  *          localStyles - Conjunto de estilos reutilizables.
  */
 const localStyles = StyleSheet.create({
+  inputGroup: {},
   /** Contenedor horizontal del mensaje de error (icono + texto). */
   errorView: {
     opacity: 0.7,

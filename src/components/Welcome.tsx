@@ -3,12 +3,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   Dimensions,
   useWindowDimensions,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
 import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
 import AppButton from 'src/ui/Button';
@@ -182,6 +183,7 @@ const WelcomeComponent = ({
   isLandscape: boolean;
   width: number;
 }) => {
+  const theme = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   return (
@@ -248,10 +250,33 @@ const WelcomeComponent = ({
             </ButtonText>
           </GetStartedButton>
         </ButtonContainer>
+        <View>
+          <FooterText>
+            ¿Ya tienes una cuenta? <LinkText>Iniciar Sesión</LinkText>
+          </FooterText>
+        </View>
 
-        <FooterText>
-          ¿Ya tienes una cuenta? <LinkText>Iniciar Sesión</LinkText>
-        </FooterText>
+        <View style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <TouchableWithoutFeedback
+            style={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            <Text
+              variant='labelMedium'
+              style={{
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                borderBottomColor: theme.colors.primary,
+                textDecorationStyle: 'solid',
+                textDecorationLine: 'underline',
+                display: 'flex',
+                color: theme.colors.primary,
+                fontWeight: 'bold',
+              }}
+            >
+              ¿Olvidaste tu contraseña ?
+            </Text>
+          </TouchableWithoutFeedback>
+        </View>
       </Footer>
     </Container>
   );
