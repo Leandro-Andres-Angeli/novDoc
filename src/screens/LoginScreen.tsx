@@ -212,7 +212,7 @@ const IntroScreen = () => {
       <Header>
         <HeaderContent>
           <LogoIcon>{'</>'}</LogoIcon>
-          <LogoText>DevMatch</LogoText>
+          <LogoText>MatchApp</LogoText>
         </HeaderContent>
       </Header>
 

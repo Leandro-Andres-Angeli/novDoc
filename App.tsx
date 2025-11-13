@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { Children, useEffect, PropsWithChildren } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { db } from './firebase/config';
 
@@ -12,8 +12,18 @@ import * as SplashScreen from 'expo-splash-screen';
 import AuthContextProvider from './src/appContext/AuthContext';
 // Set the animation options. This is optional.
 // Keep the splash screen visible while we fetch resources
+const Providers = ({ children }: PropsWithChildren) => {
+  return (
+    <AuthContextProvider>
+      <PaperProvider>
+        <NavigationContainer>
+          <SafeAreaView style={{ flex: 1 }}>{children}</SafeAreaView>
+        </NavigationContainer>
+      </PaperProvider>
+    </AuthContextProvider>
+  );
+};
 SplashScreen.preventAutoHideAsync();
-
 export default function App() {
   useEffect(() => {
     setTimeout(() => {
@@ -21,19 +31,9 @@ export default function App() {
     }, 2000);
   }, []);
   return (
-    <AuthContextProvider>
-      <PaperProvider>
-        <NavigationContainer>
-          <SafeAreaView style={{ flex: 1 }}>
-            <MainNavigator></MainNavigator>
-          </SafeAreaView>
-        </NavigationContainer>
-      </PaperProvider>
-    </AuthContextProvider>
-    // <View style={styles.container}>
-    //   <Text>Test</Text>
-    //   <StatusBar style='auto' />
-    // </View>
+    <Providers>
+      <MainNavigator></MainNavigator>
+    </Providers>
   );
 }
 
