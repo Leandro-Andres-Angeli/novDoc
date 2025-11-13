@@ -5,7 +5,7 @@ import { db } from './firebase/config';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { logger } from 'react-native-logs';
-import MainNavigator from './src/navigator/MainNavigator';
+import MainNavigator from './src/navigators/MainNavigator';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';

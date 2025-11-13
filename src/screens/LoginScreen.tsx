@@ -36,7 +36,7 @@ const LoginScreen = () => {
 export default LoginScreen; */
 
 import React, { useContext, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { Text, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { AuthContext } from '../appContext/AuthContext';
 import { collection, getDocs, onSnapshot, query } from 'firebase/firestore';
@@ -251,20 +251,20 @@ const IntroScreen = () => {
             <ButtonText>Comenzar</ButtonText>
           </GetStartedButton>
         </ButtonContainer>
-        <ButtonContainer>
+        {/* <ButtonContainer>
           <GetStartedButton
             onPress={() => login({ data: Math.random() })}
             activeOpacity={0.9}
           >
             <ButtonText>Login</ButtonText>
           </GetStartedButton>
-        </ButtonContainer>
-        <ButtonContainer>
+        </ButtonContainer> */}
+        {/* <ButtonContainer>
           <GetStartedButton onPress={() => logout()} activeOpacity={0.9}>
             <ButtonText>Logout</ButtonText>
           </GetStartedButton>
-        </ButtonContainer>
-        <Text>{JSON.stringify(authState)}</Text>
+        </ButtonContainer> */}
+
         <FooterText>
           ¿Ya tienes una cuenta?<LinkText>Iniciar Sesión</LinkText>
         </FooterText>
