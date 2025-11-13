@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactNativePaperSelect from '../ui/ReactNativePaperSelect';
+import * as Yup from 'yup';
 import {
   View,
   ScrollView,
@@ -20,53 +21,184 @@ import {
   MD3DarkTheme,
 } from 'react-native-paper';
 import { Role, rolesList } from 'src/types/authContextTypes/userRole';
+import { useFormik } from 'formik';
 
-// Custom theme configuration
-const lightTheme = {
-  ...MD3LightTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    primary: '#137fec',
-    background: '#f6f7f8',
-    surface: '#e2e8f0',
-    surfaceVariant: '#e2e8f0',
-  },
+export interface SignUpForm {
+  email: string;
+  password: string;
+  password2: string;
+  firstName: string;
+  lastName: string;
+  role: Role;
+  terminosYCondiciones: boolean;
+}
+const signUpForm: SignUpForm = {
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: '',
+  password2: '',
+  role: Role.PROFESSIONAL,
+  terminosYCondiciones: false,
 };
 
-const darkTheme = {
-  ...MD3DarkTheme,
-  colors: {
-    ...MD3DarkTheme.colors,
-    primary: '#137fec',
-    background: '#101922',
-    surface: '#1e293b',
-    surfaceVariant: '#1e293b',
-  },
-};
-
+const formValidationSchema = Yup.object({
+  password: Yup.string()
+    .required('campo obligatorio')
+    .min(6, 'debe contener al menos 6 caracteres'),
+  password2: Yup.string()
+    .oneOf(
+      [Yup.ref('password'), ''],
+      'confirmar contraseña y contraseña deben ser iguales'
+    )
+    .required('campo obligatorio'),
+  email: Yup.string()
+    .email('ingresar un email válido')
+    .required('campo obligatorio'),
+  nombre: Yup.string().required('campo obligatorio'),
+  apellido: Yup.string().required(),
+  terminosYCondiciones: Yup.bool().oneOf(
+    [true],
+    'Accept Terms & Conditions is required'
+  ),
+});
 const SignUp = () => {
-  const colorScheme = useColorScheme();
-
-  //   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
   const theme = useTheme();
 
-  const [roleValue, setRoleValue] = useState('developer');
-  const [fullName, setFullName] = useState('');
-  const [headline, setHeadline] = useState('');
-  const [location, setLocation] = useState('');
-  const [aboutMe, setAboutMe] = useState('');
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const handleUploadPhoto = () => {
-    console.log('Upload photo');
-  };
-
-  const handleNext = () => {
-    console.log('Next: Skills');
-  };
   const f = (val: any) => {};
+  const formik = useFormik({
+    initialValues: signUpForm,
+    validationSchema: formValidationSchema,
+
+    onSubmit: () => console.log('submit form'),
+  });
+  const { setFieldValue, handleChange, handleBlur, setFieldTouched } = formik;
 
   return (
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <ReactNativePaperSelect<string>
+            theme={theme}
+            hideSearchBox={true}
+            textInputStyle={{ backgroundColor: theme.colors.background }}
+            onSelect={f}
+            dialogStyle={{ backgroundColor: theme.colors.background }}
+            checkboxProps={{
+              checkboxColor: theme.colors.primary,
+            }}
+            label='Perfil'
+            dialogDoneButtonText='Ok'
+            dialogCloseButtonText='Cancelar'
+            multiEnable={false}
+            onSelection={() => {}}
+            selectedArrayList={[]}
+            arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
+            value={''}
+          ></ReactNativePaperSelect>
+          {/* Segmented Buttons */}
+
+          <View style={styles.contentContainer}>
+            {/* Text Input Fields */}
+            <View style={styles.inputsContainer}>
+              <TextInput
+                label='Full Name'
+                value={formik.values.firstName}
+                onChangeText={formik.handleChange}
+                placeholder='e.g. Jane Doe'
+                mode='flat'
+                style={[
+                  styles.input,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                activeUnderlineColor={theme.colors.primary}
+                underlineColor='transparent'
+              />
+
+              {/*   <TextInput
+                label='Headline'
+                value={headline}
+                onChangeText={setHeadline}
+                placeholder='e.g. Senior iOS Engineer'
+                mode='flat'
+                style={[
+                  styles.input,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                activeUnderlineColor={theme.colors.primary}
+                underlineColor='transparent'
+              />
+ */}
+              {/*      <TextInput
+                label='Location'
+                value={location}
+                onChangeText={setLocation}
+                placeholder='e.g. San Francisco, CA'
+                mode='flat'
+                style={[
+                  styles.input,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                activeUnderlineColor={theme.colors.primary}
+                underlineColor='transparent'
+              /> */}
+
+              {/*         <TextInput
+                label='About Me'
+                value={aboutMe}
+                onChangeText={setAboutMe}
+                placeholder='Tell us a little about yourself...'
+                mode='flat'
+                multiline
+                numberOfLines={4}
+                style={[
+                  styles.input,
+                  styles.textArea,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                activeUnderlineColor={theme.colors.primary}
+                underlineColor='transparent'
+              />
+             */}
+            </View>
+            {/* Bottom spacing for button */}
+            <View style={{ height: 100 }} />
+          </View>
+        </ScrollView>
+
+        {/* Floating Action Button */}
+        <View
+          style={[
+            styles.fabContainer,
+            {
+              backgroundColor: theme.colors.background,
+            },
+          ]}
+        >
+          <Button
+            mode='contained'
+            style={styles.fab}
+            contentStyle={styles.fabContent}
+            labelStyle={styles.fabLabel}
+            onPress={() => formik.handleSubmit}
+          >
+            Crear cuenta
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
+  );
+  /*   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
@@ -97,60 +229,15 @@ const SignUp = () => {
             arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
             value={''}
           ></ReactNativePaperSelect>
-          {/* Segmented Buttons */}
-
-          <View style={styles.segmentedContainer}>
-            <SegmentedButtons
-              value={roleValue}
-              onValueChange={setRoleValue}
-              buttons={[
-                {
-                  value: 'developer',
-                  label: "I'm a Developer",
-                  style: { backgroundColor: theme.colors.surface },
-                },
-                {
-                  value: 'recruiter',
-                  label: "I'm a Recruiter",
-                  style: { backgroundColor: theme.colors.surface },
-                },
-              ]}
-              style={{ backgroundColor: theme.colors.surface }}
-            />
-          </View>
+         
 
           <View style={styles.contentContainer}>
-            {/* Section Header */}
-            <Text variant='headlineSmall' style={styles.sectionHeader}>
-              Basic Information
-            </Text>
-
-            {/* Profile Picture Upload */}
-            <View style={styles.profilePictureContainer}>
-              <View style={styles.profilePictureLeft}>
-                <Avatar.Icon
-                  size={40}
-                  icon='account'
-                  style={{ backgroundColor: theme.colors.surface }}
-                />
-                <Text variant='bodyLarge'>Profile Picture</Text>
-              </View>
-              <Button
-                mode='contained-tonal'
-                onPress={handleUploadPhoto}
-                style={styles.uploadButton}
-                contentStyle={styles.uploadButtonContent}
-              >
-                Upload
-              </Button>
-            </View>
-
-            {/* Text Input Fields */}
+            
             <View style={styles.inputsContainer}>
               <TextInput
                 label='Full Name'
-                value={fullName}
-                onChangeText={setFullName}
+                value={formik.values.firstName}
+                onChangeText={formik.handleChange}
                 placeholder='e.g. Jane Doe'
                 mode='flat'
                 style={[
@@ -207,36 +294,33 @@ const SignUp = () => {
               />
             </View>
 
-            {/* Bottom spacing for button */}
+           
             <View style={{ height: 100 }} />
           </View>
         </ScrollView>
 
-        {/* Floating Action Button */}
+       
         <View
           style={[
             styles.fabContainer,
             {
-              backgroundColor:
-                colorScheme === 'dark'
-                  ? 'rgba(16, 25, 34, 0.95)'
-                  : 'rgba(246, 247, 248, 0.95)',
+              backgroundColor: theme.colors.background,
             },
           ]}
         >
           <Button
             mode='contained'
-            onPress={handleNext}
             style={styles.fab}
             contentStyle={styles.fabContent}
             labelStyle={styles.fabLabel}
+            onPress={() => formik.handleSubmit}
           >
-            Next: Skills
+            Crear cuenta
           </Button>
         </View>
       </KeyboardAvoidingView>
     </View>
-  );
+  ); */
 };
 
 const styles = StyleSheet.create({
