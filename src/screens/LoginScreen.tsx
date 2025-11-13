@@ -35,10 +35,12 @@ const LoginScreen = () => {
 
 export default LoginScreen; */
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { AuthContext } from '../appContext/AuthContext';
+import { collection, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 
 const { width } = Dimensions.get('window');
 
@@ -187,6 +189,24 @@ interface IntoScreenProps {
 
 const IntroScreen = () => {
   const { login, authState, logout } = useContext(AuthContext);
+  const coll = collection(db, 'test');
+  const q = query(coll);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        console.log('is empty');
+      }
+      querySnapshot.forEach((doc) => {
+        console.log('doc', doc.data());
+      });
+    });
+
+    return () => {
+      return unsubscribe();
+    };
+  }, []);
+
   return (
     <Container>
       <Header>
