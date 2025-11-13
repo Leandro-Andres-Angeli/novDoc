@@ -1,4 +1,4 @@
-/* import { View, Text } from 'react-native';
+/* import { View, Text, ViewStyle } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -35,18 +35,36 @@ const LoginScreen = () => {
 
 export default LoginScreen; */
 
-import React, { useContext, useEffect } from 'react';
-import { Text, Dimensions } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  Text,
+  Dimensions,
+  StyleProp,
+  ViewStyle,
+  ColorValue,
+  FlexStyle,
+  AppState,
+  View,
+  Image,
+} from 'react-native';
 import styled from 'styled-components/native';
 import { AuthContext } from '../appContext/AuthContext';
 import { collection, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import WelcomeComponent from '../components/Welcome';
 
 const { width } = Dimensions.get('window');
-
+interface FlexContainerProps {
+  flexDirection: FlexStyle['flexDirection'];
+}
 const Container = styled.View`
   flex: 1;
-  background-color: #f7fafc;
+  background-color: white;
+`;
+const FlexContainer = styled.View<FlexContainerProps>`
+  flex: 1;
+  flex-direction: ${(props) => props?.flexDirection};
 `;
 
 const Header = styled.View`
@@ -207,70 +225,49 @@ const IntroScreen = () => {
     };
   }, []);
 
+  let { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+  const handleScreenOrientation = (
+    screenWidth: number,
+    screenHeight: number
+  ) => {
+    return screenWidth < screenHeight ? 'portrait' : 'landscape';
+  };
+
+  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
+    handleScreenOrientation(screenWidth, screenHeight)
+  );
+
+  useEffect(() => {
+    const DimensionsChangeSubs = Dimensions.addEventListener(
+      'change',
+      function () {
+        screenHeight = Dimensions.get('screen').height;
+        screenWidth = Dimensions.get('screen').width;
+        setOrientation(handleScreenOrientation(screenWidth, screenHeight));
+      }
+    );
+    const appStateSubs = AppState.addEventListener(
+      'change',
+      function (appState) {
+        if (appState === 'active') {
+          screenHeight = Dimensions.get('screen').height;
+          screenWidth = Dimensions.get('screen').width;
+          setOrientation(handleScreenOrientation(screenWidth, screenHeight));
+        }
+      }
+    );
+    return () => {
+      DimensionsChangeSubs.remove();
+      appStateSubs.remove();
+    };
+  }, []);
+
+  //PORTRAIT
   return (
-    <Container>
-      <Header>
-        <HeaderContent>
-          <LogoIcon>{'</>'}</LogoIcon>
-          <LogoText>MatchApp</LogoText>
-        </HeaderContent>
-      </Header>
-
-      <MainContent>
-        <ContentWrapper>
-          <CardContainer>
-            <Card rotation={-12} left={0}>
-              <CardImage
-                source={{
-                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJoszwyNyJpJQB08xFpe59uUkizWMCFsD2T_hqkMYcl0chToThcW2zTTKoicbQkexbxASu75AZ2h9srg8xX0JGdvqIBCVn9a4MV4Rx3kw3GYiZbCM3_SseypV0nssOUg4Hi0QtcjNax7CO66hNaAJQGRUy1I2mm_GBMY4vos6q0t-5Zu_dtEJmvg6y2IigZpZyw6Bbv0AkFC60ACpYuq4RHgW35jYR_thyt4Ey1CJWtQcgvIl9j8zdsA0WzapZhJz1JZUjUnOXS1_h',
-                }}
-                resizeMode='cover'
-              />
-            </Card>
-            <Card rotation={12} right={0}>
-              <CardImage
-                source={{
-                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDdPX6sRLxBUkP1yEEwAl7BhHUWlp0S2DPUZGb15KvMGbPm-M6PBUSovA9CJINzQ6y2mL9kXlvMTHsYuiM5M_m0K-sdDPSHFlsT7sdM-P0KukiTjRUYLAuvVKomOLhtVEMVZS12xavX_0FlLtIAU3H5ju7xW9yB8GKexzJQWQbPFBrjPkj7w4cXduzPsDJ3rXK4DQrrYhnDP7Qxbyt08eR3giWmnyrN6ENu10_li6wacSKTF6yFME8ep75NZ2NWN6NXG0YNirqsTdzl',
-                }}
-                resizeMode='cover'
-              />
-            </Card>
-          </CardContainer>
-
-          <Title> Código y Oportunidades se Conectan.</Title>
-          <Subtitle>
-            Desliza a la derecha por tu próximo paso profesional. Conecta con
-            los mejores reclutadores y desarrolladores fácilmente.
-          </Subtitle>
-        </ContentWrapper>
-      </MainContent>
-
-      <Footer>
-        <ButtonContainer>
-          <GetStartedButton activeOpacity={0.9}>
-            <ButtonText>Comenzar</ButtonText>
-          </GetStartedButton>
-        </ButtonContainer>
-        {/* <ButtonContainer>
-          <GetStartedButton
-            onPress={() => login({ data: Math.random() })}
-            activeOpacity={0.9}
-          >
-            <ButtonText>Login</ButtonText>
-          </GetStartedButton>
-        </ButtonContainer> */}
-        {/* <ButtonContainer>
-          <GetStartedButton onPress={() => logout()} activeOpacity={0.9}>
-            <ButtonText>Logout</ButtonText>
-          </GetStartedButton>
-        </ButtonContainer> */}
-
-        <FooterText>
-          ¿Ya tienes una cuenta?<LinkText>Iniciar Sesión</LinkText>
-        </FooterText>
-      </Footer>
-    </Container>
+    <WelcomeComponent
+      isLandscape={orientation === 'landscape'}
+      width={screenWidth}
+    ></WelcomeComponent>
   );
 };
-
 export default IntroScreen;
