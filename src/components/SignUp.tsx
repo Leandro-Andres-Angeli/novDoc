@@ -110,8 +110,7 @@ const SignUp = () => {
               hideSearchBox={true}
               textInputStyle={{
                 backgroundColor: theme.colors.background,
-                borderWidth: 0.5,
-                borderColor: 'black',
+
                 textTransform: 'capitalize',
               }}
               dialogStyle={{ backgroundColor: theme.colors.background }}
@@ -182,24 +181,6 @@ const SignUp = () => {
             },
           ]}
         >
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Email Address</Text>
-            <TextInput
-              mode='outlined'
-              placeholder='Enter your email'
-              keyboardType='email-address'
-              autoCapitalize='none'
-              style={styles.input}
-              outlineColor='#d4d4d8'
-              activeOutlineColor={theme.colors.primary}
-              theme={{
-                colors: {
-                  //   background: '#f4f4f5',
-                },
-              }}
-            />
-          </View>
-
           <Button
             mode='contained'
             style={styles.fab}

@@ -12,7 +12,7 @@ import {
   StyleSheet, // Creación de estilos en React Native
 } from 'react-native';
 import React, { JSX } from 'react';
-import { Icon, TextInput, TextInputProps } from 'react-native-paper';
+import { Icon, TextInput, TextInputProps, useTheme } from 'react-native-paper';
 
 interface FormInputProps<T> extends Partial<TextInputProps> {
   /** Clave del campo dentro del tipo genérico T. */
@@ -35,7 +35,7 @@ interface FormInputProps<T> extends Partial<TextInputProps> {
  * @param {FormInputProps<T>} props - Propiedades del componente.
  * @returns {JSX.Element} El elemento `TextInput` configurado.
  */
-export const FormInput = <T,>(props: FormInputProps<T>): JSX.Element => {
+export function FormInput<T>(props: FormInputProps<T>): JSX.Element {
   const {
     formKey,
     label,
@@ -71,7 +71,7 @@ export const FormInput = <T,>(props: FormInputProps<T>): JSX.Element => {
       {...inheritProps}
     />
   );
-};
+}
 
 /**
  * Versión del componente que incluye un mensaje de ayuda o error debajo del input.
@@ -82,14 +82,14 @@ export const FormInput = <T,>(props: FormInputProps<T>): JSX.Element => {
  *        Propiedades del componente, incluyendo la condición de error y su mensaje.
  * @returns {JSX.Element} El input con posible mensaje de error.
  */
-export const FormInputWithHelper = <T,>(
+export function FormInputWithHelper<T>(
   props: FormInputProps<T> & {
     /** Indica si debe mostrarse el mensaje de error. */
     errorCondition: boolean;
     /** Texto del mensaje de error que se mostrará bajo el input. */
     errorMessage: string;
   }
-): JSX.Element => {
+): JSX.Element {
   const {
     formKey,
     label,
@@ -103,15 +103,15 @@ export const FormInputWithHelper = <T,>(
     errorMessage,
     ...inheritProps
   } = props;
-
+  const theme = useTheme();
   return (
     <>
       <TextInput
+        style={{ backgroundColor: theme.colors.background }}
         onBlur={onBlur}
         autoCapitalize='none'
         label={label ?? ''}
         placeholder={placeholder ?? ''}
-        mode='outlined'
         onFocus={onFocus}
         onChangeText={onChangeText}
         value={value}
@@ -127,7 +127,7 @@ export const FormInputWithHelper = <T,>(
       )}
     </>
   );
-};
+}
 
 /**
  * Definición de estilos locales para el componente.
