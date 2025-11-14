@@ -19,6 +19,7 @@ import {
 import { Role, rolesList } from 'src/types/authContextTypes/userRole';
 import { useFormik } from 'formik';
 import { FormInputWithHelper } from '../ui/FormInputs';
+import RoleSelector from './RoleSelector';
 
 export interface SignUpForm {
   email: string;
@@ -91,109 +92,117 @@ const SignUp = () => {
     Keyboard.dismiss();
   };
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    <>
+      <View
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
         >
-          <View style={{ padding: 15 }}>
-            <ReactNativePaperSelect<Role>
-              theme={theme}
-              hideSearchBox={true}
-              textInputStyle={{
-                backgroundColor: theme.colors.background,
-
-                textTransform: 'capitalize',
-              }}
-              dialogStyle={{ backgroundColor: theme.colors.background }}
-              checkboxProps={{
-                checkboxColor: theme.colors.primary,
-              }}
-              label='Perfil'
-              dialogDoneButtonText='Ok'
-              dialogCloseButtonText='Cancelar'
-              multiEnable={false}
-              onSelection={({ selectedList }) => {
-                const parsed = selectedList.at(0)?.value as Role;
-
-                handleInputValue('role', parsed);
-              }}
-              selectedArrayList={[
-                { _id: formik.values.role, value: formik.values.role },
-              ]}
-              arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
-              value={formik.values.role}
-            ></ReactNativePaperSelect>
-          </View>
-          {/* Segmented Buttons */}
-
-          <View style={styles.contentContainer}>
-            {/* Text Input Fields */}
-            <View style={styles.inputsContainer}>
-              <FormInputWithHelper<SignUpForm>
-                formKey='email'
-                value={values.email}
-                placeholder='Escribí tu correo electrónico'
-                key={'email'}
-                label='Correo electrónico'
-                onBlur={() => handleTextInputBlur('email')}
-                onFocus={() => setFieldTouched('email', true)}
-                onChangeText={handleChange('email')}
-                keyboardType='email-address'
-                errorCondition={Boolean(touched.email && errors.email) || false}
-                errorMessage={errors.email ?? ''}
-              ></FormInputWithHelper>
-              <FormInputWithHelper<SignUpForm>
-                formKey='password'
-                value={values.password}
-                placeholder='Escribí tu contraseña'
-                secureTextEntry={true}
-                key={'password'}
-                label='Contraseña'
-                onBlur={() => handleTextInputBlur('password')}
-                onFocus={() => setFieldTouched('password', true)}
-                onChangeText={handleChange('password')}
-                errorCondition={
-                  Boolean(touched.password && errors.password) || false
-                }
-                errorMessage={errors.password ?? ''}
-              ></FormInputWithHelper>
-            </View>
-            {/* Bottom spacing for button */}
-            <View style={{ height: 100 }} />
-          </View>
-        </ScrollView>
-
-        {/* Floating Action Button */}
-        <View
-          style={[
-            styles.fabContainer,
-            {
-              backgroundColor: theme.colors.background,
-            },
-          ]}
-        >
-          <Button
-            mode='contained'
-            style={styles.fab}
-            contentStyle={styles.fabContent}
-            labelStyle={styles.fabLabel}
-            onPress={() => formik.handleSubmit}
-            disabled={(dirty && !isValid) || !dirty}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
           >
-            Crear cuenta
-          </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+            <RoleSelector
+              defaultValue={Role.PROFESSIONAL}
+              handleChange={(val: Role) => handleInputValue('role', val)}
+            ></RoleSelector>
+            {/*     <View style={{ padding: 15 }}>
+              <ReactNativePaperSelect<Role>
+                theme={theme}
+                hideSearchBox={true}
+                textInputStyle={{
+                  backgroundColor: theme.colors.background,
+
+                  textTransform: 'capitalize',
+                }}
+                dialogStyle={{ backgroundColor: theme.colors.background }}
+                checkboxProps={{
+                  checkboxColor: theme.colors.primary,
+                }}
+                label='Perfil'
+                dialogDoneButtonText='Ok'
+                dialogCloseButtonText='Cancelar'
+                multiEnable={false}
+                onSelection={({ selectedList }) => {
+                  const parsed = selectedList.at(0)?.value as Role;
+
+                  handleInputValue('role', parsed);
+                }}
+                selectedArrayList={[
+                  { _id: formik.values.role, value: formik.values.role },
+                ]}
+                arrayList={rolesList.map((val) => ({ _id: val, value: val }))}
+                value={formik.values.role}
+              ></ReactNativePaperSelect>
+            </View> */}
+            {/* Segmented Buttons */}
+
+            <View style={styles.contentContainer}>
+              {/* Text Input Fields */}
+              <View style={styles.inputsContainer}>
+                <FormInputWithHelper<SignUpForm>
+                  formKey='email'
+                  value={values.email}
+                  placeholder='Escribí tu correo electrónico'
+                  key={'email'}
+                  label='Correo electrónico'
+                  onBlur={() => handleTextInputBlur('email')}
+                  onFocus={() => setFieldTouched('email', true)}
+                  onChangeText={handleChange('email')}
+                  keyboardType='email-address'
+                  errorCondition={
+                    Boolean(touched.email && errors.email) || false
+                  }
+                  errorMessage={errors.email ?? ''}
+                ></FormInputWithHelper>
+                <FormInputWithHelper<SignUpForm>
+                  formKey='password'
+                  value={values.password}
+                  placeholder='Escribí tu contraseña'
+                  secureTextEntry={true}
+                  key={'password'}
+                  label='Contraseña'
+                  onBlur={() => handleTextInputBlur('password')}
+                  onFocus={() => setFieldTouched('password', true)}
+                  onChangeText={handleChange('password')}
+                  errorCondition={
+                    Boolean(touched.password && errors.password) || false
+                  }
+                  errorMessage={errors.password ?? ''}
+                ></FormInputWithHelper>
+              </View>
+              {/* Bottom spacing for button */}
+              <View style={{ height: 100 }} />
+            </View>
+          </ScrollView>
+
+          {/* Floating Action Button */}
+          <View
+            style={[
+              styles.fabContainer,
+              {
+                backgroundColor: theme.colors.background,
+              },
+            ]}
+          >
+            <Button
+              mode='contained'
+              style={styles.fab}
+              contentStyle={styles.fabContent}
+              labelStyle={styles.fabLabel}
+              onPress={() => formik.handleSubmit}
+              disabled={(dirty && !isValid) || !dirty}
+            >
+              Crear cuenta
+            </Button>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+    </>
   );
 };
 
