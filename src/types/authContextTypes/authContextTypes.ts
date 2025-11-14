@@ -1,5 +1,12 @@
+import { Role } from './userRole';
+
 //TODO type user
-export type IUser = Record<string, any>;
+export interface IUser {
+  name: string;
+  lastName: string;
+  email: string;
+  role: Role;
+}
 //TODO type user
 export type IAuthState =
   | { logged: false; user: null }

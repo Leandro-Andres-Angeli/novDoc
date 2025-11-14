@@ -14,6 +14,7 @@ import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIG
 import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
 import AppButton from 'src/ui/Button';
 import styled from 'styled-components/native';
+import AppHeader from '../ui/AppHeader';
 
 const Container = styled.View`
   flex: 1;
@@ -188,12 +189,7 @@ const WelcomeComponent = ({
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   return (
     <Container>
-      <Header>
-        <HeaderContent>
-          <LogoIcon>{'</>'}</LogoIcon>
-          <LogoText style={{ zIndex: 9 }}>MatchApp</LogoText>
-        </HeaderContent>
-      </Header>
+      <AppHeader></AppHeader>
 
       <MainContent isLandscape={isLandscape}>
         <ContentWrapper isLandscape={isLandscape}>
@@ -252,7 +248,14 @@ const WelcomeComponent = ({
         </ButtonContainer>
         <View>
           <FooterText>
-            ¿Ya tienes una cuenta? <LinkText>Iniciar Sesión</LinkText>
+            ¿Ya tienes una cuenta?{' '}
+            <LinkText
+              onPress={() =>
+                navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.LOGIN, {})
+              }
+            >
+              Iniciar Sesión
+            </LinkText>
           </FooterText>
         </View>
 

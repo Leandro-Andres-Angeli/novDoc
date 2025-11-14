@@ -103,11 +103,10 @@ export function FormInputWithHelper<T>(
     errorMessage,
     ...inheritProps
   } = props;
-  const theme = useTheme();
+
   return (
     <>
       <TextInput
-        style={{ backgroundColor: theme.colors.background }}
         onBlur={onBlur}
         autoCapitalize='none'
         label={label ?? ''}

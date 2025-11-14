@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Children, useEffect, PropsWithChildren } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { db } from './firebase/config';
-
+import ToastManager from 'toastify-react-native';
 import { logger } from 'react-native-logs';
 import {
   NavigationContainer,
@@ -36,7 +36,8 @@ const Providers = ({ children }: PropsWithChildren) => {
       ...LightTheme.colors,
       primary: COLORS.primary,
       secondaryContainer: '#dcdcdcff',
-      onPrimary: 'white',
+      onPrimaryContainer: 'red',
+      surfaceVariant: '#f2f1f1ff',
     },
   };
 
@@ -60,16 +61,10 @@ export default function App() {
   }, []);
   return (
     <Providers>
-      <MainNavigator></MainNavigator>
+      <>
+        <MainNavigator></MainNavigator>
+        <ToastManager></ToastManager>
+      </>
     </Providers>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

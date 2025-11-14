@@ -1,6 +1,7 @@
 export enum PUBLIC_NAVIGATOR_ROUTES {
   INTRO = 'INTRO',
   SIGN_UP = 'SIGN_UP',
+  LOGIN = 'LOGIN',
 }
 
 export default PUBLIC_NAVIGATOR_ROUTES;
