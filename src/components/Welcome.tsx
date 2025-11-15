@@ -15,30 +15,11 @@ import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicN
 import AppButton from 'src/ui/Button';
 import styled from 'styled-components/native';
 import AppHeader from '../ui/AppHeader';
+import CardImage from '@ui/CardImage';
 
 const Container = styled.View`
   flex: 1;
   background-color: #f7fafc;
-`;
-
-const Header = styled.View`
-  height: 56px;
-  flex-direction: row;
-  align-items: center;
-  padding-horizontal: 16px;
-`;
-
-const HeaderContent = styled.View`
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-`;
-
-const LogoText = styled.Text`
-  font-size: 20px;
-  font-weight: 700;
-  color: #2d3748;
-  letter-spacing: -0.5px;
 `;
 
 const MainContent = styled.View<{ isLandscape: boolean }>`
@@ -93,11 +74,6 @@ const Card = styled.View<{
   ${(props) => props.left !== undefined && `left: ${props.left}px;`}
   ${(props) => props.right !== undefined && `right: ${props.right}px;`}
   top: ${(props) => (props.isLandscape ? '16px' : '32px')};
-`;
-
-const CardImage = styled.Image`
-  width: 100%;
-  height: 100%;
 `;
 
 const Title = styled.Text<{ isLandscape: boolean }>`
@@ -258,10 +234,10 @@ const WelcomeComponent = ({
           }}
         >
           <FooterText>
-            ¿Ya tienes una cuenta?{' '}
+            ¿Ya tienes una cuenta?
             <LinkText
               onPress={() =>
-                navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.LOGIN, {})
+                navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_IN, {})
               }
             >
               Iniciar Sesión

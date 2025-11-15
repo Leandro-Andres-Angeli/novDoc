@@ -107,7 +107,7 @@ const SignUp = () => {
           type: 'success',
           autoHide: true,
           onHide: () => {
-            navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.LOGIN, {});
+            navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_IN, {});
           },
         });
       }

@@ -5,12 +5,12 @@ import IntroScreen from '../../screens/IntroScreen';
 import PUBLIC_NAVIGATOR_ROUTES from './PUBLIC_NAVIGATOR_ROUTES';
 import SignUpScreen from '../../screens/SignUpScreen';
 import { useTheme } from 'react-native-paper';
-import LoginScreen from 'src/screens/LoginScreen';
+import SignInScreen from 'src/screens/SignInScreen';
 
 export type publicNavigatorRootStack = {
   [PUBLIC_NAVIGATOR_ROUTES.INTRO]: {};
   [PUBLIC_NAVIGATOR_ROUTES.SIGN_UP]: {};
-  [PUBLIC_NAVIGATOR_ROUTES.LOGIN]: {};
+  [PUBLIC_NAVIGATOR_ROUTES.SIGN_IN]: {};
 };
 const Stack = createNativeStackNavigator<publicNavigatorRootStack>();
 const PublicNavigator = () => {
@@ -35,8 +35,8 @@ const PublicNavigator = () => {
         component={SignUpScreen}
       ></Stack.Screen>
       <Stack.Screen
-        name={PUBLIC_NAVIGATOR_ROUTES.LOGIN}
-        component={LoginScreen}
+        name={PUBLIC_NAVIGATOR_ROUTES.SIGN_IN}
+        component={SignInScreen}
       ></Stack.Screen>
     </Stack.Navigator>
   );

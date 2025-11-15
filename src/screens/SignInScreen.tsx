@@ -106,7 +106,7 @@ const TextWrapper = styled.View<{ isLandscape: boolean }>`
     props.isLandscape && 'flex: 1; max-width: 100%; padding-left: 32px;'}
 `;
 
-const LoginScreen = () => {
+const SignInScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   const { width } = Dimensions.get('screen');
@@ -154,4 +154,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignInScreen;

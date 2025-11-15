@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../screens/IntroScreen';
+import SignInScreen from '../screens/IntroScreen';
 import MAIN_NAVIGATOR_ROUTES from './MAIN_NAVIGATOR_ROUTES';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IntroScreen from '../screens/IntroScreen';
