@@ -1,21 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  useWindowDimensions,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import React from 'react';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
 import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
-import AppButton from 'src/ui/Button';
+import AppButton from '@ui/AppButton';
 import styled from 'styled-components/native';
 import AppHeader from '../ui/AppHeader';
 import CardImage from '@ui/CardImage';
+import LinkText from '@ui/LinkText';
+import AppButtonText from '@ui/AppButtonText';
+import AppTitle from '@ui/AppTitle';
+import AppSubTitle from '@ui/AppSubtitle';
+import AppSubtitle from '@ui/AppSubtitle';
 
 const Container = styled.View`
   flex: 1;
@@ -76,26 +74,6 @@ const Card = styled.View<{
   top: ${(props) => (props.isLandscape ? '16px' : '32px')};
 `;
 
-const Title = styled.Text<{ isLandscape: boolean }>`
-  font-size: ${(props) => (props.isLandscape ? '28px' : '32px')};
-  font-weight: 800;
-  color: #0a2540;
-  text-align: center;
-  letter-spacing: -0.5px;
-  margin-bottom: 12px;
-  margin-top: ${(props) => (props.isLandscape ? '0px' : '24px')};
-  line-height: ${(props) => (props.isLandscape ? '36px' : '40px')};
-`;
-
-const Subtitle = styled.Text<{ isLandscape: boolean }>`
-  font-size: ${(props) => (props.isLandscape ? '14px' : '16px')};
-  font-weight: 400;
-  color: #2d3748;
-  text-align: center;
-  line-height: ${(props) => (props.isLandscape ? '20px' : '24px')};
-  padding-horizontal: 16px;
-`;
-
 const Footer = styled.View<{ isLandscape: boolean }>`
   padding-horizontal: 16px;
   padding-bottom: ${(props) => (props.isLandscape ? '16px' : '32px')};
@@ -113,22 +91,6 @@ const ButtonContainer = styled.View<{ isLandscape: boolean }>`
   ${(props) => props.isLandscape && 'margin-right: 16px;'}
 `;
 
-const GetStartedButton = styled.TouchableOpacity<{ isLandscape: boolean }>`
-  background-color: #38b2ac;
-  border-radius: 12px;
-  height: 48px;
-  justify-content: center;
-  align-items: center;
-  padding-horizontal: 20px;
-  ${(props) => props.isLandscape && 'min-width: 200px;'}
-`;
-
-const ButtonText = styled.Text`
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-`;
-
 const FooterText = styled.Text`
   font-size: 14px;
   font-weight: 500;
@@ -137,20 +99,9 @@ const FooterText = styled.Text`
   padding-horizontal: 16px;
 `;
 
-const LinkText = styled.Text`
-  font-weight: 700;
-  color: #38b2ac;
-  text-decoration-line: underline;
-`;
-
 const TextWrapper = styled.View<{ isLandscape: boolean }>`
   ${(props) =>
     props.isLandscape && 'flex: 1; max-width: 100%; padding-left: 32px;'}
-`;
-
-const LogoIcon = styled.Text`
-  font-size: 28px;
-  color: #2d3748;
 `;
 
 const WelcomeComponent = ({
@@ -200,13 +151,13 @@ const WelcomeComponent = ({
         </ContentWrapper>
 
         <TextWrapper isLandscape={isLandscape}>
-          <Title isLandscape={isLandscape}>
+          <AppTitle {...{ isLandscape }}>
             Código y Oportunidades se Conectan.
-          </Title>
-          <Subtitle isLandscape={isLandscape}>
+          </AppTitle>
+          <AppSubtitle isLandscape={isLandscape}>
             Desliza a la derecha por tu próximo paso profesional. Conecta con
             los mejores reclutadores y desarrolladores fácilmente.
-          </Subtitle>
+          </AppSubtitle>
         </TextWrapper>
       </MainContent>
 
@@ -217,15 +168,14 @@ const WelcomeComponent = ({
             marginLeft: 'auto',
           }}
         >
-          <GetStartedButton activeOpacity={0.9} isLandscape={isLandscape}>
-            <ButtonText
-              onPress={() =>
-                navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_UP, {})
-              }
-            >
-              Comenzar
-            </ButtonText>
-          </GetStartedButton>
+          <AppButton
+            {...{ isLandscape }}
+            onPress={() =>
+              navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_UP, {})
+            }
+          >
+            <AppButtonText>Comenzar</AppButtonText>
+          </AppButton>
         </ButtonContainer>
         <View
           style={{

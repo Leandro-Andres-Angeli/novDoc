@@ -106,6 +106,7 @@ const SignUp = () => {
           text1: createdUser.message,
           type: 'success',
           autoHide: true,
+          theme: theme.dark ? 'dark' : 'light',
           onHide: () => {
             navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_IN, {});
           },
