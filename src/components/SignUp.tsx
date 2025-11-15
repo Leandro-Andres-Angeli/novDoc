@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import ReactNativePaperSelect from '../ui/ReactNativePaperSelect';
 import * as Yup from 'yup';
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-} from 'react-native';
+import { View, ScrollView, StyleSheet, Platform, Keyboard } from 'react-native';
 import {
   TextInput,
   Button,
@@ -16,7 +9,12 @@ import {
   useTheme,
   TextInputProps,
   Checkbox,
+  ActivityIndicator,
 } from 'react-native-paper';
+import {
+  KeyboardAvoidingView,
+  KeyboardAwareScrollView,
+} from 'react-native-keyboard-controller';
 import { Role, rolesList } from 'src/types/authContextTypes/userRole';
 import { useFormik } from 'formik';
 import { AppFormInputWithHelper } from '../ui/AppFormInputs';
@@ -28,6 +26,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { publicNavigatorRootStack } from '../navigators/publicNavigator/PublicNavigator';
 import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
+import { useToast } from 'react-native-paper-toast';
 
 export interface SignUpForm {
   email: string;
@@ -89,8 +88,8 @@ const SignUp = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   const theme = useTheme();
+  const toaster = useToast();
   const handleSubmit = async () => {
-    console.log(formik.values);
     setProcessinForm(true);
     try {
       const { email, password, lastName, name, role } = formik.values;
@@ -98,14 +97,19 @@ const SignUp = () => {
       const createdUser = await signUpNewUser(signUpUser);
 
       if (!createdUser.success) {
-        console.log('error');
-        Toast.error(createdUser.message);
+        return Toast.show({ text1: createdUser.message, type: 'error' });
       } else {
-        Toast.show({
+        return Toast.show({
           text1: createdUser.message,
+
           type: 'success',
           autoHide: true,
+          iconColor: theme.colors.primary,
+          visibilityTime: 500,
           theme: theme.dark ? 'dark' : 'light',
+
+          progressBarColor: theme.colors.primary,
+
           onHide: () => {
             navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_IN, {});
           },
@@ -149,142 +153,149 @@ const SignUp = () => {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      <KeyboardAwareScrollView
+      // style={styles.flex}
+      // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
       >
-        <ScrollView
+        {/* <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-        >
+        > */}
+        <View style={styles.contentContainer}>
           <RoleSelector
             defaultValue={Role.PROFESSIONAL}
             handleChange={(val: Role) => handleInputValue('role', val)}
           ></RoleSelector>
-
-          <View style={styles.contentContainer}>
-            {/* Text Input Fields */}
-            <View style={styles.inputsContainer}>
-              <AppFormInputWithHelper<SignUpForm>
-                formKey='name'
-                value={values.name}
-                placeholder='Escribí tu nombre'
-                key={'name'}
-                label='Nombre'
-                onBlur={() => handleTextInputBlur('name')}
-                onFocus={() => setFieldTouched('name', true)}
-                onChangeText={handleChange('name')}
-                keyboardType='ascii-capable'
-                errorCondition={Boolean(touched.name && errors.name) || false}
-                errorMessage={errors.name ?? ''}
-              ></AppFormInputWithHelper>
-              <AppFormInputWithHelper<SignUpForm>
-                formKey='lastName'
-                value={values.lastName}
-                placeholder='Escribí tu apellido'
-                key={'lastName'}
-                label='Apellido'
-                onBlur={() => handleTextInputBlur('lastName')}
-                onFocus={() => setFieldTouched('lastName', true)}
-                onChangeText={handleChange('lastName')}
-                keyboardType='ascii-capable'
-                errorCondition={
-                  Boolean(touched.lastName && errors.lastName) || false
-                }
-                errorMessage={errors.lastName ?? ''}
-              ></AppFormInputWithHelper>
-              <AppFormInputWithHelper<SignUpForm>
-                formKey='email'
-                value={values.email}
-                placeholder='Escribí tu correo electrónico'
-                key={'email'}
-                label='Correo electrónico'
-                onBlur={() => handleTextInputBlur('email')}
-                onFocus={() => setFieldTouched('email', true)}
-                onChangeText={handleChange('email')}
-                keyboardType='email-address'
-                errorCondition={Boolean(touched.email && errors.email) || false}
-                errorMessage={errors.email ?? ''}
-              ></AppFormInputWithHelper>
-              <AppFormInputWithHelper<SignUpForm>
-                formKey='password'
-                value={values.password}
-                placeholder='Escribí tu contraseña'
-                isTextSecureEntry={true}
-                key={'password'}
-                label='Contraseña'
-                onBlur={() => handleTextInputBlur('password')}
-                onFocus={() => setFieldTouched('password', true)}
-                onChangeText={handleChange('password')}
-                errorCondition={
-                  Boolean(touched.password && errors.password) || false
-                }
-                errorMessage={errors.password ?? ''}
-              ></AppFormInputWithHelper>
-            </View>
-            <View style={styles.inputsContainer}>
-              <AppFormInputWithHelper<SignUpForm>
-                formKey='password2'
-                value={values.password2}
-                placeholder='Escribí tu contraseña'
-                isTextSecureEntry={true}
-                key={'password2'}
-                label='Repetir Contraseña'
-                onBlur={() => handleBlur('password2')}
-                onFocus={() => setFieldTouched('password2', true)}
-                onChangeText={handleChange('password2')}
-                errorCondition={
-                  Boolean(touched.password2 && errors.password2) || false
-                }
-                errorMessage={errors.password2 ?? ''}
-              ></AppFormInputWithHelper>
-            </View>
-          </View>
-          <View
-            style={{
-              marginLeft: 10,
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}
-          >
-            <Checkbox
-              status={
-                (formik.values.termsAndConditions && 'checked') || 'unchecked'
-              }
-              onPress={(e) => {
-                handleInputValue(
-                  'termsAndConditions',
-                  !formik.values.termsAndConditions
-                );
-              }}
-            ></Checkbox>
-            <Text variant='labelSmall'>Acepto los términos y condiciones.</Text>
-          </View>
-        </ScrollView>
-
-        <View
-          style={[
-            styles.fabContainer,
-            {
-              backgroundColor: theme.colors.background,
-            },
-          ]}
-        >
-          <Button
-            mode='contained'
-            style={styles.fab}
-            contentStyle={styles.fabContent}
-            labelStyle={styles.fabLabel}
-            onPress={() => formik.handleSubmit()}
-            disabled={(dirty && !isValid) || !dirty || processingForm}
-          >
-            Crear cuenta
-          </Button>
         </View>
-      </KeyboardAvoidingView>
+        <View style={styles.contentContainer}>
+          {/* Text Input Fields */}
+          <View style={styles.inputsContainer}>
+            <AppFormInputWithHelper<SignUpForm>
+              formKey='name'
+              value={values.name}
+              placeholder='Escribí tu nombre'
+              key={'name'}
+              label='Nombre'
+              onBlur={() => handleTextInputBlur('name')}
+              onFocus={() => setFieldTouched('name', true)}
+              onChangeText={handleChange('name')}
+              keyboardType='ascii-capable'
+              errorCondition={Boolean(touched.name && errors.name) || false}
+              errorMessage={errors.name ?? ''}
+            ></AppFormInputWithHelper>
+            <AppFormInputWithHelper<SignUpForm>
+              formKey='lastName'
+              value={values.lastName}
+              placeholder='Escribí tu apellido'
+              key={'lastName'}
+              label='Apellido'
+              onBlur={() => handleTextInputBlur('lastName')}
+              onFocus={() => setFieldTouched('lastName', true)}
+              onChangeText={handleChange('lastName')}
+              keyboardType='ascii-capable'
+              errorCondition={
+                Boolean(touched.lastName && errors.lastName) || false
+              }
+              errorMessage={errors.lastName ?? ''}
+            ></AppFormInputWithHelper>
+            <AppFormInputWithHelper<SignUpForm>
+              formKey='email'
+              value={values.email}
+              placeholder='Escribí tu correo electrónico'
+              key={'email'}
+              label='Correo electrónico'
+              onBlur={() => handleTextInputBlur('email')}
+              onFocus={() => setFieldTouched('email', true)}
+              onChangeText={handleChange('email')}
+              keyboardType='email-address'
+              errorCondition={Boolean(touched.email && errors.email) || false}
+              errorMessage={errors.email ?? ''}
+            ></AppFormInputWithHelper>
+            <AppFormInputWithHelper<SignUpForm>
+              formKey='password'
+              value={values.password}
+              placeholder='Escribí tu contraseña'
+              isTextSecureEntry={true}
+              key={'password'}
+              label='Contraseña'
+              onBlur={() => handleTextInputBlur('password')}
+              onFocus={() => setFieldTouched('password', true)}
+              onChangeText={handleChange('password')}
+              errorCondition={
+                Boolean(touched.password && errors.password) || false
+              }
+              errorMessage={errors.password ?? ''}
+            ></AppFormInputWithHelper>
+          </View>
+          <View style={styles.inputsContainer}>
+            <AppFormInputWithHelper<SignUpForm>
+              formKey='password2'
+              value={values.password2}
+              placeholder='Escribí tu contraseña'
+              isTextSecureEntry={true}
+              key={'password2'}
+              label='Repetir Contraseña'
+              onBlur={() => handleBlur('password2')}
+              onFocus={() => setFieldTouched('password2', true)}
+              onChangeText={handleChange('password2')}
+              errorCondition={
+                Boolean(touched.password2 && errors.password2) || false
+              }
+              errorMessage={errors.password2 ?? ''}
+            ></AppFormInputWithHelper>
+          </View>
+        </View>
+        <View
+          style={{
+            marginLeft: 10,
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
+          <Checkbox
+            status={
+              (formik.values.termsAndConditions && 'checked') || 'unchecked'
+            }
+            onPress={(e) => {
+              handleInputValue(
+                'termsAndConditions',
+                !formik.values.termsAndConditions
+              );
+            }}
+          ></Checkbox>
+          <Text variant='labelSmall'>Acepto los términos y condiciones.</Text>
+        </View>
+        {/* </ScrollView> */}
+      </KeyboardAwareScrollView>
+      <View
+        style={[
+          styles.fabContainer,
+          {
+            backgroundColor: theme.colors.background,
+          },
+        ]}
+      >
+        <Button
+          mode='contained'
+          style={styles.fab}
+          contentStyle={styles.fabContent}
+          labelStyle={styles.fabLabel}
+          onPress={() => formik.handleSubmit()}
+          disabled={(dirty && !isValid) || !dirty || processingForm}
+        >
+          {processingForm ? (
+            <>
+              {' '}
+              <ActivityIndicator size={'small'}></ActivityIndicator>{' '}
+            </>
+          ) : (
+            'Crear cuenta'
+          )}
+        </Button>
+      </View>
     </View>
   );
 };

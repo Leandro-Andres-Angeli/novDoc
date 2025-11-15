@@ -18,10 +18,12 @@ import {
 import merge from 'deepmerge';
 import MainNavigator from './src/navigators/MainNavigator';
 import { PaperProvider } from 'react-native-paper';
+import { ToastProvider } from 'react-native-paper-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import AuthContextProvider from './src/appContext/AuthContext';
 import COLORS from 'src/constants/COLORS';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 const Providers = ({ children }: PropsWithChildren) => {
   const { LightTheme, DarkTheme } = adaptNavigationTheme({
@@ -46,7 +48,11 @@ const Providers = ({ children }: PropsWithChildren) => {
     <AuthContextProvider>
       <PaperProvider theme={CombinedDefaultTheme}>
         <NavigationContainer theme={CombinedDefaultTheme}>
-          <SafeAreaView style={{ flex: 1 }}>{children}</SafeAreaView>
+          <SafeAreaView style={{ flex: 1 }}>
+            <KeyboardProvider>
+              <ToastProvider>{children}</ToastProvider>
+            </KeyboardProvider>
+          </SafeAreaView>
         </NavigationContainer>
       </PaperProvider>
     </AuthContextProvider>

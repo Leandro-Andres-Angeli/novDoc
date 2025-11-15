@@ -1,9 +1,9 @@
-import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { auth, db } from 'firebase/config';
 import { IUser } from '../types/authContextTypes/authContextTypes';
 import { ISignUpUser } from 'src/components/SignUp';
 import { addDoc, collection } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 interface FirebaseResponse {
   success: boolean;
   message: string;
@@ -19,7 +19,8 @@ export const signUpNewUser = async (
       user.password
     );
     const { password, ...userWithoutPassword } = user;
-
+    console.log('HERE');
+    console.log('HERE user', user);
     if (userSignUp) {
       await addDoc(userCollection, userWithoutPassword);
       return { success: true, message: 'Perfil creado' };
