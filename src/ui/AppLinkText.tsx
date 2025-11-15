@@ -8,7 +8,7 @@ const LinkTextStyled = styled.Text<{ color: string }>`
   color: ${(props) => props.color};
   text-decoration-line: underline;
 `;
-const LinkText = (props: TextProps & { color?: string | undefined }) => {
+const AppLinkText = (props: TextProps & { color?: string | undefined }) => {
   const theme = useTheme();
 
   return (
@@ -18,4 +18,4 @@ const LinkText = (props: TextProps & { color?: string | undefined }) => {
   );
 };
 
-export default LinkText;
+export default AppLinkText;

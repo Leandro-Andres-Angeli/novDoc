@@ -1,12 +1,7 @@
-import { View, Text } from 'react-native';
 import React, { useContext } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignInScreen from '../screens/IntroScreen';
-import MAIN_NAVIGATOR_ROUTES from './MAIN_NAVIGATOR_ROUTES';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import IntroScreen from '../screens/IntroScreen';
+
 import { AuthContext } from '../appContext/AuthContext';
-import Loading from '../ui/Loading';
+import AppLoading from '../ui/AppLoading';
 import PublicNavigator from './publicNavigator/PublicNavigator';
 
 function MainNavigator() {
@@ -17,6 +12,6 @@ function MainNavigator() {
   if (!logged) {
     return <PublicNavigator></PublicNavigator>;
   }
-  return <Loading></Loading>;
+  return <AppLoading></AppLoading>;
 }
 export default MainNavigator;

@@ -9,7 +9,7 @@ import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicN
 
 import styled from 'styled-components/native';
 import AppHeader from '../ui/AppHeader';
-import CardImage from '@ui/CardImage';
+import CardImage from '@ui/AppCardImage';
 import AppButton from '@ui/AppButton';
 import AppButtonText from '@ui/AppButtonText';
 import AppTitle from '../ui/AppTitle';

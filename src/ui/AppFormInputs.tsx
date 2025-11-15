@@ -11,8 +11,15 @@ import {
   KeyboardTypeOptions, // Opciones de tipo de teclado (email, numeric, etc.)
   StyleSheet, // Creación de estilos en React Native
 } from 'react-native';
-import React, { JSX } from 'react';
+import React, {
+  isValidElement,
+  JSX,
+  PropsWithChildren,
+  ReactElement,
+  useState,
+} from 'react';
 import { Icon, TextInput, TextInputProps, useTheme } from 'react-native-paper';
+import { Children } from 'react';
 
 interface FormInputProps<T> extends Partial<TextInputProps> {
   /** Clave del campo dentro del tipo genérico T. */
@@ -35,7 +42,7 @@ interface FormInputProps<T> extends Partial<TextInputProps> {
  * @param {FormInputProps<T>} props - Propiedades del componente.
  * @returns {JSX.Element} El elemento `TextInput` configurado.
  */
-export function FormInput<T>(props: FormInputProps<T>): JSX.Element {
+export function AppFormInput<T>(props: FormInputProps<T>): JSX.Element {
   const {
     formKey,
     label,
@@ -73,6 +80,24 @@ export function FormInput<T>(props: FormInputProps<T>): JSX.Element {
   );
 }
 
+export function AppFormInputSecureTextEntry<T>(props: FormInputProps<T>) {
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  return (
+    <TextInput
+      {...props}
+      secureTextEntry={secureTextEntry}
+      right={
+        <TextInput.Icon
+          icon={secureTextEntry ? 'eye-off-outline' : 'eye-outline'}
+          onPress={() => setSecureTextEntry((prev) => !prev)}
+        />
+      }
+      {...props}
+    />
+  );
+}
+
 /**
  * Versión del componente que incluye un mensaje de ayuda o error debajo del input.
  *
@@ -82,12 +107,13 @@ export function FormInput<T>(props: FormInputProps<T>): JSX.Element {
  *        Propiedades del componente, incluyendo la condición de error y su mensaje.
  * @returns {JSX.Element} El input con posible mensaje de error.
  */
-export function FormInputWithHelper<T>(
+export function AppFormInputWithHelper<T>(
   props: FormInputProps<T> & {
     /** Indica si debe mostrarse el mensaje de error. */
     errorCondition: boolean;
     /** Texto del mensaje de error que se mostrará bajo el input. */
     errorMessage: string;
+    isTextSecureEntry?: boolean;
   }
 ): JSX.Element {
   const {
@@ -101,22 +127,33 @@ export function FormInputWithHelper<T>(
     keyboardType,
     errorCondition,
     errorMessage,
+
     ...inheritProps
   } = props;
 
+  const isTextSecureEntry = props.isTextSecureEntry ?? false;
+  let input = (
+    <TextInput
+      onBlur={onBlur}
+      autoCapitalize='none'
+      label={label ?? ''}
+      placeholder={placeholder ?? ''}
+      onFocus={onFocus}
+      onChangeText={onChangeText}
+      value={value}
+      keyboardType={keyboardType ?? 'default'}
+      {...inheritProps}
+    />
+  );
+  if (isTextSecureEntry) {
+    input = (
+      <AppFormInputSecureTextEntry {...props}></AppFormInputSecureTextEntry>
+    );
+  }
   return (
     <>
-      <TextInput
-        onBlur={onBlur}
-        autoCapitalize='none'
-        label={label ?? ''}
-        placeholder={placeholder ?? ''}
-        onFocus={onFocus}
-        onChangeText={onChangeText}
-        value={value}
-        keyboardType={keyboardType ?? 'default'}
-        {...inheritProps}
-      />
+      {input}
+
       {/* Si errorCondition es true, mostramos la vista de error. */}
       {errorCondition && (
         <View style={localStyles.errorView}>

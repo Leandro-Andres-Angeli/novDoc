@@ -19,7 +19,7 @@ import {
 } from 'react-native-paper';
 import { Role, rolesList } from 'src/types/authContextTypes/userRole';
 import { useFormik } from 'formik';
-import { FormInputWithHelper } from '../ui/FormInputs';
+import { AppFormInputWithHelper } from '../ui/AppFormInputs';
 import RoleSelector from './RoleSelector';
 import { IUser } from 'src/types/authContextTypes/authContextTypes';
 import { signUpNewUser } from 'src/services/auth';
@@ -85,7 +85,6 @@ export interface ISignUpUser {
   role: Role;
 }
 const SignUp = () => {
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [processingForm, setProcessinForm] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
@@ -168,7 +167,7 @@ const SignUp = () => {
           <View style={styles.contentContainer}>
             {/* Text Input Fields */}
             <View style={styles.inputsContainer}>
-              <FormInputWithHelper<SignUpForm>
+              <AppFormInputWithHelper<SignUpForm>
                 formKey='name'
                 value={values.name}
                 placeholder='Escribí tu nombre'
@@ -180,8 +179,8 @@ const SignUp = () => {
                 keyboardType='ascii-capable'
                 errorCondition={Boolean(touched.name && errors.name) || false}
                 errorMessage={errors.name ?? ''}
-              ></FormInputWithHelper>
-              <FormInputWithHelper<SignUpForm>
+              ></AppFormInputWithHelper>
+              <AppFormInputWithHelper<SignUpForm>
                 formKey='lastName'
                 value={values.lastName}
                 placeholder='Escribí tu apellido'
@@ -195,8 +194,8 @@ const SignUp = () => {
                   Boolean(touched.lastName && errors.lastName) || false
                 }
                 errorMessage={errors.lastName ?? ''}
-              ></FormInputWithHelper>
-              <FormInputWithHelper<SignUpForm>
+              ></AppFormInputWithHelper>
+              <AppFormInputWithHelper<SignUpForm>
                 formKey='email'
                 value={values.email}
                 placeholder='Escribí tu correo electrónico'
@@ -208,12 +207,12 @@ const SignUp = () => {
                 keyboardType='email-address'
                 errorCondition={Boolean(touched.email && errors.email) || false}
                 errorMessage={errors.email ?? ''}
-              ></FormInputWithHelper>
-              <FormInputWithHelper<SignUpForm>
+              ></AppFormInputWithHelper>
+              <AppFormInputWithHelper<SignUpForm>
                 formKey='password'
                 value={values.password}
                 placeholder='Escribí tu contraseña'
-                secureTextEntry={true}
+                isTextSecureEntry={true}
                 key={'password'}
                 label='Contraseña'
                 onBlur={() => handleTextInputBlur('password')}
@@ -223,20 +222,14 @@ const SignUp = () => {
                   Boolean(touched.password && errors.password) || false
                 }
                 errorMessage={errors.password ?? ''}
-              ></FormInputWithHelper>
+              ></AppFormInputWithHelper>
             </View>
             <View style={styles.inputsContainer}>
-              <FormInputWithHelper<SignUpForm>
+              <AppFormInputWithHelper<SignUpForm>
                 formKey='password2'
                 value={values.password2}
                 placeholder='Escribí tu contraseña'
-                secureTextEntry={secureTextEntry}
-                right={
-                  <TextInput.Icon
-                    icon={secureTextEntry ? 'eye-off-outline' : 'eye-outline'}
-                    onPress={() => setSecureTextEntry((prev) => !prev)}
-                  />
-                }
+                isTextSecureEntry={true}
                 key={'password2'}
                 label='Repetir Contraseña'
                 onBlur={() => handleBlur('password2')}
@@ -246,7 +239,7 @@ const SignUp = () => {
                   Boolean(touched.password2 && errors.password2) || false
                 }
                 errorMessage={errors.password2 ?? ''}
-              ></FormInputWithHelper>
+              ></AppFormInputWithHelper>
             </View>
           </View>
           <View

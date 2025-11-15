@@ -12,7 +12,7 @@ interface LoadingProps {
   activityIndicatorSize?: number;
 }
 
-const Loading = (props: LoadingProps) => {
+const AppLoading = (props: LoadingProps) => {
   return (
     <View
       style={{ ...loadingBaseStyles.view, ...StyleSheet.flatten(props.styles) }}
@@ -31,4 +31,4 @@ const loadingBaseStyles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default Loading;
+export default AppLoading;

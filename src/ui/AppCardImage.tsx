@@ -5,8 +5,8 @@ const CardImageStyled = styled.Image`
   width: 100%;
   height: 100%;
 `;
-const CardImage = (props: ImageProps) => {
+const AppCardImage = (props: ImageProps) => {
   return <CardImageStyled {...props} />;
 };
 
-export default CardImage;
+export default AppCardImage;

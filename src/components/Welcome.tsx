@@ -8,12 +8,13 @@ import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicN
 import AppButton from '@ui/AppButton';
 import styled from 'styled-components/native';
 import AppHeader from '../ui/AppHeader';
-import CardImage from '@ui/CardImage';
-import LinkText from '@ui/LinkText';
+import CardImage from '@ui/AppCardImage';
+
 import AppButtonText from '@ui/AppButtonText';
 import AppTitle from '@ui/AppTitle';
-import AppSubTitle from '@ui/AppSubtitle';
+
 import AppSubtitle from '@ui/AppSubtitle';
+import AppLinkText from '@ui/AppLinkText';
 
 const Container = styled.View`
   flex: 1;
@@ -185,13 +186,13 @@ const WelcomeComponent = ({
         >
           <FooterText>
             ¿Ya tienes una cuenta?
-            <LinkText
+            <AppLinkText
               onPress={() =>
                 navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_IN, {})
               }
             >
               Iniciar Sesión
-            </LinkText>
+            </AppLinkText>
           </FooterText>
         </View>
 
