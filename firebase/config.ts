@@ -21,12 +21,6 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_APP_ID,
 };
 
-// Initialize Firebase
-// const {
-//   auth: authModule,
-//   database,
-//   storage: store,
-// } = admin.initializeApp(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
@@ -34,14 +28,3 @@ const auth = initializeAuth(app, {
 const db = getFirestore(app);
 const storage = getStorage(app);
 export { auth, db, storage };
-
-// const db = database();
-// const storage = store();
-// const auth = authModule();
-// export { auth, db, storage };
-// const app = admin.initializeApp(firebaseConfig);
-// const {
-//   auth: authModule,
-//   database,
-//   storage: store,
-// } = admin.initializeApp(firebaseConfig);

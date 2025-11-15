@@ -235,7 +235,12 @@ const WelcomeComponent = ({
       </MainContent>
 
       <Footer isLandscape={isLandscape}>
-        <ButtonContainer isLandscape={isLandscape}>
+        <ButtonContainer
+          isLandscape={isLandscape}
+          style={{
+            marginLeft: 'auto',
+          }}
+        >
           <GetStartedButton activeOpacity={0.9} isLandscape={isLandscape}>
             <ButtonText
               onPress={() =>
@@ -246,7 +251,12 @@ const WelcomeComponent = ({
             </ButtonText>
           </GetStartedButton>
         </ButtonContainer>
-        <View>
+        <View
+          style={{
+            marginLeft: isLandscape ? 'auto' : 'auto',
+            marginRight: isLandscape ? 5 : 'auto',
+          }}
+        >
           <FooterText>
             ¿Ya tienes una cuenta?{' '}
             <LinkText
@@ -259,12 +269,18 @@ const WelcomeComponent = ({
           </FooterText>
         </View>
 
-        <View style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <View
+          style={{
+            display: 'flex',
+            marginRight: isLandscape ? 10 : 'auto',
+            marginLeft: isLandscape ? 15 : 'auto',
+            justifyContent: 'flex-end',
+          }}
+        >
           <TouchableWithoutFeedback
             style={{ display: 'flex', justifyContent: 'flex-end' }}
           >
             <Text
-              variant='labelMedium'
               style={{
                 marginLeft: 'auto',
                 marginRight: 'auto',
