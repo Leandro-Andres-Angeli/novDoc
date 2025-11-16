@@ -15,7 +15,6 @@ const useAuthStateReducer = () => {
   );
 
   const login = (user: IUser) => {
-    console.log('login in');
     authDispatch({
       type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_LOGIN,
       payload: { logged: true, user },

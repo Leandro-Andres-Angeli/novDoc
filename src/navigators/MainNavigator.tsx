@@ -7,6 +7,7 @@ import useOnAuthStateChangeListener from '../hooks/useOnAuthStateChangeListener'
 import { Button } from 'react-native';
 import { signOut } from 'firebase/auth';
 import { auth } from 'firebase/config';
+import PrivateNavigator from './privateNavigator/PrivateNavigator';
 
 function MainNavigator() {
   const {
@@ -15,7 +16,7 @@ function MainNavigator() {
 
   useOnAuthStateChangeListener();
   // return <Loading></Loading>;
-  let content = <AppLoading></AppLoading>;
+  let content = <PrivateNavigator></PrivateNavigator>;
   if (!logged) {
     content = <PublicNavigator></PublicNavigator>;
   }

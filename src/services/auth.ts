@@ -26,7 +26,10 @@ export const signUpNewUser = async (
     const { password, ...userWithoutPassword } = user;
 
     if (userSignUp) {
-      await addDoc(userCollection, userWithoutPassword);
+      await addDoc(userCollection, {
+        id: userSignUp.user.uid,
+        ...userWithoutPassword,
+      });
       return { success: true, message: 'Perfil creado' };
     } else {
       throw Error('Error creando usuario');

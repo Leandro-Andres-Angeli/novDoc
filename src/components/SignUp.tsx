@@ -35,14 +35,6 @@ export interface SignUpForm {
   termsAndConditions: boolean;
 }
 
-export interface IProfessional extends IUser {
-  skills: Array<string>;
-  languages: Array<string>;
-  role: Role.PROFESSIONAL;
-}
-export interface IRecruiter extends IUser {
-  role: Role.RECRUITER;
-}
 const signUpForm: SignUpForm = {
   email: '',
   password: '',
