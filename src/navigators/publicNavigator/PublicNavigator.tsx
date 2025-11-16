@@ -1,13 +1,16 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import IntroScreen from '../../screens/IntroScreen';
+
 import PUBLIC_NAVIGATOR_ROUTES from './PUBLIC_NAVIGATOR_ROUTES';
-import SignUpScreen from '../../screens/SignUpScreen';
+
 import { useTheme } from 'react-native-paper';
-import SignInScreen from 'src/screens/SignInScreen';
+
 import AppHeader from '@ui/AppHeader';
 import { BlurView } from 'expo-blur';
+import IntroScreen from 'src/screens/public/IntroScreen';
+import SignUpScreen from 'src/screens/public/SignUpScreen';
+import SignInScreen from 'src/screens/public/SignInScreen';
 
 export type publicNavigatorRootStack = {
   [PUBLIC_NAVIGATOR_ROUTES.INTRO]: {};
@@ -28,7 +31,11 @@ const PublicNavigator = () => {
         name={PUBLIC_NAVIGATOR_ROUTES.INTRO}
         component={IntroScreen}
         options={{
-          header: () => <AppHeader></AppHeader>,
+          header: () => (
+            <AppHeader>
+              <Text></Text>
+            </AppHeader>
+          ),
           headerShown: true,
         }}
       ></Stack.Screen>

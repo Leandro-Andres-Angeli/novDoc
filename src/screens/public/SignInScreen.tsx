@@ -10,10 +10,10 @@ import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicN
 import styled from 'styled-components/native';
 
 import AppButton from '@ui/AppButton';
-import AppButtonText from '../ui/AppButtonText';
+
 import AppFooter from '@ui/AppFooter';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import AppForm from '../components/form/AppForm';
+
 import SignIn from 'src/components/SignIn';
 
 const Container = styled.View`
@@ -72,29 +72,6 @@ const Subtitle = styled.Text<{ isLandscape: boolean }>`
   text-align: center;
   line-height: ${(props) => (props.isLandscape ? '20px' : '24px')};
   padding-horizontal: 16px;
-`;
-
-const ButtonContainer = styled.View<{ isLandscape: boolean }>`
-  width: ${(props) => (props.isLandscape ? 'auto' : '100%')};
-  max-width: 448px;
-  align-self: center;
-  ${(props) => props.isLandscape && 'margin-right: 16px;'}
-`;
-
-const GetStartedButton = styled.TouchableOpacity<{ isLandscape: boolean }>`
-  background-color: #38b2ac;
-  border-radius: 12px;
-  height: 48px;
-  justify-content: center;
-  align-items: center;
-  padding-horizontal: 20px;
-  ${(props) => props.isLandscape && 'min-width: 200px;'}
-`;
-
-const ButtonText = styled.Text`
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
 `;
 
 const TextWrapper = styled.View<{ isLandscape: boolean }>`

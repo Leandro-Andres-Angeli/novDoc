@@ -1,8 +1,9 @@
-import { View, Text } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import React, { PropsWithChildren } from 'react';
 
 import styled from 'styled-components/native';
 import { useTheme } from 'react-native-paper';
+
 const Header = styled.View`
   height: 56px;
   flex-direction: row;
@@ -26,14 +27,23 @@ const LogoIcon = styled.Text<{ color?: string }>`
   font-size: 28px;
   color: ${(props) => props.color ?? '#2d3748'};
 `;
-const AppHeader = () => {
+interface AppHeaderProps extends PropsWithChildren {
+  logo?: boolean;
+  styles?: StyleProp<ViewStyle>;
+}
+const AppHeader = ({ logo = true, children, styles }: AppHeaderProps) => {
   const theme = useTheme();
 
   return (
-    <Header>
+    <Header style={{ ...StyleSheet.flatten(styles) }}>
       <HeaderContent>
-        <LogoIcon color={theme.colors.onSurface}>{'</>'}</LogoIcon>
-        <LogoText style={{ zIndex: 9 }}>MatchApp</LogoText>
+        {logo && (
+          <>
+            <LogoIcon color={theme.colors.onSurface}>{'</>'}</LogoIcon>
+            <LogoText style={{ zIndex: 9 }}>MatchApp</LogoText>
+          </>
+        )}
+        {children && children}
       </HeaderContent>
     </Header>
   );

@@ -15,6 +15,7 @@ export interface IProfessional extends IUser {
 }
 export interface IRecruiter extends IUser {
   role: Role.RECRUITER;
+  jobs: Array<string>;
 }
 export type UserTypes = IProfessional | IRecruiter;
 //TODO type user

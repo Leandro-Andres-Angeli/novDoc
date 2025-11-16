@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, FlexStyle, AppState } from 'react-native';
 
-import { AuthContext } from '../appContext/AuthContext';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { db } from '../../firebase/config';
-
-import WelcomeComponent from '../components/Welcome';
+import { AuthContext } from 'src/appContext/AuthContext';
+import { db } from 'firebase/config';
+import WelcomeComponent from 'src/components/Welcome';
 
 const IntroScreen = () => {
   const { login, authState, logout } = useContext(AuthContext);
