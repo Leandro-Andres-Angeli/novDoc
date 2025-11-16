@@ -9,5 +9,5 @@ export const isProfessional = (
 export const isRecruiter = (
   user: Record<string, any>
 ): user is IProfessional => {
-  return user.role === Role.RECRUITER;
+  return user.role === Role.PROFESSIONAL;
 };

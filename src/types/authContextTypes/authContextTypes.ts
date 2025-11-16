@@ -16,7 +16,7 @@ export interface IProfessional extends IUser {
 export interface IRecruiter extends IUser {
   role: Role.RECRUITER;
 }
-export type UserTypes = IProfessional | IProfessional;
+export type UserTypes = IProfessional | IRecruiter;
 //TODO type user
 export type IAuthState =
   | { logged: false; user: null }

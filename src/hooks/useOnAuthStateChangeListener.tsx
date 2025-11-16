@@ -21,6 +21,7 @@ import {
 } from 'src/types/authContextTypes/authContextTypes';
 import { Role } from 'src/types/authContextTypes/userRole';
 import { IProfessional } from '../types/authContextTypes/authContextTypes';
+import { isProfessional, isRecruiter } from 'src/utils/checkUserType';
 
 type RoleToUserMap = {
   [Role.PROFESSIONAL]: IProfessional;
@@ -28,10 +29,8 @@ type RoleToUserMap = {
 };
 type UserTypeFor<R extends Role> = RoleToUserMap[R];
 const userConverter = {
-  toFirestore: <R extends Role>(user: IUser & { role: R }) => {
-    type UserType = UserTypeFor<R>;
-    const userByRole: UserType = { ...user } as unknown as UserType;
-    return userByRole;
+  toFirestore: (user: IUser & Record<string, any>) => {
+    return user;
   },
   fromFirestore: <R extends Role>(
     snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>,
@@ -76,7 +75,12 @@ const useOnAuthStateChangeListener = () => {
             console.log(doc.data());
             if (doc.exists()) {
               const userData = doc.data();
-              login(userData);
+              if (isRecruiter(userData)) {
+                login(userData);
+              }
+              if (isProfessional(userData)) {
+                login(userData);
+              } else throw Error('Not valid role found ');
             }
           });
         } else {
