@@ -9,6 +9,7 @@ export interface authContextInterface {
   authState: IAuthState;
   login: (user: UserTypes) => void;
   logout: () => void;
+  loading: boolean;
 }
 export const AuthContext = createContext<authContextInterface>(
   {} as authContextInterface
@@ -16,9 +17,9 @@ export const AuthContext = createContext<authContextInterface>(
 
 interface AuthContextProviderProps extends PropsWithChildren {}
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const { authState, login, logout } = useAuthStateReducer();
+  const { authState, login, logout, loading } = useAuthStateReducer();
   return (
-    <AuthContext.Provider value={{ authState, login, logout }}>
+    <AuthContext.Provider value={{ authState, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

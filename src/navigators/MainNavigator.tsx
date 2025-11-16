@@ -15,7 +15,7 @@ function MainNavigator() {
   } = useContext(AuthContext);
 
   useOnAuthStateChangeListener();
-  // return <Loading></Loading>;
+
   let content = <PrivateNavigator></PrivateNavigator>;
   if (!logged) {
     content = <PublicNavigator></PublicNavigator>;

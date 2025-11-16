@@ -6,6 +6,7 @@ import { isProfessional } from 'src/utils/checkUserType';
 const PrivateNavigator = () => {
   const {
     authState: { user },
+    loading,
   } = useContext(AuthContext);
 
   if (!user) {
