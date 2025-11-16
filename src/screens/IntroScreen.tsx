@@ -12,7 +12,7 @@ const IntroScreen = () => {
   const coll = collection(db, 'test');
   const q = query(coll);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       if (querySnapshot.empty) {
         console.log('is empty');
@@ -25,7 +25,7 @@ const IntroScreen = () => {
     return () => {
       return unsubscribe();
     };
-  }, []);
+  }, []); */
 
   let { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
   const handleScreenOrientation = (

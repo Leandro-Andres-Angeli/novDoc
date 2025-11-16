@@ -8,16 +8,10 @@ import {
   Text, // Texto simple
 
   // Props comunes de los inputs de texto
-  KeyboardTypeOptions, // Opciones de tipo de teclado (email, numeric, etc.)
+  // Opciones de tipo de teclado (email, numeric, etc.)
   StyleSheet, // Creación de estilos en React Native
 } from 'react-native';
-import React, {
-  isValidElement,
-  JSX,
-  PropsWithChildren,
-  ReactElement,
-  useState,
-} from 'react';
+import React, { JSX, useState } from 'react';
 import { Icon, TextInput, TextInputProps, useTheme } from 'react-native-paper';
 import { Children } from 'react';
 
@@ -66,7 +60,7 @@ export function AppFormInput<T>(props: FormInputProps<T>): JSX.Element {
       /** Texto de ayuda cuando el campo está vacío; también opcional. */
       placeholder={placeholder ?? ''}
       /** Estilo del contorno del input. */
-      mode='outlined'
+      mode='flat'
       /** Evento que se dispara al enfocar el input. */
       onFocus={onFocus}
       /** Actualiza el valor del input según el texto ingresado. */

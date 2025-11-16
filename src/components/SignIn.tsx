@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
-import { Card } from 'react-native-paper';
+import { Dimensions, View } from 'react-native';
+import { Card, Text, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -14,6 +14,12 @@ import AppButton from '@ui/AppButton';
 import AppButtonText from '@ui/AppButtonText';
 import AppTitle from '../ui/AppTitle';
 import AppSubtitle from '@ui/AppSubtitle';
+import AppForm from './form/AppForm';
+import * as Yup from 'yup';
+import SignInScreen from '../screens/SignInScreen';
+import utilityStyles from 'src/styles/utilityStyles';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { AppFormInput, AppFormInputSecureTextEntry } from '../ui/AppFormInputs';
 
 const Container = styled.View`
   flex: 1;
@@ -73,46 +79,82 @@ const TextWrapper = styled.View<{ isLandscape: boolean }>`
 const SignIn = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
-  const { width } = Dimensions.get('screen');
+  interface ISignInForm {
+    email: string;
+    password: string;
+  }
+  const signInForm: ISignInForm = {
+    email: '',
+    password: '',
+  };
+  const formValidationSchema = Yup.object({
+    password: Yup.string().required('campo obligatorio'),
+    email: Yup.string()
+      .email('ingresar un email válido')
+      .required('campo obligatorio'),
+  });
+  const theme = useTheme();
+  async function handleSubmit(values: ISignInForm) {}
+
   return (
-    <Container>
-      <AppHeader></AppHeader>
-
-      <MainContent isLandscape={false}>
-        <ContentWrapper isLandscape={false}>
-          <CardContainer isLandscape={false} screenWidth={width}>
-            <Card>
-              <CardImage
-                source={{
-                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJoszwyNyJpJQB08xFpe59uUkizWMCFsD2T_hqkMYcl0chToThcW2zTTKoicbQkexbxASu75AZ2h9srg8xX0JGdvqIBCVn9a4MV4Rx3kw3GYiZbCM3_SseypV0nssOUg4Hi0QtcjNax7CO66hNaAJQGRUy1I2mm_GBMY4vos6q0t-5Zu_dtEJmvg6y2IigZpZyw6Bbv0AkFC60ACpYuq4RHgW35jYR_thyt4Ey1CJWtQcgvIl9j8zdsA0WzapZhJz1JZUjUnOXS1_h',
-                }}
-                resizeMode='cover'
-              />
-            </Card>
-          </CardContainer>
-        </ContentWrapper>
-
-        <TextWrapper isLandscape={false}>
-          <AppTitle>Código y Oportunidades se Conectan.</AppTitle>
-          <AppSubtitle>
-            Desliza a la derecha por tu próximo paso profesional. Conecta con
-            los mejores reclutadores y desarrolladores fácilmente.
-          </AppSubtitle>
-        </TextWrapper>
-      </MainContent>
-
-      <Footer isLandscape={false}>
-        <ButtonContainer isLandscape={false}>
-          <AppButton
-            onPress={() =>
-              navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_UP, {})
-            }
+    <AppForm<ISignInForm>
+      validationSchema={formValidationSchema}
+      handleSubmit={handleSubmit}
+      formFields={signInForm}
+    >
+      {(props) => {
+        const { handleTextInputBlur, values, setFieldTouched, handleChange } =
+          props;
+        return (
+          <View
+            style={[
+              { backgroundColor: theme.colors.background },
+              utilityStyles.contentContainer,
+            ]}
           >
-            <AppButtonText> Ingresar</AppButtonText>
-          </AppButton>
-        </ButtonContainer>
-      </Footer>
-    </Container>
+            <View style={utilityStyles.contentContainer}>
+              <AppFormInput
+                formKey={'email'}
+                placeholder='Escribí tu email'
+                key={'email'}
+                value={values.email}
+                label='Nombre'
+                onBlur={() => handleTextInputBlur('email')}
+                onFocus={() => setFieldTouched('email', true)}
+                onChangeText={handleChange('email')}
+                keyboardType='ascii-capable'
+              ></AppFormInput>
+            </View>
+            <View style={utilityStyles.contentContainer}>
+              <AppFormInputSecureTextEntry
+                formKey={'password'}
+                placeholder='Escribí tu contraseña'
+                key={'password'}
+                value={values.password}
+                label='Contraseña'
+                onBlur={() => handleTextInputBlur('password')}
+                onFocus={() => setFieldTouched('password', true)}
+                onChangeText={handleChange('password')}
+                keyboardType='ascii-capable'
+              ></AppFormInputSecureTextEntry>
+            </View>
+            <KeyboardAwareScrollView>
+              <View style={utilityStyles.contentContainer}>
+                <ButtonContainer isLandscape={false}>
+                  <AppButton
+                    onPress={() =>
+                      navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_UP, {})
+                    }
+                  >
+                    <AppButtonText>Ingresar</AppButtonText>
+                  </AppButton>
+                </ButtonContainer>
+              </View>
+            </KeyboardAwareScrollView>
+          </View>
+        );
+      }}
+    </AppForm>
   );
 };
 

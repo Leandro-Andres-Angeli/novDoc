@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import React from 'react';
 
 import styled from 'styled-components/native';
+import { useTheme } from 'react-native-paper';
 const Header = styled.View`
   height: 56px;
   flex-direction: row;
@@ -26,6 +27,8 @@ const LogoIcon = styled.Text`
   color: #2d3748;
 `;
 const AppHeader = () => {
+  const theme = useTheme();
+  console.log(theme.colors.background);
   return (
     <Header>
       <HeaderContent>

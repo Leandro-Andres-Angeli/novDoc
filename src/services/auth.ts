@@ -3,15 +3,19 @@ import { IUser } from '../types/authContextTypes/authContextTypes';
 import { ISignUpUser } from 'src/components/SignUp';
 import { addDoc, collection } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-interface FirebaseResponse {
-  success: boolean;
-  message: string;
-}
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import {
+  FirebaseErrorResponse,
+  FirebaseSignUpResponse,
+} from 'src/types/firebaseResponse/firebaseResponses';
+
 const userCollection = collection(db, 'users');
 export const signUpNewUser = async (
   user: ISignUpUser
-): Promise<FirebaseResponse> => {
+): Promise<FirebaseSignUpResponse> => {
   try {
     const userSignUp = await createUserWithEmailAndPassword(
       auth,
@@ -19,8 +23,7 @@ export const signUpNewUser = async (
       user.password
     );
     const { password, ...userWithoutPassword } = user;
-    console.log('HERE');
-    console.log('HERE user', user);
+
     if (userSignUp) {
       await addDoc(userCollection, userWithoutPassword);
       return { success: true, message: 'Perfil creado' };
@@ -35,5 +38,29 @@ export const signUpNewUser = async (
       message = 'Email ya registrado';
     }
     return { success: false, message: message };
+  }
+};
+
+export const signInUser = async (
+  email: string,
+  password: string
+): Promise<void | FirebaseErrorResponse> => {
+  try {
+    const signedUser = await signInWithEmailAndPassword(auth, email, password);
+    if (signedUser) {
+      console.log('SUCCESS', signedUser);
+    } else {
+      console.log('not found ');
+      return {
+        message: 'datos de login incorrectos',
+        success: false,
+      };
+    }
+  } catch (error) {
+    console.log('in catch', error);
+    return {
+      message: 'error al intentar hacer login',
+      success: false,
+    };
   }
 };

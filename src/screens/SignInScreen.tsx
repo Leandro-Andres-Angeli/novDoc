@@ -8,7 +8,13 @@ import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIG
 import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
 
 import styled from 'styled-components/native';
-import AppHeader from '../ui/AppHeader';
+
+import AppButton from '@ui/AppButton';
+import AppButtonText from '../ui/AppButtonText';
+import AppFooter from '@ui/AppFooter';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import AppForm from '../components/form/AppForm';
+import SignIn from 'src/components/SignIn';
 
 const Container = styled.View`
   flex: 1;
@@ -68,16 +74,6 @@ const Subtitle = styled.Text<{ isLandscape: boolean }>`
   padding-horizontal: 16px;
 `;
 
-const Footer = styled.View<{ isLandscape: boolean }>`
-  padding-horizontal: 16px;
-  padding-bottom: ${(props) => (props.isLandscape ? '16px' : '32px')};
-  padding-top: 16px;
-  gap: 8px;
-  ${(props) =>
-    props.isLandscape &&
-    'flex-direction: row; justify-content: center; align-items: center;'}
-`;
-
 const ButtonContainer = styled.View<{ isLandscape: boolean }>`
   width: ${(props) => (props.isLandscape ? 'auto' : '100%')};
   max-width: 448px;
@@ -112,8 +108,6 @@ const SignInScreen = () => {
   const { width } = Dimensions.get('screen');
   return (
     <Container>
-      <AppHeader></AppHeader>
-
       <MainContent isLandscape={false}>
         <ContentWrapper isLandscape={false}>
           <CardContainer isLandscape={false} screenWidth={width}>
@@ -137,19 +131,9 @@ const SignInScreen = () => {
         </TextWrapper>
       </MainContent>
 
-      <Footer isLandscape={false}>
-        <ButtonContainer isLandscape={false}>
-          <GetStartedButton activeOpacity={0.9} isLandscape={false}>
-            <ButtonText
-              onPress={() =>
-                navigation.navigate(PUBLIC_NAVIGATOR_ROUTES.SIGN_UP, {})
-              }
-            >
-              Ingresar
-            </ButtonText>
-          </GetStartedButton>
-        </ButtonContainer>
-      </Footer>
+      <AppFooter>
+        <SignIn></SignIn>
+      </AppFooter>
     </Container>
   );
 };

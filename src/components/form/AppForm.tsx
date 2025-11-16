@@ -29,9 +29,6 @@ function AppForm<T extends FormikValues>({
   });
 
   const handleInputValue = <K extends keyof T>(key: K, value: T[K]) => {
-    console.log('setting value');
-    console.log('to str', key.toString());
-    console.log('value', value);
     formikProps.setFieldValue(key.toString(), value);
   };
   const handleTextInputBlur = (key: keyof T) => {

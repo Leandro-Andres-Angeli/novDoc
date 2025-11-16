@@ -6,6 +6,8 @@ import PUBLIC_NAVIGATOR_ROUTES from './PUBLIC_NAVIGATOR_ROUTES';
 import SignUpScreen from '../../screens/SignUpScreen';
 import { useTheme } from 'react-native-paper';
 import SignInScreen from 'src/screens/SignInScreen';
+import AppHeader from '@ui/AppHeader';
+import { BlurView } from 'expo-blur';
 
 export type publicNavigatorRootStack = {
   [PUBLIC_NAVIGATOR_ROUTES.INTRO]: {};
@@ -25,6 +27,10 @@ const PublicNavigator = () => {
       <Stack.Screen
         name={PUBLIC_NAVIGATOR_ROUTES.INTRO}
         component={IntroScreen}
+        options={{
+          header: () => <AppHeader></AppHeader>,
+          headerShown: true,
+        }}
       ></Stack.Screen>
       <Stack.Screen
         options={{
@@ -35,6 +41,16 @@ const PublicNavigator = () => {
         component={SignUpScreen}
       ></Stack.Screen>
       <Stack.Screen
+        options={{
+          header: () => (
+            <BlurView intensity={30}>
+              <AppHeader></AppHeader>
+            </BlurView>
+          ),
+          headerShown: true,
+          headerTransparent: true,
+          headerBlurEffect: 'regular',
+        }}
         name={PUBLIC_NAVIGATOR_ROUTES.SIGN_IN}
         component={SignInScreen}
       ></Stack.Screen>

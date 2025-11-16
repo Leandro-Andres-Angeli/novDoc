@@ -16,6 +16,7 @@
     "@shopify/flash-list": "2.0.2",
     "deepmerge": "^4.3.1",
     "expo": "~54.0.23",
+    "expo-blur": "~15.0.7",
     "expo-screen-orientation": "~9.0.7",
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",

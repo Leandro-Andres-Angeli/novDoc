@@ -9,12 +9,9 @@ import {
   Checkbox,
   ActivityIndicator,
 } from 'react-native-paper';
-import {
-  KeyboardAvoidingView,
-  KeyboardAwareScrollView,
-} from 'react-native-keyboard-controller';
-import { Role, rolesList } from 'src/types/authContextTypes/userRole';
-import { useFormik } from 'formik';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { Role } from 'src/types/authContextTypes/userRole';
+
 import { AppFormInputWithHelper } from '../ui/AppFormInputs';
 import RoleSelector from './RoleSelector';
 import { IUser } from 'src/types/authContextTypes/authContextTypes';
@@ -24,11 +21,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { publicNavigatorRootStack } from '../navigators/publicNavigator/PublicNavigator';
 import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
-import { useToast } from 'react-native-paper-toast';
+
 import utilityStyles from 'src/styles/utilityStyles';
 import AppForm from './form/AppForm';
-import AppButton from '@ui/AppButton';
-import AppButtonText from '@ui/AppButtonText';
 
 export interface SignUpForm {
   email: string;
@@ -260,7 +255,7 @@ const SignUp = () => {
                     );
                   }}
                 ></Checkbox>
-                <Text> {JSON.stringify(values.termsAndConditions)}</Text>
+
                 <Text variant='labelSmall'>
                   Acepto los términos y condiciones.
                 </Text>

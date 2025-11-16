@@ -117,8 +117,6 @@ const WelcomeComponent = ({
     useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   return (
     <Container>
-      <AppHeader></AppHeader>
-
       <MainContent isLandscape={isLandscape}>
         <ContentWrapper isLandscape={isLandscape}>
           <CardContainer isLandscape={isLandscape} screenWidth={width}>
