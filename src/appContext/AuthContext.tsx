@@ -1,10 +1,14 @@
 import { createContext, PropsWithChildren } from 'react';
-import { IAuthState, IUser } from '../types/authContextTypes/authContextTypes';
+import {
+  IAuthState,
+  IUser,
+  UserTypes,
+} from '../types/authContextTypes/authContextTypes';
 import useAuthStateReducer from '../hooks/useAuthStateReducer';
 
 export interface authContextInterface {
   authState: IAuthState;
-  login: (user: IUser) => void;
+  login: (user: UserTypes) => void;
   logout: () => void;
 }
 export const AuthContext = createContext<authContextInterface>(
