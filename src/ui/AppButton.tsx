@@ -2,7 +2,7 @@ import { TextProps, TouchableOpacityProps } from 'react-native';
 import React, { PropsWithChildren } from 'react';
 
 import styled from 'styled-components/native';
-import { useTheme } from 'react-native-paper';
+import { ButtonProps, useTheme } from 'react-native-paper';
 const ButtonStyled = styled.TouchableOpacity<{
   isLandscape: boolean;
   bgColor: string;
