@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 import {
   FirebaseErrorResponse,
+  FirebaseResponse,
   FirebaseSignUpResponse,
 } from 'src/types/firebaseResponse/firebaseResponses';
 
@@ -44,20 +45,18 @@ export const signUpNewUser = async (
 export const signInUser = async (
   email: string,
   password: string
-): Promise<void | FirebaseErrorResponse> => {
+): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
     const signedUser = await signInWithEmailAndPassword(auth, email, password);
     if (signedUser) {
-      console.log('SUCCESS', signedUser);
-    } else {
-      console.log('not found ');
       return {
-        message: 'datos de login incorrectos',
-        success: false,
+        success: true,
+        message: 'login exitoso',
       };
+    } else {
+      throw Error('login error');
     }
   } catch (error) {
-    console.log('in catch', error);
     return {
       message: 'error al intentar hacer login',
       success: false,

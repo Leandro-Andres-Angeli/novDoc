@@ -22,17 +22,17 @@ const HeaderContent = styled.View`
   gap: 8px;
 `;
 
-const LogoIcon = styled.Text`
+const LogoIcon = styled.Text<{ color?: string }>`
   font-size: 28px;
-  color: #2d3748;
+  color: ${(props) => props.color ?? '#2d3748'};
 `;
 const AppHeader = () => {
   const theme = useTheme();
-  console.log(theme.colors.background);
+
   return (
     <Header>
       <HeaderContent>
-        <LogoIcon>{'</>'}</LogoIcon>
+        <LogoIcon color={theme.colors.onSurface}>{'</>'}</LogoIcon>
         <LogoText style={{ zIndex: 9 }}>MatchApp</LogoText>
       </HeaderContent>
     </Header>
