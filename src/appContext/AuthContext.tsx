@@ -1,7 +1,6 @@
 import { createContext, PropsWithChildren } from 'react';
 import {
   IAuthState,
-  IUser,
   UserTypes,
 } from '../types/authContextTypes/authContextTypes';
 import useAuthStateReducer from '../hooks/useAuthStateReducer';
