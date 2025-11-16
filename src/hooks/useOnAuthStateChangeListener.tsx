@@ -5,18 +5,61 @@ import { auth, db } from 'firebase/config';
 import { AuthContext } from 'src/appContext/AuthContext';
 import {
   collection,
+  DocumentData,
   getDoc,
   getDocs,
   limit,
   query,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
   where,
 } from 'firebase/firestore';
-import { IUser } from 'src/types/authContextTypes/authContextTypes';
+import {
+  IRecruiter,
+  IUser,
+  UserTypes,
+} from 'src/types/authContextTypes/authContextTypes';
 import { Role } from 'src/types/authContextTypes/userRole';
+import { IProfessional } from '../types/authContextTypes/authContextTypes';
 
+type RoleToUserMap = {
+  [Role.PROFESSIONAL]: IProfessional;
+  [Role.RECRUITER]: IRecruiter;
+};
+type UserTypeFor<R extends Role> = RoleToUserMap[R];
+const userConverter = {
+  toFirestore: <R extends Role>(user: IUser & { role: R }) => {
+    type UserType = UserTypeFor<R>;
+    const userByRole: UserType = { ...user } as unknown as UserType;
+    return userByRole;
+  },
+  fromFirestore: <R extends Role>(
+    snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>,
+    options: SnapshotOptions | undefined
+  ): UserTypeFor<R> => {
+    const data = snapshot.data(options) as IUser;
+    const baseUser: IUser = {
+      ...data,
+    };
+
+    if (baseUser.role === Role.PROFESSIONAL) {
+      return {
+        ...baseUser,
+      } as UserTypeFor<R>;
+    }
+
+    if (baseUser.role === Role.RECRUITER) {
+      return {
+        ...baseUser,
+      } as UserTypeFor<R>;
+    }
+
+    throw new Error(`Unknown role: ${baseUser.role}`);
+  },
+};
 const useOnAuthStateChangeListener = () => {
   const { login, logout } = useContext(AuthContext);
-  const usersCollection = collection(db, 'users');
+  const usersCollection = collection(db, 'users').withConverter(userConverter);
   useEffect(() => {
     const onAuthStateSubscription = onAuthStateChanged(
       auth,
@@ -32,7 +75,7 @@ const useOnAuthStateChangeListener = () => {
           querySnapshot.forEach((doc) => {
             console.log(doc.data());
             if (doc.exists()) {
-              const userData = doc.data() as IUser;
+              const userData = doc.data();
               login(userData);
             }
           });
