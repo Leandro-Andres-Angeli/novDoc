@@ -1,4 +1,4 @@
-export enum Senority {
+export enum Seniority {
   JUNIOR = 'junior',
   MID_LEVEL = 'mid-level',
   SENIOR = 'senior',
@@ -30,7 +30,7 @@ export interface IJobOfferGeneral {
   title: string;
   description: string;
   skills: Array<string>;
-  senority: Senority;
+  seniority: Seniority;
   jobLocation: JobLocation;
   shiftTime: ShiftTime;
   salary: number;

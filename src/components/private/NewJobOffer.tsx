@@ -7,7 +7,7 @@ import {
   IJobOfferOnSite,
   IJobOfferRemote,
   JobLocation,
-  Senority,
+  Seniority,
   ShiftTime,
 } from 'src/types/dbTypes/IJobOffer';
 import * as Yup from 'yup';
@@ -77,44 +77,27 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   }
   return (
     (provinces.length > 0 && !loading && (
-      <View style={[]}>
-        <View
-          style={[
-            utilityStyles.flex,
-            utilityStyles.row,
-            utilityStyles.alignCenter,
-            utilityStyles.inputsContainer,
-            { gap: 10, marginVertical: 5 },
-          ]}
-        >
-          <Text>Usar mi ubicación</Text>
-          <IconButton icon={'camera'} mode='contained'></IconButton>
-        </View>
-        <View>
-          {/* <Text> {JSON.stringify(provinces, null, 3)}</Text> */}
-          <AppReactNativePaperSelect
-            multiEnable={false}
-            value={selectedProvince.value}
-            selectedArrayList={[selectedProvince]}
-            theme={theme}
-            dialogStyle={{ backgroundColor: theme.colors.background }}
-            hideSearchBox={true}
-            onSelection={(val) =>
-              setSelectedProvince({
-                _id: val.selectedList.at(0)?._id ?? '',
-                value: val.selectedList.at(0)?.value ?? '',
-              })
-            }
-            arrayList={provinces.map((el) => ({
-              ...el,
-              _id: el.id,
-              label: el.iso_nombre,
-              value: el.iso_nombre,
-            }))}
-            label='Provincias'
-          ></AppReactNativePaperSelect>
-        </View>
-      </View>
+      <AppReactNativePaperSelect
+        multiEnable={false}
+        value={selectedProvince.value}
+        selectedArrayList={[selectedProvince]}
+        theme={theme}
+        dialogStyle={{ backgroundColor: theme.colors.background }}
+        hideSearchBox={true}
+        onSelection={(val) =>
+          setSelectedProvince({
+            _id: val.selectedList.at(0)?._id ?? '',
+            value: val.selectedList.at(0)?.value ?? '',
+          })
+        }
+        arrayList={provinces.map((el) => ({
+          ...el,
+          _id: el.id,
+          label: el.iso_nombre,
+          value: el.iso_nombre,
+        }))}
+        label='Provincias'
+      ></AppReactNativePaperSelect>
     )) || <></>
   );
 };
@@ -126,7 +109,7 @@ const NewJobOffer = () => {
   //     jobLocation: JobLocation.REMOTE,
 
   //     // salary: 0,
-  //     // senority: Senority.JUNIOR,
+  //     // seniority: seniority.JUNIOR,
   //     // shiftTime: ShiftTime.PART_TIME,
   //     // skills: [],
   //   };
@@ -138,11 +121,10 @@ const NewJobOffer = () => {
       title: '',
       description: '',
       jobLocation: JobLocation.REMOTE,
-      senority: Senority.JUNIOR,
+      seniority: Seniority.JUNIOR,
       salary: 0,
       shiftTime: ShiftTime.FULL_TIME,
       skills: [],
-      ...prevData,
     };
     switch (jobLocation) {
       case JobLocation.ON_SITE:
@@ -174,6 +156,54 @@ const NewJobOffer = () => {
         return JobOfferRemote;
     }
   };
+
+  const generateJobOfferValidationSchema = (jobLocation: JobLocation) => {
+    const baseValidationSchema = Yup.object({
+      title: Yup.string().required('campo obligatorio'),
+      description: Yup.string().required('campo obligatorio'),
+      jobLocation: Yup.string<JobLocation>()
+        .oneOf([JobLocation.REMOTE])
+        .required(),
+
+      salary: Yup.number()
+        .min(200, 'No puede ser menor a 200$')
+        .required('campo obligatorio'),
+      seniority: Yup.string<Seniority>().required('campo obligatorio'),
+      shiftTime: Yup.string<ShiftTime>().required('campo obligatorio'),
+      skills: Yup.array()
+        .of(Yup.string().defined())
+        .required()
+        .min(1, 'elegir al menos una skill'),
+    });
+
+    switch (jobLocation) {
+      case JobLocation.ON_SITE:
+        return baseValidationSchema.shape({
+          jobLocation: Yup.string<JobLocation>()
+            .oneOf([JobLocation.ON_SITE])
+            .required(),
+          city: Yup.string().required('campo obligatorio'),
+          locality: Yup.string().required('campo obligatorio'),
+          province: Yup.string().required('campo obligatorio'),
+        });
+
+      case JobLocation.HYBRID:
+        return baseValidationSchema.shape({
+          jobLocation: Yup.string<JobLocation>()
+            .oneOf([JobLocation.HYBRID])
+            .required(),
+          city: Yup.string().required('campo obligatorio'),
+          locality: Yup.string().required('campo obligatorio'),
+          province: Yup.string().required('campo obligatorio'),
+        });
+
+      case JobLocation.REMOTE:
+        return baseValidationSchema;
+      default:
+        return baseValidationSchema;
+    }
+  };
+
   const jobOfferHasLocation = (
     jobOfferForm: IJobOfferOnSite | IJobOfferHybrid | IJobOfferRemote
   ): jobOfferForm is IJobOfferHybrid | IJobOfferOnSite => {
@@ -183,35 +213,21 @@ const NewJobOffer = () => {
     );
   };
 
-  const [jobOfferForm, setJobOfferForm] = useState(
+  const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
     generateJobOfferForm(JobLocation.REMOTE)
   );
+  const [jobOfferValidationSchema, setJobOfferValidationSchema] = useState(
+    generateJobOfferValidationSchema(JobLocation.REMOTE)
+  );
+
   useEffect(() => {
     console.log('changed job location');
-    //  generateJobOfferForm(jobOfferForm.jobLocation, {
-    //   jobOfferForm,
-    // });
-    // setJobOfferForm(
-    //   generateJobOfferForm(jobOfferForm.jobLocation, {
-    //     jobOfferForm,
-    //   })
-    // );
-  }, [jobOfferForm.jobLocation]);
-  const formValidationSchema = Yup.object({
-    title: Yup.string().required('campo obligatorio'),
-    description: Yup.string().required('campo obligatorio'),
-    jobLocation: Yup.string<JobLocation>().required(),
 
-    // salary: Yup.number()
-    //   .min(200, 'No puede ser menor a 200$')
-    //   .required('campo obligatorio'),
-    // seniority: Yup.string<Senority>().required('campo obligatorio'),
-    // shiftTime: Yup.string<ShiftTime>().required('campo obligatorio'),
-    // skills: Yup.array()
-    //   .of(Yup.string())
-    //   .required()
-    //   .min(1, 'elegir al menos una skill'),
-  });
+    setJobOfferValidationSchema(
+      generateJobOfferValidationSchema(jobOfferForm.jobLocation)
+    );
+  }, [jobOfferForm.jobLocation]);
+
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(values: IJobOffer) {
@@ -227,7 +243,7 @@ const NewJobOffer = () => {
 
   return (
     <>
-      <Text>{JSON.stringify(jobOfferForm, null)}</Text>
+      {/* <Text>{JSON.stringify(jobOfferForm, null)}</Text> */}
       <View
         style={{
           ...utilityStyles.contentContainer,
@@ -235,10 +251,10 @@ const NewJobOffer = () => {
           marginTop: 20,
         }}
       >
-        <AppForm<Pick<IJobOffer, 'title' | 'description' | 'jobLocation'>>
+        <AppForm<IJobOffer>
           handleSubmit={handleSubmit}
           loadingPostIndicator={loading}
-          validationSchema={formValidationSchema}
+          validationSchema={jobOfferValidationSchema}
           formFields={jobOfferForm}
         >
           {({
@@ -254,14 +270,21 @@ const NewJobOffer = () => {
             handleBlur,
             handleSubmit,
             loadingPostIndicator,
+            setFieldValue,
+
+            setValues,
           }) => {
             return (
               <>
-                <Text>{JSON.stringify(values, null, 2)}</Text>
+                {/* <Text>{JSON.stringify(values, null, 2)}</Text> */}
+
                 <View
                   style={[
                     utilityStyles.container,
-                    { backgroundColor: theme.colors.background },
+                    {
+                      backgroundColor: theme.colors.background,
+                      overflow: 'scroll',
+                    },
                   ]}
                 >
                   <KeyboardAwareScrollView>
@@ -324,46 +347,18 @@ const NewJobOffer = () => {
                               },
                             ]}
                             handleChange={(val: JobLocation) => {
-                              handleInputValue('jobLocation', val);
-                              setJobOfferForm(
-                                generateJobOfferForm(jobOfferForm.jobLocation)
-                              );
+                              setValues(generateJobOfferForm(val), true);
                             }}
                           ></AppSegmentedButtons>
-                          {/* <AppFormInputWithHelper<IJobOffer>
-                      formKey='description'
-                      value={values.description}
-                      placeholder='Descripción de la oferta '
-                      key={'description'}
-                      label='Descripción'
-                      multiline={true}
-                      numberOfLines={4}
-                      style={{ minHeight: 100 }}
-                      onBlur={() => handleTextInputBlur('description')}
-                      onFocus={() => setFieldTouched('description', true)}
-                      onChangeText={handleChange('description')}
-                      keyboardType='ascii-capable'
-                      errorCondition={
-                        Boolean(touched.description && errors.description) ||
-                        false
-                      }
-                      errorMessage={errors.title ?? ''}
-                    ></AppFormInputWithHelper> */}
-                          {
-                            <Text>
-                              {' '}
-                              has location{' '}
-                              {JSON.stringify(
-                                jobOfferHasLocation(jobOfferForm)
-                              )}
-                            </Text>
-                          }
-                          {jobOfferHasLocation(jobOfferForm) ? (
-                            <LocationPicker
-                              handleSelectProvince={(val) => {
-                                // handleInputValue('province', val)
-                              }}
-                            ></LocationPicker>
+
+                          {jobOfferHasLocation(values) ? (
+                            <View style={{ ...utilityStyles.inputsContainer }}>
+                              <LocationPicker
+                                handleSelectProvince={(val) => {
+                                  setFieldValue('province', val);
+                                }}
+                              ></LocationPicker>
+                            </View>
                           ) : (
                             <></>
                           )}

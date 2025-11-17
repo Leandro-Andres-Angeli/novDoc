@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SegmentedButtons } from 'react-native-paper';
 
@@ -14,12 +14,15 @@ export function AppSegmentedButtons({
   handleChange,
 }: AppSegmentButtonProps<string>) {
   const [value, setValue] = useState(defaultValue);
+  useEffect(() => {
+    handleChange(value);
+  }, [value]);
+
   return (
     <View style={{ paddingHorizontal: 16, paddingVertical: 12 }}>
       <SegmentedButtons
         value={value}
         onValueChange={(val) => {
-          handleChange(val);
           setValue(val);
         }}
         buttons={values.map((val) => ({ value: val.value, label: val.label }))}
