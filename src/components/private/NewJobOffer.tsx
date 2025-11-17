@@ -1,7 +1,11 @@
-import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import {
   IJobOffer,
+  IJobOfferGeneral,
+  IJobOfferHybrid,
+  IJobOfferOnSite,
+  IJobOfferRemote,
   JobLocation,
   Senority,
   ShiftTime,
@@ -9,24 +13,190 @@ import {
 import * as Yup from 'yup';
 import { Toast } from 'toastify-react-native';
 import AppForm from '../form/AppForm';
-import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  ListItemProps,
+  useTheme,
+} from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { AppFormInputWithHelper } from '@ui/AppFormInputs';
 import AppSegmentedButtons from '../AppSegmentedButtons';
+import geoRefAxiosInstance, {
+  geoRefAxiosInstanceEndpoints,
+} from 'axios/geoRef';
+import {
+  GeoRefProvincesResponse,
+  Provincia,
+} from 'src/types/geoRefResponses/geoRefProvinces';
+import AppLoading from '@ui/AppLoading';
+import AppReactNativePaperSelect from '../../ui/AppReactNativePaperSelect';
+import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
+import { IconButton } from 'react-native-paper';
+interface LocationPickerProps {
+  handleSelectProvince: (val: string) => void;
+}
+const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
+  const [provinces, setProvinces] = useState<Provincia[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<ListItem>(
+    {} as ListItem
+  );
 
+  useEffect(() => {
+    handleSelectProvince(selectedProvince.value);
+  }, [selectedProvince._id]);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const theme = useTheme();
+  const getProvinces = async () => {
+    setLoading(true);
+    try {
+      const {
+        data: { provincias },
+      } = await geoRefAxiosInstance.get<GeoRefProvincesResponse>(
+        geoRefAxiosInstanceEndpoints.PROVINCES
+      );
+      console.log('DATA', provincias);
+      setProvinces(provincias);
+      setSelectedProvince({
+        _id: provincias.at(0)?.id ?? '',
+        value: provincias.at(0)?.iso_nombre ?? '',
+      });
+    } catch (error) {
+      console.log('error obteniendo provincias');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getProvinces();
+  }, []);
+  if (loading) {
+    return <AppLoading></AppLoading>;
+  }
+  return (
+    (provinces.length > 0 && !loading && (
+      <View style={[]}>
+        <View
+          style={[
+            utilityStyles.flex,
+            utilityStyles.row,
+            utilityStyles.alignCenter,
+            utilityStyles.inputsContainer,
+            { gap: 10, marginVertical: 5 },
+          ]}
+        >
+          <Text>Usar mi ubicación</Text>
+          <IconButton icon={'camera'} mode='contained'></IconButton>
+        </View>
+        <View>
+          {/* <Text> {JSON.stringify(provinces, null, 3)}</Text> */}
+          <AppReactNativePaperSelect
+            multiEnable={false}
+            value={selectedProvince.value}
+            selectedArrayList={[selectedProvince]}
+            theme={theme}
+            dialogStyle={{ backgroundColor: theme.colors.background }}
+            hideSearchBox={true}
+            onSelection={(val) =>
+              setSelectedProvince({
+                _id: val.selectedList.at(0)?._id ?? '',
+                value: val.selectedList.at(0)?.value ?? '',
+              })
+            }
+            arrayList={provinces.map((el) => ({
+              ...el,
+              _id: el.id,
+              label: el.iso_nombre,
+              value: el.iso_nombre,
+            }))}
+            label='Provincias'
+          ></AppReactNativePaperSelect>
+        </View>
+      </View>
+    )) || <></>
+  );
+};
 const NewJobOffer = () => {
-  const jobOfferForm: Pick<IJobOffer, 'title' | 'description' | 'jobLocation'> =
-    {
+  // const jobOfferForm: Pick<IJobOffer, 'title' | 'description' | 'jobLocation'> =
+  //   {
+  //     title: '',
+  //     description: '',
+  //     jobLocation: JobLocation.REMOTE,
+
+  //     // salary: 0,
+  //     // senority: Senority.JUNIOR,
+  //     // shiftTime: ShiftTime.PART_TIME,
+  //     // skills: [],
+  //   };
+  const generateJobOfferForm = (
+    jobLocation: JobLocation,
+    prevData?: Record<string, any>
+  ) => {
+    const base: IJobOfferGeneral = {
       title: '',
       description: '',
       jobLocation: JobLocation.REMOTE,
-      // salary: 0,
-      // senority: Senority.JUNIOR,
-      // shiftTime: ShiftTime.PART_TIME,
-      // skills: [],
+      senority: Senority.JUNIOR,
+      salary: 0,
+      shiftTime: ShiftTime.FULL_TIME,
+      skills: [],
+      ...prevData,
     };
+    switch (jobLocation) {
+      case JobLocation.ON_SITE:
+        const JobOfferOnSite: IJobOfferOnSite = {
+          ...base,
+          city: '',
+          jobLocation: JobLocation.ON_SITE,
+          locality: '',
+          province: '',
+        };
+        return JobOfferOnSite;
 
+      case JobLocation.HYBRID:
+        const JobOfferHybrid: IJobOfferHybrid = {
+          ...base,
+          city: '',
+          jobLocation: JobLocation.HYBRID,
+          locality: '',
+          province: '',
+        };
+        return JobOfferHybrid;
+
+      case JobLocation.REMOTE:
+        const JobOfferRemote: IJobOfferRemote = {
+          ...base,
+
+          jobLocation: JobLocation.REMOTE,
+        };
+        return JobOfferRemote;
+    }
+  };
+  const jobOfferHasLocation = (
+    jobOfferForm: IJobOfferOnSite | IJobOfferHybrid | IJobOfferRemote
+  ): jobOfferForm is IJobOfferHybrid | IJobOfferOnSite => {
+    return (
+      jobOfferForm.jobLocation === JobLocation.ON_SITE ||
+      jobOfferForm.jobLocation === JobLocation.HYBRID
+    );
+  };
+
+  const [jobOfferForm, setJobOfferForm] = useState(
+    generateJobOfferForm(JobLocation.REMOTE)
+  );
+  useEffect(() => {
+    console.log('changed job location');
+    //  generateJobOfferForm(jobOfferForm.jobLocation, {
+    //   jobOfferForm,
+    // });
+    // setJobOfferForm(
+    //   generateJobOfferForm(jobOfferForm.jobLocation, {
+    //     jobOfferForm,
+    //   })
+    // );
+  }, [jobOfferForm.jobLocation]);
   const formValidationSchema = Yup.object({
     title: Yup.string().required('campo obligatorio'),
     description: Yup.string().required('campo obligatorio'),
@@ -56,102 +226,111 @@ const NewJobOffer = () => {
   const theme = useTheme();
 
   return (
-    <View
-      style={{
-        ...utilityStyles.contentContainer,
-        ...utilityStyles.flex,
-        marginTop: 20,
-      }}
-    >
-      <AppForm<Pick<IJobOffer, 'title' | 'description' | 'jobLocation'>>
-        handleSubmit={handleSubmit}
-        loadingPostIndicator={loading}
-        validationSchema={formValidationSchema}
-        formFields={jobOfferForm}
+    <>
+      <Text>{JSON.stringify(jobOfferForm, null)}</Text>
+      <View
+        style={{
+          ...utilityStyles.contentContainer,
+          ...utilityStyles.flex,
+          marginTop: 20,
+        }}
       >
-        {({
-          handleInputValue,
-          handleTextInputBlur,
-          setFieldTouched,
-          handleChange,
-          values,
-          touched,
-          errors,
-          dirty,
-          isValid,
-          handleBlur,
-          handleSubmit,
-          loadingPostIndicator,
-        }) => {
-          return (
-            <View
-              style={[
-                utilityStyles.container,
-                { backgroundColor: theme.colors.background },
-              ]}
-            >
-              <KeyboardAwareScrollView>
-                <View style={utilityStyles.contentContainer}>
-                  <View style={utilityStyles.inputsContainer}>
-                    <AppFormInputWithHelper<IJobOffer>
-                      formKey='title'
-                      value={values.title}
-                      placeholder='Título de la oferta '
-                      key={'title'}
-                      label='Título'
-                      onBlur={() => handleTextInputBlur('title')}
-                      onFocus={() => setFieldTouched('title', true)}
-                      onChangeText={handleChange('title')}
-                      keyboardType='ascii-capable'
-                      errorCondition={
-                        Boolean(touched.title && errors.title) || false
-                      }
-                      errorMessage={errors.title ?? ''}
-                    ></AppFormInputWithHelper>
-                  </View>
-                  <View style={utilityStyles.inputsContainer}>
-                    <AppFormInputWithHelper<IJobOffer>
-                      formKey='description'
-                      value={values.description}
-                      placeholder='Descripción de la oferta '
-                      key={'description'}
-                      label='Descripción'
-                      multiline={true}
-                      numberOfLines={4}
-                      style={{ minHeight: 100 }}
-                      onBlur={() => handleTextInputBlur('description')}
-                      onFocus={() => setFieldTouched('description', true)}
-                      onChangeText={handleChange('description')}
-                      keyboardType='ascii-capable'
-                      errorCondition={
-                        Boolean(touched.description && errors.description) ||
-                        false
-                      }
-                      errorMessage={errors.title ?? ''}
-                    ></AppFormInputWithHelper>
-                  </View>
-                  <View style={utilityStyles.inputsContainer}>
-                    <AppSegmentedButtons
-                      defaultValue={JobLocation.REMOTE}
-                      values={[
-                        {
-                          value: JobLocation.HYBRID,
-                          label: JobLocation.HYBRID,
-                        },
-                        {
-                          value: JobLocation.ON_SITE,
-                          label: JobLocation.ON_SITE,
-                        },
-                        {
-                          value: JobLocation.REMOTE,
-                          label: JobLocation.REMOTE,
-                        },
-                      ]}
-                      handleChange={(val: JobLocation) =>
-                        handleInputValue('jobLocation', val)
-                      }
-                    ></AppSegmentedButtons>
-                    {/* <AppFormInputWithHelper<IJobOffer>
+        <AppForm<Pick<IJobOffer, 'title' | 'description' | 'jobLocation'>>
+          handleSubmit={handleSubmit}
+          loadingPostIndicator={loading}
+          validationSchema={formValidationSchema}
+          formFields={jobOfferForm}
+        >
+          {({
+            handleInputValue,
+            handleTextInputBlur,
+            setFieldTouched,
+            handleChange,
+            values,
+            touched,
+            errors,
+            dirty,
+            isValid,
+            handleBlur,
+            handleSubmit,
+            loadingPostIndicator,
+          }) => {
+            return (
+              <>
+                <Text>{JSON.stringify(values, null, 2)}</Text>
+                <View
+                  style={[
+                    utilityStyles.container,
+                    { backgroundColor: theme.colors.background },
+                  ]}
+                >
+                  <KeyboardAwareScrollView>
+                    <ScrollView>
+                      <View style={utilityStyles.contentContainer}>
+                        <View style={utilityStyles.inputsContainer}>
+                          <AppFormInputWithHelper<IJobOffer>
+                            formKey='title'
+                            value={values.title}
+                            placeholder='Título de la oferta '
+                            key={'title'}
+                            label='Título'
+                            onBlur={() => handleTextInputBlur('title')}
+                            onFocus={() => setFieldTouched('title', true)}
+                            onChangeText={handleChange('title')}
+                            keyboardType='ascii-capable'
+                            errorCondition={
+                              Boolean(touched.title && errors.title) || false
+                            }
+                            errorMessage={errors.title ?? ''}
+                          ></AppFormInputWithHelper>
+                        </View>
+                        <View style={utilityStyles.inputsContainer}>
+                          <AppFormInputWithHelper<IJobOffer>
+                            formKey='description'
+                            value={values.description}
+                            placeholder='Descripción de la oferta '
+                            key={'description'}
+                            label='Descripción'
+                            multiline={true}
+                            numberOfLines={4}
+                            style={{ minHeight: 100 }}
+                            onBlur={() => handleTextInputBlur('description')}
+                            onFocus={() => setFieldTouched('description', true)}
+                            onChangeText={handleChange('description')}
+                            keyboardType='ascii-capable'
+                            errorCondition={
+                              Boolean(
+                                touched.description && errors.description
+                              ) || false
+                            }
+                            errorMessage={errors.title ?? ''}
+                          ></AppFormInputWithHelper>
+                        </View>
+                        <View style={utilityStyles.inputsContainer}>
+                          <AppSegmentedButtons
+                            defaultValue={JobLocation.REMOTE}
+                            values={[
+                              {
+                                value: JobLocation.HYBRID,
+                                label: JobLocation.HYBRID,
+                              },
+                              {
+                                value: JobLocation.ON_SITE,
+                                label: JobLocation.ON_SITE,
+                              },
+                              {
+                                value: JobLocation.REMOTE,
+                                label: JobLocation.REMOTE,
+                              },
+                            ]}
+                            handleChange={(val: JobLocation) => {
+                              handleInputValue('jobLocation', val);
+                              setJobOfferForm(
+                                generateJobOfferForm(jobOfferForm.jobLocation)
+                              );
+                            }}
+                          ></AppSegmentedButtons>
+                          {/* <AppFormInputWithHelper<IJobOffer>
                       formKey='description'
                       value={values.description}
                       placeholder='Descripción de la oferta '
@@ -170,41 +349,62 @@ const NewJobOffer = () => {
                       }
                       errorMessage={errors.title ?? ''}
                     ></AppFormInputWithHelper> */}
+                          {
+                            <Text>
+                              {' '}
+                              has location{' '}
+                              {JSON.stringify(
+                                jobOfferHasLocation(jobOfferForm)
+                              )}
+                            </Text>
+                          }
+                          {jobOfferHasLocation(jobOfferForm) ? (
+                            <LocationPicker
+                              handleSelectProvince={(val) => {
+                                // handleInputValue('province', val)
+                              }}
+                            ></LocationPicker>
+                          ) : (
+                            <></>
+                          )}
+                        </View>
+                      </View>
+                    </ScrollView>
+                  </KeyboardAwareScrollView>
+                  <View
+                    style={[
+                      utilityStyles.fabContainer,
+                      {
+                        backgroundColor: theme.colors.background,
+                      },
+                    ]}
+                  >
+                    {!loadingPostIndicator && (
+                      <Button
+                        mode='contained'
+                        style={utilityStyles.fab}
+                        contentStyle={utilityStyles.fabContent}
+                        labelStyle={utilityStyles.fabLabel}
+                        onPress={() => handleSubmit()}
+                        disabled={(dirty && !isValid) || !dirty}
+                      >
+                        Crear oferta
+                      </Button>
+                    )}
+                    {loadingPostIndicator && (
+                      <ActivityIndicator
+                        color={theme.colors.primary}
+                        size={'small'}
+                      ></ActivityIndicator>
+                    )}
                   </View>
                 </View>
-              </KeyboardAwareScrollView>
-              <View
-                style={[
-                  utilityStyles.fabContainer,
-                  {
-                    backgroundColor: theme.colors.background,
-                  },
-                ]}
-              >
-                {!loadingPostIndicator && (
-                  <Button
-                    mode='contained'
-                    style={utilityStyles.fab}
-                    contentStyle={utilityStyles.fabContent}
-                    labelStyle={utilityStyles.fabLabel}
-                    onPress={() => handleSubmit()}
-                    disabled={(dirty && !isValid) || !dirty}
-                  >
-                    Crear oferta
-                  </Button>
-                )}
-                {loadingPostIndicator && (
-                  <ActivityIndicator
-                    color={theme.colors.primary}
-                    size={'small'}
-                  ></ActivityIndicator>
-                )}
-              </View>
-            </View>
-          );
-        }}
-      </AppForm>
-    </View>
+              </>
+            );
+          }}
+        </AppForm>
+      </View>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactNativePaperSelect from '../ui/ReactNativePaperSelect';
+import ReactNativePaperSelect from '../ui/AppReactNativePaperSelect';
 import * as Yup from 'yup';
 import { View, ScrollView, StyleSheet, Platform, Keyboard } from 'react-native';
 import {

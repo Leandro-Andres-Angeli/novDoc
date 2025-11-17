@@ -4,10 +4,12 @@ import { PaperSelectProps } from 'react-native-paper-select/lib/typescript/inter
 
 // Example of impl
 interface ReactNativePaperSelectProps<T = string> extends PaperSelectProps {}
-const ReactNativePaperSelect = <T,>(props: ReactNativePaperSelectProps<T>) => {
+const AppReactNativePaperSelect = <T,>(
+  props: ReactNativePaperSelectProps<T>
+) => {
   const { ...defaultProps } = props;
 
   return <PaperSelect {...defaultProps}></PaperSelect>;
 };
 
-export default ReactNativePaperSelect;
+export default AppReactNativePaperSelect;

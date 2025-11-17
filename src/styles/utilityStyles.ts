@@ -11,7 +11,15 @@ const utilityStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-
+  col: {
+    flexDirection: 'column',
+  },
+  justifyCenter: {
+    justifyContent: 'center',
+  },
+  alignCenter: {
+    alignItems: 'center',
+  },
   scrollView: {
     flex: 1,
   },
