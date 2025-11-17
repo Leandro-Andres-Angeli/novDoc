@@ -7,7 +7,7 @@ import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIG
 import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
 import AppButton from '@ui/AppButton';
 import styled from 'styled-components/native';
-import AppHeader from '../ui/AppHeader';
+
 import CardImage from '@ui/AppCardImage';
 
 import AppButtonText from '@ui/AppButtonText';

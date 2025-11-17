@@ -5,10 +5,10 @@ import styled from 'styled-components/native';
 import { useTheme } from 'react-native-paper';
 
 const Header = styled.View`
-  height: 56px;
   flex-direction: row;
   align-items: center;
   padding-horizontal: 16px;
+  padding-vertical: 20px;
 `;
 const LogoText = styled.Text`
   font-size: 20px;

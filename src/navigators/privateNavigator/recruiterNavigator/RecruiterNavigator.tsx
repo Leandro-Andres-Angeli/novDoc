@@ -1,16 +1,19 @@
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import React, { useContext } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
-import AuthContextProvider, { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, Icon, IconButton, Text, useTheme } from 'react-native-paper';
 import { bottomNavigationsOptions } from '@utils/styling/bottomNavigationOptions';
-import { StyleSheet } from 'react-native';
+
 import AppHeader from '@ui/AppHeader';
-import AppTitle from '@ui/AppTitle';
+
 import NoJobsPosted from 'src/components/private/NoJobsPosted';
+import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
+import AppButton from '@ui/AppButton';
+import AppButtonText from '../../../ui/AppButtonText';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -49,21 +52,23 @@ const Acc = () => (
     <Text>Test</Text>
   </View>
 );
-
-const Tab = createBottomTabNavigator();
+type RecruiterNavigatorRootParams = {
+  [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
+  [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {};
+  [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
+  [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
+  [RECRUITER_NAVIGATOR_ROUTES.FAVORITES]: {};
+};
+const Tab = createBottomTabNavigator<RecruiterNavigatorRootParams>();
 
 const RecruiterNavigator = () => {
-  const user = useContext(AuthContext).authState.user as IRecruiter;
   const theme = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: true,
-        headerRight: () => (
-          <View>
-            <Button>editar</Button>
-          </View>
-        ),
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
       }}
     >
       <Tab.Screen
@@ -116,7 +121,7 @@ const RecruiterNavigator = () => {
             headerShown: true,
           };
         }}
-        name='SwipeRecruiter'
+        name={RECRUITER_NAVIGATOR_ROUTES.SWIPE}
         component={SwipeRecruiter}
       ></Tab.Screen>
       <Tab.Screen
@@ -129,7 +134,7 @@ const RecruiterNavigator = () => {
             theme: theme,
           })
         }
-        name='Test'
+        name={RECRUITER_NAVIGATOR_ROUTES.FAVORITES}
         component={Test}
       ></Tab.Screen>
       <Tab.Screen
@@ -142,66 +147,40 @@ const RecruiterNavigator = () => {
             theme: theme,
           })
         }
-        name='Acc'
+        name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
         component={Acc}
       ></Tab.Screen>
       <Tab.Screen
-        options={(props) =>
-          bottomNavigationsOptions({
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
             ...props,
             iconName: 'plus-circle',
             iconNameFocused: 'plus-circle-outline',
             tabBarLabel: 'Publicar Oferta',
             theme: theme,
-          })
-        }
-        name='Add'
+          });
+          return {
+            ...iconOptions,
+            headerShown: true,
+            headerTitle: 'Publicar Oferta',
+            headerTitleAlign: 'center',
+            headerTitleStyle: { marginRight: 40 },
+
+            headerLeft() {
+              return (
+                <IconButton
+                  onPress={() => props.navigation.goBack()}
+                  icon={'chevron-left'}
+                ></IconButton>
+              );
+            },
+          };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
         component={Add}
       ></Tab.Screen>
     </Tab.Navigator>
   );
-  /*  return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen
-        options={function () {
-          return {
-            tabBarIcon: () => (
-              <IconButton
-                iconColor={theme.colors.onPrimary}
-                icon={'account-group'}
-              ></IconButton>
-            ),
-            tabBarLabel: 'Descrubrir',
-            tabBarLabelStyle: { color: theme.colors.onPrimary },
-            tabBarActiveBackgroundColor: theme.colors.primary,
-          };
-        }}
-        name='Onboarding'
-        component={Onboarding}
-      ></Tab.Screen>
-      <Tab.Screen
-        options={function () {
-         
-          return {
-            tabBarIcon: ({ focused }) => (
-              <IconButton
-                iconColor={
-                  focused ? theme.colors.onPrimary : theme.colors.primary
-                }
-                icon={'account-group'}
-              ></IconButton>
-            ),
-            tabBarLabel: 'Test',
-            tabBarLabelStyle: { color: theme.colors.primary },
-            tabBarActiveTintColor: theme.colors.onPrimary,
-            tabBarActiveBackgroundColor: theme.colors.primary,
-          };
-        }}
-        name='Test'
-        component={Test}
-      ></Tab.Screen>
-    </Tab.Navigator>
-  ); */
 };
 
 export default RecruiterNavigator;
