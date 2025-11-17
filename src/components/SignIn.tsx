@@ -29,8 +29,6 @@ const ButtonContainer = styled.View<{ isLandscape: boolean }>`
 `;
 
 const SignIn = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   interface ISignInForm {
     email: string;
     password: string;

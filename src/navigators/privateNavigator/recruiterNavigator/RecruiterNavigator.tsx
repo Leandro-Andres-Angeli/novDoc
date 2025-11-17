@@ -14,6 +14,7 @@ import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 import AppButton from '@ui/AppButton';
 import AppButtonText from '../../../ui/AppButtonText';
+import NewJobOfferScreen from 'src/screens/private/recruiter/NewJobOfferScreen';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -177,7 +178,7 @@ const RecruiterNavigator = () => {
           };
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
-        component={Add}
+        component={NewJobOfferScreen}
       ></Tab.Screen>
     </Tab.Navigator>
   );

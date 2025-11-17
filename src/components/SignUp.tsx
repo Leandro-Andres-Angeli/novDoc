@@ -14,7 +14,7 @@ import { Role } from 'src/types/authContextTypes/userRole';
 
 import { AppFormInputWithHelper } from '../ui/AppFormInputs';
 import RoleSelector from './RoleSelector';
-import { IUser } from 'src/types/authContextTypes/authContextTypes';
+
 import { signUpNewUser } from 'src/services/auth';
 import { Toast } from 'toastify-react-native';
 import { useNavigation } from '@react-navigation/native';

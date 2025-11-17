@@ -14,8 +14,17 @@ export enum ShiftTime {
   PART_TIME = 'part-time',
   CONTRACTOR = 'contractor',
 }
-
-export interface IJobOffer {
+export interface IJobOfferOnSite extends IJobOfferGeneral {
+  jobLocation: JobLocation.ON_SITE;
+  province: string;
+  city: string;
+}
+export interface IJobOfferHybrid extends IJobOfferGeneral {
+  jobLocation: JobLocation.HYBRID;
+  province: string;
+  city: string;
+}
+export interface IJobOfferGeneral {
   title: string;
   description: string;
   skills: Array<string>;
@@ -24,3 +33,9 @@ export interface IJobOffer {
   shiftTime: ShiftTime;
   salary: number;
 }
+
+export interface IJobOfferRemote extends Omit<IJobOfferGeneral, 'jobLocation'> {
+  jobLocation: JobLocation.REMOTE;
+}
+
+export type IJobOffer = IJobOfferOnSite | IJobOfferHybrid | IJobOfferRemote;

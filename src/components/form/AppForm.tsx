@@ -42,13 +42,7 @@ function AppForm<T extends FormikValues>({
     handleInputValue,
     handleTextInputBlur,
   } as FormChildrenProps<T>;
-  return (
-    <>
-      {children(allProps)}
-
-      {/* {JSON.stringify(valu)} */}
-    </>
-  );
+  return <>{children(allProps)}</>;
 }
 
 export default AppForm;
