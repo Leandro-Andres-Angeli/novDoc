@@ -8,6 +8,9 @@ const utilityStyles = StyleSheet.create({
   flex: {
     flex: 1,
   },
+  row: {
+    flexDirection: 'row',
+  },
 
   scrollView: {
     flex: 1,

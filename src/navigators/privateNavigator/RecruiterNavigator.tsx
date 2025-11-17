@@ -61,7 +61,7 @@ const RecruiterNavigator = () => {
         headerShown: true,
         headerRight: () => (
           <View>
-            <Text>Def</Text>
+            <Button>editar</Button>
           </View>
         ),
       }}
@@ -78,11 +78,41 @@ const RecruiterNavigator = () => {
           return {
             ...iconOptions,
 
-            header: () => (
-              <AppHeader logo={false} styles={{ justifyContent: 'center' }}>
-                <Text variant='titleMedium'>Mis Publicaciones de Trabajo</Text>
-              </AppHeader>
-            ),
+            header: () => {
+              return (
+                <View
+                  style={{
+                    ...utilityStyles.row,
+                    position: 'absolute',
+                    width: '100%',
+                  }}
+                >
+                  <AppHeader
+                    logo={false}
+                    styles={{
+                      justifyContent: 'center',
+                      marginLeft: '34%',
+                      marginRight: 'auto',
+                    }}
+                  >
+                    <Text variant='titleMedium'>Postulaciones</Text>
+                  </AppHeader>
+                  <View
+                    style={{
+                      ...utilityStyles.row,
+                      position: 'relative',
+                      right: 0,
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                    }}
+                  >
+                    <IconButton icon={'cog-outline'}></IconButton>
+                    <IconButton icon={'bell-outline'}></IconButton>
+                  </View>
+                </View>
+              );
+            },
+
             headerShown: true,
           };
         }}

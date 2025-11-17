@@ -15,6 +15,7 @@ export const bottomNavigationsOptions: (props: {
 }) => BottomTabNavigationOptions = function (props) {
   const { theme } = props;
   return {
+    ...props,
     tabBarIcon: ({ focused }) => (
       <IconButton
         iconColor={focused ? theme.colors.onPrimary : theme.colors.primary}

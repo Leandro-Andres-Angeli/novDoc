@@ -37,8 +37,8 @@ const Providers = ({ children }: PropsWithChildren) => {
       ...MD3LightTheme.colors,
       ...LightTheme.colors,
       primary: COLORS.primary,
-      secondaryContainer: '#dcdcdcff',
-      onPrimaryContainer: 'red',
+      secondaryContainer: COLORS.secondaryContainer,
+      // onPrimaryContainer: 'red',
       surfaceVariant: '#f2f1f1ff',
     },
   };
