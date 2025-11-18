@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import React, { JSX, useState } from 'react';
 import { Icon, TextInput, TextInputProps, useTheme } from 'react-native-paper';
-import { Children } from 'react';
 
 interface FormInputProps<T> extends Partial<TextInputProps> {
   /** Clave del campo dentro del tipo genérico T. */
@@ -108,6 +107,7 @@ export function AppFormInputWithHelper<T>(
     /** Texto del mensaje de error que se mostrará bajo el input. */
     errorMessage: string;
     isTextSecureEntry?: boolean;
+    children?: React.ReactNode;
   }
 ): JSX.Element {
   const {
@@ -144,6 +144,19 @@ export function AppFormInputWithHelper<T>(
       <AppFormInputSecureTextEntry {...props}></AppFormInputSecureTextEntry>
     );
   }
+  if (props.children) {
+    return (
+      <>
+        {props.children}
+        {errorCondition && (
+          <View style={localStyles.errorView}>
+            <Icon source='alert-circle-outline' size={20} />
+            <Text style={localStyles.errorText}> {errorMessage}</Text>
+          </View>
+        )}
+      </>
+    );
+  }
   return (
     <>
       {input}
@@ -158,7 +171,22 @@ export function AppFormInputWithHelper<T>(
     </>
   );
 }
-
+export const InputHelper = ({
+  errorCondition,
+  errorMessage,
+}: {
+  errorCondition: boolean;
+  errorMessage: string;
+}) => {
+  return (
+    errorCondition && (
+      <View style={localStyles.errorView}>
+        <Icon source='alert-circle-outline' size={20} />
+        <Text style={localStyles.errorText}> {errorMessage}</Text>
+      </View>
+    )
+  );
+};
 /**
  * Definición de estilos locales para el componente.
  *

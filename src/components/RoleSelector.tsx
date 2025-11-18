@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { SegmentedButtons } from 'react-native-paper';
 import { Role } from 'src/types/authContextTypes/userRole';
-import { string } from 'yup';
 
 export default function RoleSelector({
   defaultValue,

@@ -1,5 +1,5 @@
-import { View, Text, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, Keyboard } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   IJobOffer,
   IJobOfferGeneral,
@@ -20,7 +20,10 @@ import {
   useTheme,
 } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import {
+  KeyboardAwareScrollView,
+  useKeyboardState,
+} from 'react-native-keyboard-controller';
 import { AppFormInputWithHelper } from '@ui/AppFormInputs';
 import AppSegmentedButtons from '../AppSegmentedButtons';
 import geoRefAxiosInstance, {
@@ -31,11 +34,14 @@ import {
   Provincia,
 } from 'src/types/geoRefResponses/geoRefProvinces';
 import AppLoading from '@ui/AppLoading';
-import AppReactNativePaperSelect from '../../ui/AppReactNativePaperSelect';
+import AppReactNativePaperSelect, {
+  AppReactNativePaperSelectMultiple,
+} from '../../ui/AppReactNativePaperSelect';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
-import { IconButton } from 'react-native-paper';
+
 import AppSubtitle from '../../ui/AppSubtitle';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
+import { InputHelper } from '../../ui/AppFormInputs';
 interface LocationPickerProps {
   handleSelectProvince: (val: string) => void;
 }
@@ -51,8 +57,10 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const theme = useTheme();
+  const isFetching = useRef(false);
   const getProvinces = async () => {
     setLoading(true);
+
     try {
       const {
         data: { provincias },
@@ -72,7 +80,14 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
     }
   };
   useEffect(() => {
-    getProvinces();
+    isFetching.current = true;
+    if (isFetching.current) {
+      getProvinces();
+    }
+    () => {
+      isFetching.current = false;
+      return;
+    };
   }, []);
   if (loading) {
     return <AppLoading></AppLoading>;
@@ -104,6 +119,8 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   );
 };
 const NewJobOffer = () => {
+  const { isVisible } = useKeyboardState();
+
   const generateJobOfferForm = (jobLocation: JobLocation) => {
     const base: IJobOfferGeneral = {
       title: '',
@@ -112,7 +129,7 @@ const NewJobOffer = () => {
       seniority: Seniority.JUNIOR,
       salary: 0,
       shiftTime: ShiftTime.FULL_TIME,
-      skills: [],
+      skills: new Array(),
     };
     switch (jobLocation) {
       case JobLocation.ON_SITE:
@@ -268,8 +285,6 @@ const NewJobOffer = () => {
           }) => {
             return (
               <>
-                {/* <Text>{JSON.stringify(values, null, 2)}</Text> */}
-
                 <View
                   style={[
                     // utilityStyles.container,
@@ -279,9 +294,20 @@ const NewJobOffer = () => {
                     },
                   ]}
                 >
-                  <KeyboardAwareScrollView>
-                    <ScrollView
-                      style={{ overflow: 'scroll', marginBottom: 100 }}
+                  <KeyboardAwareScrollView
+                    style={{
+                      overflow: 'scroll',
+                      marginBottom: 50,
+                    }}
+                    disableScrollOnKeyboardHide
+                    automaticallyAdjustContentInsets
+                    automaticallyAdjustKeyboardInsets
+                    automaticallyAdjustsScrollIndicatorInsets
+                  >
+                    <View
+                      style={{
+                        paddingBottom: isVisible ? 10 : 'auto',
+                      }}
                     >
                       <View style={utilityStyles.contentContainer}>
                         <View style={utilityStyles.inputsContainer}>
@@ -381,63 +407,56 @@ const NewJobOffer = () => {
                             }}
                           ></AppSegmentedButtons>
                         </View>
-                        <View style={{ ...utilityStyles.inputsContainer }}>
+
+                        <View
+                          style={{
+                            ...utilityStyles.inputsContainer,
+                          }}
+                        >
                           <AppSubtitle textAlign='left'>Skills</AppSubtitle>
-                          <AppReactNativePaperSelect
-                            multiEnable={true}
-                            value={''}
-                            // selectedArrayList={[values.skills.map(val) => ({ _id : val , label : val})]}
-                            selectedArrayList={values.skills.map((el) => ({
-                              _id: el.name,
 
-                              value: el.name,
-                            }))}
-                            theme={theme}
-                            dialogStyle={{
-                              backgroundColor: theme.colors.background,
-                            }}
-                            hideSearchBox={true}
-                            dialogCloseButtonText='cancelar'
-                            dialogDoneButtonText='ok'
-                            selectAllText='seleccionar todo'
-                            onSelection={
-                              (val) => {}
-                              // setSelectedProvince({
-                              //   _id: val.selectedList.at(0)?._id ?? '',
-                              //   value: val.selectedList.at(0)?.value ?? '',
-                              // })
+                          <AppReactNativePaperSelectMultiple
+                            handleSelectedListChange={(val) =>
+                              setFieldValue('skills', val)
                             }
-                            arrayList={skillsLists.map((el) => ({
+                            label='Skills'
+                            selectedList={values.skills.map((el) => ({
+                              _id: el.name,
+                              value: el.name,
+                            }))}
+                            list={skillsLists.map((el) => ({
                               _id: el.name,
 
                               value: el.name,
                             }))}
-                            label='Skills'
-                          ></AppReactNativePaperSelect>
+                          ></AppReactNativePaperSelectMultiple>
+                          <Text> {JSON.stringify(values.skills)}</Text>
+                          <InputHelper
+                            errorCondition={errors.skills !== undefined}
+                            errorMessage={errors?.skills?.toString() ?? ''}
+                          ></InputHelper>
                         </View>
 
                         <View style={{ ...utilityStyles.inputsContainer }}>
                           <AppFormInputWithHelper<IJobOffer>
                             formKey='salary'
                             value={values.salary}
-                            placeholder='Descripción de la oferta '
+                            placeholder='Salario'
                             key={'salary'}
-                            label='Descripción'
+                            label='Salario'
                             multiline={true}
-                            numberOfLines={4}
-                            style={{ minHeight: 100 }}
                             onBlur={() => handleTextInputBlur('salary')}
                             onFocus={() => setFieldTouched('salary', true)}
                             onChangeText={handleChange('salary')}
-                            keyboardType='ascii-capable'
+                            keyboardType='decimal-pad'
                             errorCondition={
                               Boolean(touched.salary && errors.salary) || false
                             }
-                            errorMessage={errors.title ?? ''}
+                            errorMessage={errors.salary ?? ''}
                           ></AppFormInputWithHelper>
                         </View>
                       </View>
-                    </ScrollView>
+                    </View>
                   </KeyboardAwareScrollView>
                   <View
                     style={[
