@@ -43,54 +43,23 @@ import AppSubtitle from '../../ui/AppSubtitle';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { InputHelper } from '../../ui/AppFormInputs';
 import useGetLocations from 'src/hooks/useGetLocations';
+import {
+  Ciudad,
+  GeoRefCitiesResponse,
+} from 'src/types/geoRefResponses/geoRefCities';
 
 interface LocationPickerProps {
   handleSelectProvince: (val: string) => void;
+  handleSelectCity: (val: string) => void;
   dynamicParams?: string | number[];
 }
-const LocationPicker1 = ({ handleSelectProvince }: LocationPickerProps) => {
-  // const [provinces, setProvinces] = useState<Provincia[]>([]);
-  // const [selectedProvince, setSelectedProvince] = useState<ListItem>(
-  //   {} as ListItem
-  // );
-
-  // const [loading, setLoading] = useState<boolean>(false);
+const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   const theme = useTheme();
-  // const isFetching = useRef(false);
-  // const getProvinces = async () => {
-  //   setLoading(true);
 
-  //   try {
-  //     const {
-  //       data: { provincias },
-  //     } = await geoRefAxiosInstance.get<GeoRefProvincesResponse<Provincia>>(
-  //       geoRefAxiosInstanceEndpoints.PROVINCES
-  //     );
-
-  //     setProvinces(provincias);
-  //     setSelectedProvince({
-  //       _id: provincias.at(0)?.id ?? '',
-  //       value: provincias.at(0)?.iso_nombre ?? '',
-  //     });
-  //   } catch (error) {
-  //     console.log('error obteniendo provincias');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   isFetching.current = true;
-  //   if (isFetching.current) {
-  //     getProvinces();
-  //   }
-  //   () => {
-  //     isFetching.current = false;
-  //     return;
-  //   };
-  // }, []);
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
     {} as ListItem
   );
+  const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
   useEffect(() => {
     handleSelectProvince(selectedProvince.value);
     if (selectedProvince._id) {
@@ -102,20 +71,33 @@ const LocationPicker1 = ({ handleSelectProvince }: LocationPickerProps) => {
       value: province.iso_nombre ?? '',
     });
   };
-  const {
-    getLocations,
-    loadingLocations: loadingProvinces,
-    locations: provinces,
-  } = useGetLocations<Provincia, GeoRefProvincesResponse<Provincia>>({
-    url: geoRefAxiosInstanceEndpoints.PROVINCES,
-    key: 'provincias',
-    setInitialLocation: handleSelectProvinceInner,
-  });
-  if (loadingProvinces) {
+  const handleSelectCityInner = (city: Ciudad) => {
+    setSelectedCity({
+      _id: city.id ?? '',
+      value: city.nombre ?? '',
+    });
+  };
+  const { loadingLocations: loadingProvinces, locations: provinces } =
+    useGetLocations<Provincia, GeoRefProvincesResponse<Provincia>>({
+      url: geoRefAxiosInstanceEndpoints.PROVINCES,
+      key: 'provincias',
+      setInitialLocation: handleSelectProvinceInner,
+    });
+  const { locations: cities, loadingLocations: loadingCities } =
+    useGetLocations<Ciudad, GeoRefCitiesResponse>({
+      url: geoRefAxiosInstanceEndpoints.MUNICIPIOS(
+        selectedProvince._id ?? '02'
+      ),
+      key: 'municipios',
+      setInitialLocation: handleSelectCityInner,
+      dynamicParams: [selectedProvince._id],
+    });
+  const loadingLocations = loadingProvinces || loadingCities;
+  if (loadingLocations) {
     return <AppLoading></AppLoading>;
   }
   return (
-    (provinces.length > 0 && !loadingProvinces && (
+    (provinces.length > 0 && !loadingLocations && (
       <>
         <AppReactNativePaperSelect
           multiEnable={false}
@@ -139,33 +121,32 @@ const LocationPicker1 = ({ handleSelectProvince }: LocationPickerProps) => {
           label='Provincia'
         ></AppReactNativePaperSelect>
 
-        {/*   <AppReactNativePaperSelect
+        <AppReactNativePaperSelect
           multiEnable={false}
-          value={selectedProvince.value}
-          selectedArrayList={[selectedProvince]}
+          value={selectedCity.value}
+          selectedArrayList={[selectedCity]}
           theme={theme}
           dialogStyle={{ backgroundColor: theme.colors.background }}
           hideSearchBox={true}
-          onSelection={
-            (val) => {}
-            // setSelectedProvince({
-            //   _id: val.selectedList.at(0)?._id ?? '',
-            //   value: val.selectedList.at(0)?.value ?? '',
-            // })
-          }
-          arrayList={provinces.map((el) => ({
+          onSelection={(val) => {
+            setSelectedCity({
+              _id: val.selectedList.at(0)?._id ?? '',
+              value: val.selectedList.at(0)?.value ?? '',
+            });
+          }}
+          arrayList={cities.map((el) => ({
             ...el,
             _id: el.id,
-            label: el.iso_nombre,
-            value: el.iso_nombre,
+            label: el.nombre,
+            value: el.nombre,
           }))}
           label='Ciudad'
-        ></AppReactNativePaperSelect> */}
+        ></AppReactNativePaperSelect>
       </>
     )) || <></>
   );
 };
-const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
+const LocationPicker1 = ({ handleSelectProvince }: LocationPickerProps) => {
   const [provinces, setProvinces] = useState<Provincia[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
     {} as ListItem
@@ -373,8 +354,6 @@ const NewJobOffer = () => {
   );
 
   useEffect(() => {
-    console.log('changed job location');
-
     setJobOfferValidationSchema(
       generateJobOfferValidationSchema(jobOfferForm.jobLocation)
     );
@@ -419,7 +398,7 @@ const NewJobOffer = () => {
           errors,
           dirty,
           isValid,
-          handleBlur,
+
           handleSubmit,
           loadingPostIndicator,
           setFieldValue,
@@ -513,11 +492,14 @@ const NewJobOffer = () => {
 
                         {jobOfferHasLocation(values) ? (
                           <View style={{ ...utilityStyles.inputsContainer }}>
-                            <LocationPicker1
+                            <LocationPicker
                               handleSelectProvince={(val) => {
                                 setFieldValue('province', val);
                               }}
-                            ></LocationPicker1>
+                              handleSelectCity={(val) => {
+                                setFieldValue('city', val);
+                              }}
+                            ></LocationPicker>
                           </View>
                         ) : (
                           <></>
