@@ -302,7 +302,7 @@ const NewJobOffer = () => {
       title: Yup.string().required('campo obligatorio'),
       description: Yup.string().required('campo obligatorio'),
       jobLocation: Yup.string<JobLocation>()
-        .oneOf([JobLocation.REMOTE])
+        .oneOf([JobLocation.REMOTE, JobLocation.HYBRID, JobLocation.ON_SITE])
         .required(),
 
       salary: Yup.number()
@@ -538,7 +538,7 @@ const NewJobOffer = () => {
                           }}
                         ></AppSegmentedButtons>
                       </View>
-
+                      <Text>{JSON.stringify(errors)}</Text>
                       <View
                         style={{
                           ...utilityStyles.inputsContainer,
