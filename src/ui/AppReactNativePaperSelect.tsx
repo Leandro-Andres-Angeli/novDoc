@@ -36,33 +36,13 @@ export const AppReactNativePaperSelectMultiple = (
 ) => {
   const { ...defaultProps } = props;
 
-  // const [selectedList, setSelectedList] = useState<{
-  //   value: string | undefined;
-  //   list: ListItem[];
-  //   selectedList: ListItem[];
-  //   error: string;
-  // }>({
-  //   value: undefined,
-  //   list: props.list,
-  //   selectedList: props.selectedList,
-  //   error: '',
-  // });
-  // useEffect(() => {
-  //   console.log('rendering ');
-  //   props.handleSelectedListChange(selectedList.selectedList);
-  // }, [selectedList.selectedList]);
-
   const handleList = (val: SelectedItem) => {
     props.handleSelectedListChange(val.selectedList);
-    // setSelectedList((prev) => ({
-    //   ...prev,
-    //   value: val.text,
-    //   error: '',
-    //   selectedList: val.selectedList,
-    // }));
   };
-  const displayValue =
-    props.selectedList.map((item) => item.value).join(', ') ?? '';
+  let displayValue =
+    (props.selectedList.length > 0 &&
+      props.selectedList.map((item) => item.value).join(',')) ||
+    'Skills';
   const theme = useTheme();
   return (
     <>
@@ -76,7 +56,7 @@ export const AppReactNativePaperSelectMultiple = (
         selectAllText='seleccionar todo'
         multiEnable={true}
         onSelection={handleList}
-        selectedArrayList={props.selectedList}
+        selectedArrayList={[...props.selectedList]}
         value={displayValue}
         arrayList={[...props.list]}
         dialogCloseButtonText='Cancelar'

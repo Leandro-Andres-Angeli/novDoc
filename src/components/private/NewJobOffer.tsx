@@ -241,6 +241,7 @@ const NewJobOffer = () => {
 
   async function handleSubmit(values: IJobOffer) {
     setLoading(true);
+    console.log(values);
     try {
     } catch (error) {
       console.log('error', error);
@@ -258,6 +259,7 @@ const NewJobOffer = () => {
           ...utilityStyles.contentContainer,
           ...utilityStyles.flex,
           marginTop: 20,
+          marginBottom: 40,
         }}
       >
         <AppForm<IJobOffer>
@@ -295,10 +297,7 @@ const NewJobOffer = () => {
                   ]}
                 >
                   <KeyboardAwareScrollView
-                    style={{
-                      overflow: 'scroll',
-                      marginBottom: 50,
-                    }}
+                    style={{ marginBottom: 100 }}
                     disableScrollOnKeyboardHide
                     automaticallyAdjustContentInsets
                     automaticallyAdjustKeyboardInsets
@@ -417,7 +416,10 @@ const NewJobOffer = () => {
 
                           <AppReactNativePaperSelectMultiple
                             handleSelectedListChange={(val) =>
-                              setFieldValue('skills', val)
+                              setFieldValue(
+                                'skills',
+                                val.map((el) => ({ name: el.value }))
+                              )
                             }
                             label='Skills'
                             selectedList={values.skills.map((el) => ({
@@ -430,7 +432,7 @@ const NewJobOffer = () => {
                               value: el.name,
                             }))}
                           ></AppReactNativePaperSelectMultiple>
-                          <Text> {JSON.stringify(values.skills)}</Text>
+
                           <InputHelper
                             errorCondition={errors.skills !== undefined}
                             errorMessage={errors?.skills?.toString() ?? ''}
@@ -440,14 +442,16 @@ const NewJobOffer = () => {
                         <View style={{ ...utilityStyles.inputsContainer }}>
                           <AppFormInputWithHelper<IJobOffer>
                             formKey='salary'
-                            value={values.salary}
+                            value={values.salary.toString()}
                             placeholder='Salario'
                             key={'salary'}
                             label='Salario'
                             multiline={true}
                             onBlur={() => handleTextInputBlur('salary')}
                             onFocus={() => setFieldTouched('salary', true)}
-                            onChangeText={handleChange('salary')}
+                            onChangeText={(e) =>
+                              handleInputValue('salary', Number(e))
+                            }
                             keyboardType='decimal-pad'
                             errorCondition={
                               Boolean(touched.salary && errors.salary) || false
