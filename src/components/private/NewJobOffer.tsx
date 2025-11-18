@@ -42,9 +42,129 @@ import { ListItem } from 'react-native-paper-select/lib/typescript/interface/pap
 import AppSubtitle from '../../ui/AppSubtitle';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { InputHelper } from '../../ui/AppFormInputs';
+import useGetLocations from 'src/hooks/useGetLocations';
+
 interface LocationPickerProps {
   handleSelectProvince: (val: string) => void;
+  dynamicParams?: string | number[];
 }
+const LocationPicker1 = ({ handleSelectProvince }: LocationPickerProps) => {
+  // const [provinces, setProvinces] = useState<Provincia[]>([]);
+  // const [selectedProvince, setSelectedProvince] = useState<ListItem>(
+  //   {} as ListItem
+  // );
+
+  // const [loading, setLoading] = useState<boolean>(false);
+  const theme = useTheme();
+  // const isFetching = useRef(false);
+  // const getProvinces = async () => {
+  //   setLoading(true);
+
+  //   try {
+  //     const {
+  //       data: { provincias },
+  //     } = await geoRefAxiosInstance.get<GeoRefProvincesResponse<Provincia>>(
+  //       geoRefAxiosInstanceEndpoints.PROVINCES
+  //     );
+
+  //     setProvinces(provincias);
+  //     setSelectedProvince({
+  //       _id: provincias.at(0)?.id ?? '',
+  //       value: provincias.at(0)?.iso_nombre ?? '',
+  //     });
+  //   } catch (error) {
+  //     console.log('error obteniendo provincias');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   isFetching.current = true;
+  //   if (isFetching.current) {
+  //     getProvinces();
+  //   }
+  //   () => {
+  //     isFetching.current = false;
+  //     return;
+  //   };
+  // }, []);
+  const [selectedProvince, setSelectedProvince] = useState<ListItem>(
+    {} as ListItem
+  );
+  useEffect(() => {
+    handleSelectProvince(selectedProvince.value);
+    if (selectedProvince._id) {
+    }
+  }, [selectedProvince._id]);
+  const handleSelectProvinceInner = (province: Provincia) => {
+    setSelectedProvince({
+      _id: province.id ?? '',
+      value: province.iso_nombre ?? '',
+    });
+  };
+  const {
+    getLocations,
+    loadingLocations: loadingProvinces,
+    locations: provinces,
+  } = useGetLocations<Provincia, GeoRefProvincesResponse<Provincia>>({
+    url: geoRefAxiosInstanceEndpoints.PROVINCES,
+    key: 'provincias',
+    setInitialLocation: handleSelectProvinceInner,
+  });
+  if (loadingProvinces) {
+    return <AppLoading></AppLoading>;
+  }
+  return (
+    (provinces.length > 0 && !loadingProvinces && (
+      <>
+        <AppReactNativePaperSelect
+          multiEnable={false}
+          value={selectedProvince.value}
+          selectedArrayList={[selectedProvince]}
+          theme={theme}
+          dialogStyle={{ backgroundColor: theme.colors.background }}
+          hideSearchBox={true}
+          onSelection={(val) => {
+            setSelectedProvince({
+              _id: val.selectedList.at(0)?._id ?? '',
+              value: val.selectedList.at(0)?.value ?? '',
+            });
+          }}
+          arrayList={provinces.map((el) => ({
+            ...el,
+            _id: el.id,
+            label: el.iso_nombre,
+            value: el.iso_nombre,
+          }))}
+          label='Provincia'
+        ></AppReactNativePaperSelect>
+
+        {/*   <AppReactNativePaperSelect
+          multiEnable={false}
+          value={selectedProvince.value}
+          selectedArrayList={[selectedProvince]}
+          theme={theme}
+          dialogStyle={{ backgroundColor: theme.colors.background }}
+          hideSearchBox={true}
+          onSelection={
+            (val) => {}
+            // setSelectedProvince({
+            //   _id: val.selectedList.at(0)?._id ?? '',
+            //   value: val.selectedList.at(0)?.value ?? '',
+            // })
+          }
+          arrayList={provinces.map((el) => ({
+            ...el,
+            _id: el.id,
+            label: el.iso_nombre,
+            value: el.iso_nombre,
+          }))}
+          label='Ciudad'
+        ></AppReactNativePaperSelect> */}
+      </>
+    )) || <></>
+  );
+};
 const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   const [provinces, setProvinces] = useState<Provincia[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
@@ -53,6 +173,8 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
 
   useEffect(() => {
     handleSelectProvince(selectedProvince.value);
+    if (selectedProvince._id) {
+    }
   }, [selectedProvince._id]);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,7 +186,7 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
     try {
       const {
         data: { provincias },
-      } = await geoRefAxiosInstance.get<GeoRefProvincesResponse>(
+      } = await geoRefAxiosInstance.get<GeoRefProvincesResponse<Provincia>>(
         geoRefAxiosInstanceEndpoints.PROVINCES
       );
 
@@ -94,27 +216,52 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   }
   return (
     (provinces.length > 0 && !loading && (
-      <AppReactNativePaperSelect
-        multiEnable={false}
-        value={selectedProvince.value}
-        selectedArrayList={[selectedProvince]}
-        theme={theme}
-        dialogStyle={{ backgroundColor: theme.colors.background }}
-        hideSearchBox={true}
-        onSelection={(val) =>
-          setSelectedProvince({
-            _id: val.selectedList.at(0)?._id ?? '',
-            value: val.selectedList.at(0)?.value ?? '',
-          })
-        }
-        arrayList={provinces.map((el) => ({
-          ...el,
-          _id: el.id,
-          label: el.iso_nombre,
-          value: el.iso_nombre,
-        }))}
-        label='Provincias'
-      ></AppReactNativePaperSelect>
+      <>
+        <AppReactNativePaperSelect
+          multiEnable={false}
+          value={selectedProvince.value}
+          selectedArrayList={[selectedProvince]}
+          theme={theme}
+          dialogStyle={{ backgroundColor: theme.colors.background }}
+          hideSearchBox={true}
+          onSelection={(val) =>
+            setSelectedProvince({
+              _id: val.selectedList.at(0)?._id ?? '',
+              value: val.selectedList.at(0)?.value ?? '',
+            })
+          }
+          arrayList={provinces.map((el) => ({
+            ...el,
+            _id: el.id,
+            label: el.iso_nombre,
+            value: el.iso_nombre,
+          }))}
+          label='Provincia'
+        ></AppReactNativePaperSelect>
+
+        {/*   <AppReactNativePaperSelect
+          multiEnable={false}
+          value={selectedProvince.value}
+          selectedArrayList={[selectedProvince]}
+          theme={theme}
+          dialogStyle={{ backgroundColor: theme.colors.background }}
+          hideSearchBox={true}
+          onSelection={
+            (val) => {}
+            // setSelectedProvince({
+            //   _id: val.selectedList.at(0)?._id ?? '',
+            //   value: val.selectedList.at(0)?.value ?? '',
+            // })
+          }
+          arrayList={provinces.map((el) => ({
+            ...el,
+            _id: el.id,
+            label: el.iso_nombre,
+            value: el.iso_nombre,
+          }))}
+          label='Ciudad'
+        ></AppReactNativePaperSelect> */}
+      </>
     )) || <></>
   );
 };
@@ -137,7 +284,7 @@ const NewJobOffer = () => {
           ...base,
           city: '',
           jobLocation: JobLocation.ON_SITE,
-          locality: '',
+
           province: '',
         };
         return JobOfferOnSite;
@@ -147,7 +294,7 @@ const NewJobOffer = () => {
           ...base,
           city: '',
           jobLocation: JobLocation.HYBRID,
-          locality: '',
+
           province: '',
         };
         return JobOfferHybrid;
@@ -179,10 +326,6 @@ const NewJobOffer = () => {
 
         .required()
         .min(1, 'elegir al menos una skill'),
-      /*  skills: Yup.array()
-        .of(Yup.string().defined())
-        .required()
-        .min(1, 'elegir al menos una skill'), */
     });
 
     switch (jobLocation) {
@@ -192,7 +335,7 @@ const NewJobOffer = () => {
             .oneOf([JobLocation.ON_SITE])
             .required(),
           city: Yup.string().required('campo obligatorio'),
-          locality: Yup.string().required('campo obligatorio'),
+
           province: Yup.string().required('campo obligatorio'),
         });
 
@@ -202,7 +345,7 @@ const NewJobOffer = () => {
             .oneOf([JobLocation.HYBRID])
             .required(),
           city: Yup.string().required('campo obligatorio'),
-          locality: Yup.string().required('campo obligatorio'),
+
           province: Yup.string().required('campo obligatorio'),
         });
 
@@ -252,250 +395,249 @@ const NewJobOffer = () => {
   const theme = useTheme();
 
   return (
-    <>
-      {/* <Text>{JSON.stringify(jobOfferForm, null)}</Text> */}
-      <View
-        style={{
-          ...utilityStyles.contentContainer,
-          ...utilityStyles.flex,
-          marginTop: 20,
-          marginBottom: 40,
-        }}
+    <View
+      style={{
+        ...utilityStyles.contentContainer,
+        ...utilityStyles.flex,
+        marginTop: 20,
+        marginBottom: 40,
+      }}
+    >
+      <AppForm<IJobOffer>
+        handleSubmit={handleSubmit}
+        loadingPostIndicator={loading}
+        validationSchema={jobOfferValidationSchema}
+        formFields={jobOfferForm}
       >
-        <AppForm<IJobOffer>
-          handleSubmit={handleSubmit}
-          loadingPostIndicator={loading}
-          validationSchema={jobOfferValidationSchema}
-          formFields={jobOfferForm}
-        >
-          {({
-            handleInputValue,
-            handleTextInputBlur,
-            setFieldTouched,
-            handleChange,
-            values,
-            touched,
-            errors,
-            dirty,
-            isValid,
-            handleBlur,
-            handleSubmit,
-            loadingPostIndicator,
-            setFieldValue,
+        {({
+          handleInputValue,
+          handleTextInputBlur,
+          setFieldTouched,
+          handleChange,
+          values,
+          touched,
+          errors,
+          dirty,
+          isValid,
+          handleBlur,
+          handleSubmit,
+          loadingPostIndicator,
+          setFieldValue,
 
-            setValues,
-          }) => {
-            return (
-              <>
+          setValues,
+        }) => {
+          return (
+            <>
+              <View
+                style={[
+                  {
+                    backgroundColor: theme.colors.background,
+                    overflow: 'scroll',
+                  },
+                ]}
+              >
+                <KeyboardAwareScrollView
+                  style={{ marginBottom: 100 }}
+                  disableScrollOnKeyboardHide
+                  automaticallyAdjustContentInsets
+                  automaticallyAdjustKeyboardInsets
+                  automaticallyAdjustsScrollIndicatorInsets
+                >
+                  <View
+                    style={{
+                      paddingBottom: isVisible ? 10 : 'auto',
+                    }}
+                  >
+                    <View style={utilityStyles.contentContainer}>
+                      <View style={utilityStyles.inputsContainer}>
+                        <AppFormInputWithHelper<IJobOffer>
+                          formKey='title'
+                          value={values.title}
+                          placeholder='Título de la oferta '
+                          key={'title'}
+                          label='Título'
+                          onBlur={() => handleTextInputBlur('title')}
+                          onFocus={() => setFieldTouched('title', true)}
+                          onChangeText={handleChange('title')}
+                          keyboardType='ascii-capable'
+                          errorCondition={
+                            Boolean(touched.title && errors.title) || false
+                          }
+                          errorMessage={errors.title ?? ''}
+                        ></AppFormInputWithHelper>
+                      </View>
+                      <View style={utilityStyles.inputsContainer}>
+                        <AppFormInputWithHelper<IJobOffer>
+                          formKey='description'
+                          value={values.description}
+                          placeholder='Descripción de la oferta '
+                          key={'description'}
+                          label='Descripción'
+                          multiline={true}
+                          numberOfLines={4}
+                          style={{ minHeight: 100 }}
+                          onBlur={() => handleTextInputBlur('description')}
+                          onFocus={() => setFieldTouched('description', true)}
+                          onChangeText={handleChange('description')}
+                          keyboardType='ascii-capable'
+                          errorCondition={
+                            Boolean(
+                              touched.description && errors.description
+                            ) || false
+                          }
+                          errorMessage={errors.description ?? ''}
+                        ></AppFormInputWithHelper>
+                      </View>
+                      <View style={utilityStyles.inputsContainer}>
+                        <AppSubtitle textAlign='left'>Modalidad</AppSubtitle>
+                        <AppSegmentedButtons
+                          defaultValue={JobLocation.REMOTE}
+                          values={[
+                            {
+                              value: JobLocation.HYBRID,
+                              label: JobLocation.HYBRID,
+                            },
+                            {
+                              value: JobLocation.ON_SITE,
+                              label: JobLocation.ON_SITE,
+                            },
+                            {
+                              value: JobLocation.REMOTE,
+                              label: JobLocation.REMOTE,
+                            },
+                          ]}
+                          handleChange={(val: JobLocation) => {
+                            setValues(generateJobOfferForm(val), true);
+                          }}
+                        ></AppSegmentedButtons>
+
+                        {jobOfferHasLocation(values) ? (
+                          <View style={{ ...utilityStyles.inputsContainer }}>
+                            <LocationPicker1
+                              handleSelectProvince={(val) => {
+                                setFieldValue('province', val);
+                              }}
+                            ></LocationPicker1>
+                          </View>
+                        ) : (
+                          <></>
+                        )}
+                        {jobOfferHasLocation(values) && (
+                          <Text> {values.province}</Text>
+                        )}
+                      </View>
+                      <View style={{ ...utilityStyles.inputsContainer }}>
+                        <AppSubtitle textAlign='left'>Turno</AppSubtitle>
+                        <AppSegmentedButtons
+                          defaultValue={ShiftTime.PART_TIME}
+                          values={[
+                            {
+                              value: ShiftTime.PART_TIME,
+                              label: ShiftTime.PART_TIME,
+                            },
+                            {
+                              value: ShiftTime.FULL_TIME,
+                              label: ShiftTime.FULL_TIME,
+                            },
+                            {
+                              value: ShiftTime.CONTRACTOR,
+                              label: ShiftTime.CONTRACTOR,
+                            },
+                          ]}
+                          handleChange={(val: ShiftTime) => {
+                            handleInputValue('shiftTime', val);
+                          }}
+                        ></AppSegmentedButtons>
+                      </View>
+
+                      <View
+                        style={{
+                          ...utilityStyles.inputsContainer,
+                        }}
+                      >
+                        <AppSubtitle textAlign='left'>Skills</AppSubtitle>
+
+                        <AppReactNativePaperSelectMultiple
+                          handleSelectedListChange={(val) =>
+                            setFieldValue(
+                              'skills',
+                              val.map((el) => ({ name: el.value }))
+                            )
+                          }
+                          label='Skills'
+                          selectedList={values.skills.map((el) => ({
+                            _id: el.name,
+                            value: el.name,
+                          }))}
+                          list={skillsLists.map((el) => ({
+                            _id: el.name,
+
+                            value: el.name,
+                          }))}
+                        ></AppReactNativePaperSelectMultiple>
+
+                        <InputHelper
+                          errorCondition={errors.skills !== undefined}
+                          errorMessage={errors?.skills?.toString() ?? ''}
+                        ></InputHelper>
+                      </View>
+
+                      <View style={{ ...utilityStyles.inputsContainer }}>
+                        <AppFormInputWithHelper<IJobOffer>
+                          formKey='salary'
+                          value={values.salary.toString()}
+                          placeholder='Salario'
+                          key={'salary'}
+                          label='Salario'
+                          multiline={true}
+                          onBlur={() => handleTextInputBlur('salary')}
+                          onFocus={() => setFieldTouched('salary', true)}
+                          onChangeText={(e) =>
+                            handleInputValue('salary', Number(e))
+                          }
+                          keyboardType='decimal-pad'
+                          errorCondition={
+                            Boolean(touched.salary && errors.salary) || false
+                          }
+                          errorMessage={errors.salary ?? ''}
+                        ></AppFormInputWithHelper>
+                      </View>
+                    </View>
+                  </View>
+                </KeyboardAwareScrollView>
                 <View
                   style={[
-                    // utilityStyles.container,
+                    utilityStyles.fabContainer,
                     {
                       backgroundColor: theme.colors.background,
-                      overflow: 'scroll',
                     },
                   ]}
                 >
-                  <KeyboardAwareScrollView
-                    style={{ marginBottom: 100 }}
-                    disableScrollOnKeyboardHide
-                    automaticallyAdjustContentInsets
-                    automaticallyAdjustKeyboardInsets
-                    automaticallyAdjustsScrollIndicatorInsets
-                  >
-                    <View
-                      style={{
-                        paddingBottom: isVisible ? 10 : 'auto',
-                      }}
+                  {!loadingPostIndicator && (
+                    <Button
+                      mode='contained'
+                      style={utilityStyles.fab}
+                      contentStyle={utilityStyles.fabContent}
+                      labelStyle={utilityStyles.fabLabel}
+                      onPress={() => handleSubmit()}
+                      disabled={(dirty && !isValid) || !dirty}
                     >
-                      <View style={utilityStyles.contentContainer}>
-                        <View style={utilityStyles.inputsContainer}>
-                          <AppFormInputWithHelper<IJobOffer>
-                            formKey='title'
-                            value={values.title}
-                            placeholder='Título de la oferta '
-                            key={'title'}
-                            label='Título'
-                            onBlur={() => handleTextInputBlur('title')}
-                            onFocus={() => setFieldTouched('title', true)}
-                            onChangeText={handleChange('title')}
-                            keyboardType='ascii-capable'
-                            errorCondition={
-                              Boolean(touched.title && errors.title) || false
-                            }
-                            errorMessage={errors.title ?? ''}
-                          ></AppFormInputWithHelper>
-                        </View>
-                        <View style={utilityStyles.inputsContainer}>
-                          <AppFormInputWithHelper<IJobOffer>
-                            formKey='description'
-                            value={values.description}
-                            placeholder='Descripción de la oferta '
-                            key={'description'}
-                            label='Descripción'
-                            multiline={true}
-                            numberOfLines={4}
-                            style={{ minHeight: 100 }}
-                            onBlur={() => handleTextInputBlur('description')}
-                            onFocus={() => setFieldTouched('description', true)}
-                            onChangeText={handleChange('description')}
-                            keyboardType='ascii-capable'
-                            errorCondition={
-                              Boolean(
-                                touched.description && errors.description
-                              ) || false
-                            }
-                            errorMessage={errors.description ?? ''}
-                          ></AppFormInputWithHelper>
-                        </View>
-                        <View style={utilityStyles.inputsContainer}>
-                          <AppSubtitle textAlign='left'>Modalidad</AppSubtitle>
-                          <AppSegmentedButtons
-                            defaultValue={JobLocation.REMOTE}
-                            values={[
-                              {
-                                value: JobLocation.HYBRID,
-                                label: JobLocation.HYBRID,
-                              },
-                              {
-                                value: JobLocation.ON_SITE,
-                                label: JobLocation.ON_SITE,
-                              },
-                              {
-                                value: JobLocation.REMOTE,
-                                label: JobLocation.REMOTE,
-                              },
-                            ]}
-                            handleChange={(val: JobLocation) => {
-                              setValues(generateJobOfferForm(val), true);
-                            }}
-                          ></AppSegmentedButtons>
-
-                          {jobOfferHasLocation(values) ? (
-                            <View style={{ ...utilityStyles.inputsContainer }}>
-                              <LocationPicker
-                                handleSelectProvince={(val) => {
-                                  setFieldValue('province', val);
-                                }}
-                              ></LocationPicker>
-                            </View>
-                          ) : (
-                            <></>
-                          )}
-                        </View>
-                        <View style={{ ...utilityStyles.inputsContainer }}>
-                          <AppSubtitle textAlign='left'>Turno</AppSubtitle>
-                          <AppSegmentedButtons
-                            defaultValue={ShiftTime.PART_TIME}
-                            values={[
-                              {
-                                value: ShiftTime.PART_TIME,
-                                label: ShiftTime.PART_TIME,
-                              },
-                              {
-                                value: ShiftTime.FULL_TIME,
-                                label: ShiftTime.FULL_TIME,
-                              },
-                              {
-                                value: ShiftTime.CONTRACTOR,
-                                label: ShiftTime.CONTRACTOR,
-                              },
-                            ]}
-                            handleChange={(val: ShiftTime) => {
-                              handleInputValue('shiftTime', val);
-                            }}
-                          ></AppSegmentedButtons>
-                        </View>
-
-                        <View
-                          style={{
-                            ...utilityStyles.inputsContainer,
-                          }}
-                        >
-                          <AppSubtitle textAlign='left'>Skills</AppSubtitle>
-
-                          <AppReactNativePaperSelectMultiple
-                            handleSelectedListChange={(val) =>
-                              setFieldValue(
-                                'skills',
-                                val.map((el) => ({ name: el.value }))
-                              )
-                            }
-                            label='Skills'
-                            selectedList={values.skills.map((el) => ({
-                              _id: el.name,
-                              value: el.name,
-                            }))}
-                            list={skillsLists.map((el) => ({
-                              _id: el.name,
-
-                              value: el.name,
-                            }))}
-                          ></AppReactNativePaperSelectMultiple>
-
-                          <InputHelper
-                            errorCondition={errors.skills !== undefined}
-                            errorMessage={errors?.skills?.toString() ?? ''}
-                          ></InputHelper>
-                        </View>
-
-                        <View style={{ ...utilityStyles.inputsContainer }}>
-                          <AppFormInputWithHelper<IJobOffer>
-                            formKey='salary'
-                            value={values.salary.toString()}
-                            placeholder='Salario'
-                            key={'salary'}
-                            label='Salario'
-                            multiline={true}
-                            onBlur={() => handleTextInputBlur('salary')}
-                            onFocus={() => setFieldTouched('salary', true)}
-                            onChangeText={(e) =>
-                              handleInputValue('salary', Number(e))
-                            }
-                            keyboardType='decimal-pad'
-                            errorCondition={
-                              Boolean(touched.salary && errors.salary) || false
-                            }
-                            errorMessage={errors.salary ?? ''}
-                          ></AppFormInputWithHelper>
-                        </View>
-                      </View>
-                    </View>
-                  </KeyboardAwareScrollView>
-                  <View
-                    style={[
-                      utilityStyles.fabContainer,
-                      {
-                        backgroundColor: theme.colors.background,
-                      },
-                    ]}
-                  >
-                    {!loadingPostIndicator && (
-                      <Button
-                        mode='contained'
-                        style={utilityStyles.fab}
-                        contentStyle={utilityStyles.fabContent}
-                        labelStyle={utilityStyles.fabLabel}
-                        onPress={() => handleSubmit()}
-                        disabled={(dirty && !isValid) || !dirty}
-                      >
-                        Crear oferta
-                      </Button>
-                    )}
-                    {loadingPostIndicator && (
-                      <ActivityIndicator
-                        color={theme.colors.primary}
-                        size={'small'}
-                      ></ActivityIndicator>
-                    )}
-                  </View>
+                      Crear oferta
+                    </Button>
+                  )}
+                  {loadingPostIndicator && (
+                    <ActivityIndicator
+                      color={theme.colors.primary}
+                      size={'small'}
+                    ></ActivityIndicator>
+                  )}
                 </View>
-              </>
-            );
-          }}
-        </AppForm>
-      </View>
-    </>
+              </View>
+            </>
+          );
+        }}
+      </AppForm>
+    </View>
   );
 };
 

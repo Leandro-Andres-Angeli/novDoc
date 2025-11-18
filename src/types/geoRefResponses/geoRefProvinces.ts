@@ -1,9 +1,9 @@
-export interface GeoRefProvincesResponse {
+export interface GeoRefProvincesResponse<T> {
   cantidad: number;
   total: number;
   inicio: number;
   parametros: Parametros;
-  provincias: Provincia[];
+  provincias: T[];
 }
 
 export interface Parametros {}
