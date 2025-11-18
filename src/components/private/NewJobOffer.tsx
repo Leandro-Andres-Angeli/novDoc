@@ -294,6 +294,8 @@ const NewJobOffer = () => {
           jobLocation: JobLocation.REMOTE,
         };
         return JobOfferRemote;
+      default:
+        return base as IJobOfferRemote;
     }
   };
 
@@ -301,9 +303,6 @@ const NewJobOffer = () => {
     const baseValidationSchema = Yup.object({
       title: Yup.string().required('campo obligatorio'),
       description: Yup.string().required('campo obligatorio'),
-      jobLocation: Yup.string<JobLocation>()
-        .oneOf([JobLocation.REMOTE, JobLocation.HYBRID, JobLocation.ON_SITE])
-        .required(),
 
       salary: Yup.number()
         .min(200, 'No puede ser menor a 200$')
@@ -338,9 +337,17 @@ const NewJobOffer = () => {
         });
 
       case JobLocation.REMOTE:
-        return baseValidationSchema;
+        return baseValidationSchema.shape({
+          jobLocation: Yup.string<JobLocation>()
+            .oneOf([JobLocation.REMOTE])
+            .required(),
+        });
       default:
-        return baseValidationSchema;
+        return baseValidationSchema.shape({
+          jobLocation: Yup.string<JobLocation>()
+            .oneOf([JobLocation.REMOTE])
+            .required(),
+        });
     }
   };
 
@@ -361,6 +368,7 @@ const NewJobOffer = () => {
   );
 
   useEffect(() => {
+    console.log('changing job location');
     setJobOfferValidationSchema(
       generateJobOfferValidationSchema(jobOfferForm.jobLocation)
     );
@@ -493,8 +501,21 @@ const NewJobOffer = () => {
                             },
                           ]}
                           handleChange={(val: JobLocation) => {
+                            // setValues(generateJobOfferForm(val), true);
                             setValues(generateJobOfferForm(val), true);
+                            handleInputValue('jobLocation', val);
                           }}
+                          /*     handleChange={(
+                            val: JobLocation,
+                            cb = (val: JobLocation) => {
+                              return setJobOfferValidationSchema(
+                                generateJobOfferValidationSchema(val)
+                              );
+                            }
+                          ) => {
+                            setValues(generateJobOfferForm(val), true);
+                            return cb(val);
+                          }} */
                         ></AppSegmentedButtons>
 
                         {jobOfferHasLocation(values) ? (
