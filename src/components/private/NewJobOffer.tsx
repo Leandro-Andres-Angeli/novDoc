@@ -53,7 +53,10 @@ interface LocationPickerProps {
   handleSelectCity: (val: string) => void;
   dynamicParams?: string | number[];
 }
-const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
+const LocationPicker = ({
+  handleSelectProvince,
+  handleSelectCity,
+}: LocationPickerProps) => {
   const theme = useTheme();
 
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
@@ -63,8 +66,12 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   useEffect(() => {
     handleSelectProvince(selectedProvince.value);
     if (selectedProvince._id) {
+      handleSelectCity(selectedCity.value);
     }
   }, [selectedProvince._id]);
+  useEffect(() => {
+    handleSelectCity(selectedCity.value);
+  }, [selectedCity._id]);
   const handleSelectProvinceInner = (province: Provincia) => {
     setSelectedProvince({
       _id: province.id ?? '',
