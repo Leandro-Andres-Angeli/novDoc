@@ -9,7 +9,13 @@ const AppReactNativePaperSelect = <T,>(
 ) => {
   const { ...defaultProps } = props;
 
-  return <PaperSelect {...defaultProps}></PaperSelect>;
+  return (
+    <PaperSelect
+      {...defaultProps}
+      dialogCloseButtonText='Cancelar'
+      dialogDoneButtonText='Ok'
+    ></PaperSelect>
+  );
 };
 
 export default AppReactNativePaperSelect;

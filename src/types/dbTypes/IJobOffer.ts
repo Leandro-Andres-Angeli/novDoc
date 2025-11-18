@@ -1,3 +1,5 @@
+import { ISkill } from './ISkills';
+
 export enum Seniority {
   JUNIOR = 'junior',
   MID_LEVEL = 'mid-level',
@@ -29,7 +31,7 @@ export interface IJobOfferHybrid extends IJobOfferGeneral {
 export interface IJobOfferGeneral {
   title: string;
   description: string;
-  skills: Array<string>;
+  skills: Array<ISkill>;
   seniority: Seniority;
   jobLocation: JobLocation;
   shiftTime: ShiftTime;

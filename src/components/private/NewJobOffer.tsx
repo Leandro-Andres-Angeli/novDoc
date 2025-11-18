@@ -34,6 +34,8 @@ import AppLoading from '@ui/AppLoading';
 import AppReactNativePaperSelect from '../../ui/AppReactNativePaperSelect';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import { IconButton } from 'react-native-paper';
+import AppSubtitle from '../../ui/AppSubtitle';
+import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 interface LocationPickerProps {
   handleSelectProvince: (val: string) => void;
 }
@@ -57,7 +59,7 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
       } = await geoRefAxiosInstance.get<GeoRefProvincesResponse>(
         geoRefAxiosInstanceEndpoints.PROVINCES
       );
-      console.log('DATA', provincias);
+
       setProvinces(provincias);
       setSelectedProvince({
         _id: provincias.at(0)?.id ?? '',
@@ -102,21 +104,7 @@ const LocationPicker = ({ handleSelectProvince }: LocationPickerProps) => {
   );
 };
 const NewJobOffer = () => {
-  // const jobOfferForm: Pick<IJobOffer, 'title' | 'description' | 'jobLocation'> =
-  //   {
-  //     title: '',
-  //     description: '',
-  //     jobLocation: JobLocation.REMOTE,
-
-  //     // salary: 0,
-  //     // seniority: seniority.JUNIOR,
-  //     // shiftTime: ShiftTime.PART_TIME,
-  //     // skills: [],
-  //   };
-  const generateJobOfferForm = (
-    jobLocation: JobLocation,
-    prevData?: Record<string, any>
-  ) => {
+  const generateJobOfferForm = (jobLocation: JobLocation) => {
     const base: IJobOfferGeneral = {
       title: '',
       description: '',
@@ -170,10 +158,14 @@ const NewJobOffer = () => {
         .required('campo obligatorio'),
       seniority: Yup.string<Seniority>().required('campo obligatorio'),
       shiftTime: Yup.string<ShiftTime>().required('campo obligatorio'),
-      skills: Yup.array()
-        .of(Yup.string().defined())
+      skills: Yup.array<ISkill>()
+
         .required()
         .min(1, 'elegir al menos una skill'),
+      /*  skills: Yup.array()
+        .of(Yup.string().defined())
+        .required()
+        .min(1, 'elegir al menos una skill'), */
     });
 
     switch (jobLocation) {
@@ -280,7 +272,7 @@ const NewJobOffer = () => {
 
                 <View
                   style={[
-                    utilityStyles.container,
+                    // utilityStyles.container,
                     {
                       backgroundColor: theme.colors.background,
                       overflow: 'scroll',
@@ -288,7 +280,9 @@ const NewJobOffer = () => {
                   ]}
                 >
                   <KeyboardAwareScrollView>
-                    <ScrollView>
+                    <ScrollView
+                      style={{ overflow: 'scroll', marginBottom: 100 }}
+                    >
                       <View style={utilityStyles.contentContainer}>
                         <View style={utilityStyles.inputsContainer}>
                           <AppFormInputWithHelper<IJobOffer>
@@ -326,10 +320,11 @@ const NewJobOffer = () => {
                                 touched.description && errors.description
                               ) || false
                             }
-                            errorMessage={errors.title ?? ''}
+                            errorMessage={errors.description ?? ''}
                           ></AppFormInputWithHelper>
                         </View>
                         <View style={utilityStyles.inputsContainer}>
+                          <AppSubtitle textAlign='left'>Modalidad</AppSubtitle>
                           <AppSegmentedButtons
                             defaultValue={JobLocation.REMOTE}
                             values={[
@@ -362,6 +357,84 @@ const NewJobOffer = () => {
                           ) : (
                             <></>
                           )}
+                        </View>
+                        <View style={{ ...utilityStyles.inputsContainer }}>
+                          <AppSubtitle textAlign='left'>Turno</AppSubtitle>
+                          <AppSegmentedButtons
+                            defaultValue={ShiftTime.PART_TIME}
+                            values={[
+                              {
+                                value: ShiftTime.PART_TIME,
+                                label: ShiftTime.PART_TIME,
+                              },
+                              {
+                                value: ShiftTime.FULL_TIME,
+                                label: ShiftTime.FULL_TIME,
+                              },
+                              {
+                                value: ShiftTime.CONTRACTOR,
+                                label: ShiftTime.CONTRACTOR,
+                              },
+                            ]}
+                            handleChange={(val: ShiftTime) => {
+                              handleInputValue('shiftTime', val);
+                            }}
+                          ></AppSegmentedButtons>
+                        </View>
+                        <View style={{ ...utilityStyles.inputsContainer }}>
+                          <AppSubtitle textAlign='left'>Skills</AppSubtitle>
+                          <AppReactNativePaperSelect
+                            multiEnable={true}
+                            value={''}
+                            // selectedArrayList={[values.skills.map(val) => ({ _id : val , label : val})]}
+                            selectedArrayList={values.skills.map((el) => ({
+                              _id: el.name,
+
+                              value: el.name,
+                            }))}
+                            theme={theme}
+                            dialogStyle={{
+                              backgroundColor: theme.colors.background,
+                            }}
+                            hideSearchBox={true}
+                            dialogCloseButtonText='cancelar'
+                            dialogDoneButtonText='ok'
+                            selectAllText='seleccionar todo'
+                            onSelection={
+                              (val) => {}
+                              // setSelectedProvince({
+                              //   _id: val.selectedList.at(0)?._id ?? '',
+                              //   value: val.selectedList.at(0)?.value ?? '',
+                              // })
+                            }
+                            arrayList={skillsLists.map((el) => ({
+                              _id: el.name,
+
+                              value: el.name,
+                            }))}
+                            label='Skills'
+                          ></AppReactNativePaperSelect>
+                        </View>
+
+                        <View style={{ ...utilityStyles.inputsContainer }}>
+                          <AppFormInputWithHelper<IJobOffer>
+                            formKey='salary'
+                            value={values.salary}
+                            placeholder='Descripción de la oferta '
+                            key={'salary'}
+                            label='Descripción'
+                            multiline={true}
+                            numberOfLines={4}
+                            style={{ minHeight: 100 }}
+                            onBlur={() => handleTextInputBlur('salary')}
+                            onFocus={() => setFieldTouched('salary', true)}
+                            onChangeText={handleChange('salary')}
+                            keyboardType='ascii-capable'
+                            errorCondition={
+                              Boolean(touched.salary && errors.salary) || false
+                            }
+                            errorMessage={errors.title ?? ''}
+                          ></AppFormInputWithHelper>
                         </View>
                       </View>
                     </ScrollView>

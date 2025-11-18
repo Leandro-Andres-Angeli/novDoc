@@ -23,7 +23,7 @@ interface FormInputProps<T> extends Partial<TextInputProps> {
   /** Texto de marcador de posición opcional. */
   placeholder?: string;
   /** Valor actual del campo (controlado). */
-  value: string;
+  value: any;
 }
 
 /**
