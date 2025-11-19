@@ -64,15 +64,6 @@ const LocationPicker = ({
     {} as ListItem
   );
   const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
-  useEffect(() => {
-    if (selectedProvince._id) {
-      handleSelectProvince(selectedProvince.value);
-      handleSelectCity(selectedCity.value);
-    }
-  }, [selectedProvince._id]);
-  useEffect(() => {
-    handleSelectCity(selectedCity.value);
-  }, [selectedCity._id]);
   const handleSelectProvinceInner = (province: Provincia) => {
     setSelectedProvince({
       _id: province.id ?? '',
@@ -100,6 +91,15 @@ const LocationPicker = ({
       setInitialLocation: handleSelectCityInner,
       dynamicParams: [selectedProvince._id],
     });
+  useEffect(() => {
+    handleSelectProvince(selectedProvince.value);
+  }, [selectedProvince._id]);
+  useEffect(() => {
+    if (selectedProvince._id) {
+      handleSelectCity(selectedCity.value);
+    }
+  }, [selectedCity._id, selectedProvince._id]);
+
   const loadingLocations = loadingProvinces || loadingCities;
   if (loadingLocations) {
     return <AppLoading></AppLoading>;

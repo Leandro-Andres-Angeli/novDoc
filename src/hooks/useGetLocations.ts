@@ -94,15 +94,17 @@ const useGetLocations = <T, Q extends Record<string, any>>({
     setLoading(true);
 
     try {
-      if (url.includes('78')) {
+      console.log('URL', url);
+      if (url.includes('municipios?provincia=78')) {
+        console.log('JERE');
         setLocations(SANTA_CRUZ_DATA as unknown as T[]);
         setInitialLocation(SANTA_CRUZ_DATA.municipios.at(0) as unknown as T);
-        return;
+      } else {
+        const { data } = await geoRefAxiosInstance.get<Q>(url);
+        const locations = data[key];
+        setLocations(locations);
+        setInitialLocation(locations.at(0));
       }
-      const { data } = await geoRefAxiosInstance.get<Q>(url);
-      const locations = data[key];
-      setLocations(locations);
-      setInitialLocation(locations.at(0));
     } catch (error) {
       console.log('error obteniendo locaciones');
     } finally {
