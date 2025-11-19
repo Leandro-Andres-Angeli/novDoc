@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Keyboard } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   IJobOffer,
   IJobOfferGeneral,
@@ -299,7 +299,7 @@ const NewJobOffer = () => {
         return base as IJobOfferRemote;
     }
   };
-
+  /* 
   const generateJobOfferValidationSchema = (jobLocation: JobLocation) => {
     const baseValidationSchema = Yup.object({
       title: Yup.string().required('campo obligatorio'),
@@ -310,10 +310,33 @@ const NewJobOffer = () => {
         .required('campo obligatorio'),
       seniority: Yup.string<Seniority>().required('campo obligatorio'),
       shiftTime: Yup.string<ShiftTime>().required('campo obligatorio'),
+      JobLocation: Yup.string<JobLocation>()
+        .required('campo obligatorio')
+        .oneOf([JobLocation.HYBRID, JobLocation.ON_SITE, JobLocation.REMOTE]),
       skills: Yup.array<ISkill>()
 
         .required()
         .min(1, 'elegir al menos una skill'),
+      city: Yup.string().when('JobLocation', {
+        is: (val: string) =>
+          val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
+        then(schema) {
+          return schema.required('campo obligatorio');
+        },
+        otherwise(schema) {
+          return schema.notRequired();
+        },
+      }),
+      province: Yup.string().when('JobLocation', {
+        is: (val: string) =>
+          val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
+        then(schema) {
+          return schema.required('campo obligatorio');
+        },
+        otherwise(schema) {
+          return schema.notRequired();
+        },
+      }),
     });
 
     switch (jobLocation) {
@@ -350,6 +373,46 @@ const NewJobOffer = () => {
             .required(),
         });
     }
+  }; */
+  const generateJobOfferValidationSchema = () => {
+    const baseValidationSchema = Yup.object<IJobOffer>({
+      title: Yup.string().required('campo obligatorio'),
+      description: Yup.string().required('campo obligatorio'),
+
+      salary: Yup.number()
+        .min(200, 'No puede ser menor a 200$')
+        .required('campo obligatorio'),
+      seniority: Yup.string<Seniority>().required('campo obligatorio'),
+      shiftTime: Yup.string<ShiftTime>().required('campo obligatorio'),
+      jobLocation: Yup.string<JobLocation>()
+        .required('campo obligatorio')
+        .oneOf([JobLocation.HYBRID, JobLocation.ON_SITE, JobLocation.REMOTE]),
+      skills: Yup.array<ISkill>()
+
+        .required()
+        .min(1, 'elegir al menos una skill'),
+      city: Yup.string().when('jobLocation', {
+        is: (val: string) =>
+          val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
+        then(schema) {
+          return schema.required('campo obligatorio');
+        },
+        otherwise(schema) {
+          return schema.notRequired();
+        },
+      }),
+      province: Yup.string().when('jobLocation', {
+        is: (val: string) =>
+          val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
+        then(schema) {
+          return schema.required('campo obligatorio');
+        },
+        otherwise(schema) {
+          return schema.notRequired();
+        },
+      }),
+    });
+    return baseValidationSchema as unknown as Yup.ObjectSchema<IJobOffer>;
   };
 
   const jobOfferHasLocation = (
@@ -364,16 +427,36 @@ const NewJobOffer = () => {
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
     generateJobOfferForm(JobLocation.REMOTE)
   );
-  const [jobOfferValidationSchema, setJobOfferValidationSchema] = useState(
-    generateJobOfferValidationSchema(JobLocation.REMOTE)
-  );
+
+  // const [jobOfferValidationSchema, setJobOfferValidationSchema] = useState(
+  //   generateJobOfferValidationSchema(JobLocation.REMOTE)
+  // );
+  const jobOfferValidationSchema = useMemo(() => {
+    console.log('running use memo');
+    return generateJobOfferValidationSchema();
+  }, [jobOfferForm.jobLocation]);
+
+  /*   const jobOfferValidationSchema = useMemo(() => {
+    console.log('running use memo');
+    return generateJobOfferValidationSchema(jobOfferForm.jobLocation);
+  }, [jobOfferForm.jobLocation]); */
 
   useEffect(() => {
-    console.log('changing job location');
-    console.log('changing job location', jobOfferForm.jobLocation);
-    setJobOfferValidationSchema(
-      generateJobOfferValidationSchema(jobOfferForm.jobLocation)
-    );
+    // console.log('changing job location');
+    // setJobOfferValidationSchema(
+    //   generateJobOfferValidationSchema(jobOfferForm.jobLocation)
+    // );
+    // console.log('changing job location', jobOfferForm.jobLocation);
+    // setJobOfferValidationSchema(
+    //   generateJobOfferValidationSchema(jobOfferForm.jobLocation)
+    // );
+    setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation));
+
+    // console.log('JOBOFFERFORM', jobOfferForm);
+    // console.log(
+    //   'JOBOFFERFORMVALIDATIONSCHEMA',
+    //   JSON.stringify(jobOfferValidationSchema, null, 3)
+    // );
   }, [jobOfferForm.jobLocation]);
 
   const [loading, setLoading] = useState(false);
@@ -506,11 +589,13 @@ const NewJobOffer = () => {
                           handleChange={(val: JobLocation) => {
                             // setValues(generateJobOfferForm(val), true);
                             // setValues(generateJobOfferForm(val), true);
-                            setJobOfferForm(generateJobOfferForm(val));
+                            // setJobOfferForm(generateJobOfferForm(val));
                             // setValues(generateJobOfferForm(val), true);
                             handleInputValue('jobLocation', val);
+
                             // console.log('current val', values.jobLocation);
-                            // generateJobOfferValidationSchema(val);
+                            //  generateJobOfferValidationSchema(val);
+                            setJobOfferForm(generateJobOfferForm(val));
                           }}
                           /*     handleChange={(
                             val: JobLocation,
