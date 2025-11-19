@@ -43,6 +43,7 @@ import AppSubtitle from '../../ui/AppSubtitle';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { InputHelper } from '../../ui/AppFormInputs';
 import useGetLocations from 'src/hooks/useGetLocations';
+
 import {
   Ciudad,
   GeoRefCitiesResponse,
@@ -64,8 +65,8 @@ const LocationPicker = ({
   );
   const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
   useEffect(() => {
-    handleSelectProvince(selectedProvince.value);
     if (selectedProvince._id) {
+      handleSelectProvince(selectedProvince.value);
       handleSelectCity(selectedCity.value);
     }
   }, [selectedProvince._id]);
@@ -369,6 +370,7 @@ const NewJobOffer = () => {
 
   useEffect(() => {
     console.log('changing job location');
+    console.log('changing job location', jobOfferForm.jobLocation);
     setJobOfferValidationSchema(
       generateJobOfferValidationSchema(jobOfferForm.jobLocation)
     );
@@ -485,7 +487,8 @@ const NewJobOffer = () => {
                       <View style={utilityStyles.inputsContainer}>
                         <AppSubtitle textAlign='left'>Modalidad</AppSubtitle>
                         <AppSegmentedButtons
-                          defaultValue={JobLocation.REMOTE}
+                          defaultValue={values.jobLocation}
+                          value={values.jobLocation}
                           values={[
                             {
                               value: JobLocation.HYBRID,
@@ -502,8 +505,12 @@ const NewJobOffer = () => {
                           ]}
                           handleChange={(val: JobLocation) => {
                             // setValues(generateJobOfferForm(val), true);
-                            setValues(generateJobOfferForm(val), true);
+                            // setValues(generateJobOfferForm(val), true);
+                            setJobOfferForm(generateJobOfferForm(val));
+                            // setValues(generateJobOfferForm(val), true);
                             handleInputValue('jobLocation', val);
+                            // console.log('current val', values.jobLocation);
+                            // generateJobOfferValidationSchema(val);
                           }}
                           /*     handleChange={(
                             val: JobLocation,
@@ -517,7 +524,7 @@ const NewJobOffer = () => {
                             return cb(val);
                           }} */
                         ></AppSegmentedButtons>
-
+                        <Text>{values.jobLocation}</Text>
                         {jobOfferHasLocation(values) ? (
                           <View style={{ ...utilityStyles.inputsContainer }}>
                             <LocationPicker
@@ -538,7 +545,7 @@ const NewJobOffer = () => {
                       </View>
                       <View style={{ ...utilityStyles.inputsContainer }}>
                         <AppSubtitle textAlign='left'>Turno</AppSubtitle>
-                        <AppSegmentedButtons
+                        {/*   <AppSegmentedButtons
                           defaultValue={ShiftTime.PART_TIME}
                           values={[
                             {
@@ -557,7 +564,7 @@ const NewJobOffer = () => {
                           handleChange={(val: ShiftTime) => {
                             handleInputValue('shiftTime', val);
                           }}
-                        ></AppSegmentedButtons>
+                        ></AppSegmentedButtons> */}
                       </View>
                       <Text>{JSON.stringify(errors)}</Text>
                       <View
@@ -565,6 +572,7 @@ const NewJobOffer = () => {
                           ...utilityStyles.inputsContainer,
                         }}
                       >
+                        <Text>JobLocation {values.jobLocation}</Text>
                         <AppSubtitle textAlign='left'>Skills</AppSubtitle>
 
                         <AppReactNativePaperSelectMultiple
