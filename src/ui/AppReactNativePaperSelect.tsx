@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { Text, useTheme } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import {
@@ -24,9 +24,14 @@ const AppReactNativePaperSelect = <T,>(
 };
 interface ReactNativePaperSelectMultipleProps
   extends Omit<
-    PaperSelectProps,
-    'multiEnable' | 'selectedArrayList' | 'arrayList' | 'onSelection' | 'value'
-  > {
+      PaperSelectProps,
+      | 'multiEnable'
+      | 'selectedArrayList'
+      | 'arrayList'
+      | 'onSelection'
+      | 'value'
+    >,
+    PropsWithChildren {
   list: ListItem[];
   selectedList: ListItem[];
   handleSelectedListChange: (val: ListItem[]) => void;
@@ -47,6 +52,7 @@ export const AppReactNativePaperSelectMultiple = (
   return (
     <>
       <PaperSelect
+        containerStyle={{ backgroundColor: 'red' }}
         theme={theme}
         dialogStyle={{
           backgroundColor: theme.colors.background,
@@ -62,6 +68,7 @@ export const AppReactNativePaperSelectMultiple = (
         dialogCloseButtonText='Cancelar'
         dialogDoneButtonText='Ok'
       ></PaperSelect>
+      {props.children}
     </>
   );
 };

@@ -29,6 +29,7 @@ import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { InputHelper } from '../../ui/AppFormInputs';
 
 import LocationPicker from '../shared/LocationPicker';
+import GeoLocationPicker from '../shared/GeoLocationPicker';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -36,12 +37,13 @@ const NewJobOffer = () => {
   const generateJobOfferForm = (jobLocation: JobLocation) => {
     const base: IJobOfferGeneral = {
       title: '',
+      company: '',
       description: '',
       jobLocation: JobLocation.REMOTE,
       seniority: Seniority.JUNIOR,
       salary: 0,
       shiftTime: ShiftTime.FULL_TIME,
-      skills: new Array(),
+      skills: [],
     };
     switch (jobLocation) {
       case JobLocation.ON_SITE:
@@ -80,7 +82,7 @@ const NewJobOffer = () => {
     const baseValidationSchema = Yup.object<IJobOffer>({
       title: Yup.string().required('campo obligatorio'),
       description: Yup.string().required('campo obligatorio'),
-
+      company: Yup.string().required('campo obligatorio'),
       salary: Yup.number()
         .min(200, 'No puede ser menor a 200$')
         .required('campo obligatorio'),
@@ -89,10 +91,14 @@ const NewJobOffer = () => {
       jobLocation: Yup.string<JobLocation>()
         .required('campo obligatorio')
         .oneOf([JobLocation.HYBRID, JobLocation.ON_SITE, JobLocation.REMOTE]),
-      skills: Yup.array<ISkill>()
 
-        .required()
-        .min(1, 'elegir al menos una skill'),
+      /* skills: Yup.array<ISkill>()
+        .min(1, 'elegir al menos una skill')
+        .required(), */
+      skills: Yup.array<ISkill>()
+        .default([])
+        .min(1, 'elegir al menos una skill')
+        .required(),
       city: Yup.string().when('jobLocation', {
         is: (val: string) =>
           val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
@@ -186,6 +192,7 @@ const NewJobOffer = () => {
         }) => {
           return (
             <>
+              <Text>{JSON.stringify(errors)}</Text>
               <View
                 style={[
                   {
@@ -222,6 +229,23 @@ const NewJobOffer = () => {
                             Boolean(touched.title && errors.title) || false
                           }
                           errorMessage={errors.title ?? ''}
+                        ></AppFormInputWithHelper>
+                      </View>
+                      <View style={utilityStyles.inputsContainer}>
+                        <AppFormInputWithHelper<IJobOffer>
+                          formKey='company'
+                          value={values.company}
+                          placeholder='Empresa'
+                          key={'company'}
+                          label='Empresa'
+                          onBlur={() => handleTextInputBlur('company')}
+                          onFocus={() => setFieldTouched('company', true)}
+                          onChangeText={handleChange('company')}
+                          keyboardType='ascii-capable'
+                          errorCondition={
+                            Boolean(touched.company && errors.company) || false
+                          }
+                          errorMessage={errors.company ?? ''}
                         ></AppFormInputWithHelper>
                       </View>
                       <View style={utilityStyles.inputsContainer}>
@@ -272,6 +296,9 @@ const NewJobOffer = () => {
                           }}
                         ></AppSegmentedButtons>
                         <Text>{values.jobLocation}</Text>
+                        {jobOfferHasLocation(values) && (
+                          <GeoLocationPicker></GeoLocationPicker>
+                        )}
                         {jobOfferHasLocation(values) ? (
                           <View style={{ ...utilityStyles.inputsContainer }}>
                             <LocationPicker
@@ -291,7 +318,6 @@ const NewJobOffer = () => {
                         )}
                       </View>
                       <View style={{ ...utilityStyles.inputsContainer }}>
-                        <AppSubtitle textAlign='left'>Turno</AppSubtitle>
                         <AppSegmentedButtons
                           value={values.shiftTime}
                           defaultValue={values.shiftTime}
@@ -317,12 +343,9 @@ const NewJobOffer = () => {
 
                       <View
                         style={{
-                          ...utilityStyles.inputsContainer,
+                          marginBottom: 16,
                         }}
                       >
-                        <Text>JobLocation {values.jobLocation}</Text>
-                        <AppSubtitle textAlign='left'>Skills</AppSubtitle>
-
                         <AppReactNativePaperSelectMultiple
                           handleSelectedListChange={(val) =>
                             setFieldValue(
@@ -340,27 +363,30 @@ const NewJobOffer = () => {
 
                             value: el.name,
                           }))}
-                        ></AppReactNativePaperSelectMultiple>
-
-                        <InputHelper
-                          errorCondition={errors.skills !== undefined}
-                          errorMessage={errors?.skills?.toString() ?? ''}
-                        ></InputHelper>
+                        >
+                          <InputHelper
+                            errorCondition={errors.skills !== undefined}
+                            errorMessage={errors?.skills?.toString() ?? ''}
+                          ></InputHelper>
+                        </AppReactNativePaperSelectMultiple>
                       </View>
 
                       <View style={{ ...utilityStyles.inputsContainer }}>
                         <AppFormInputWithHelper<IJobOffer>
                           formKey='salary'
                           value={values.salary.toString()}
-                          placeholder='Salario'
                           key={'salary'}
                           label='Salario'
                           multiline={true}
                           onBlur={() => handleTextInputBlur('salary')}
                           onFocus={() => setFieldTouched('salary', true)}
-                          onChangeText={(e) =>
-                            handleInputValue('salary', Number(e))
-                          }
+                          onChangeText={(e) => {
+                            if (isNaN(Number(e))) {
+                              return;
+                            }
+
+                            handleInputValue('salary', Number(e));
+                          }}
                           keyboardType='decimal-pad'
                           errorCondition={
                             Boolean(touched.salary && errors.salary) || false
