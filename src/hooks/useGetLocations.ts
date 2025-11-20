@@ -97,14 +97,15 @@ const useGetLocations = <T, Q extends Record<string, any>>({
       console.log('URL', url);
       if (url.includes('municipios?provincia=78')) {
         console.log('JERE');
-        setLocations(SANTA_CRUZ_DATA as unknown as T[]);
+        setLocations(SANTA_CRUZ_DATA.municipios as unknown as T[]);
         setInitialLocation(SANTA_CRUZ_DATA.municipios.at(0) as unknown as T);
-      } else {
-        const { data } = await geoRefAxiosInstance.get<Q>(url);
-        const locations = data[key];
-        setLocations(locations);
-        setInitialLocation(locations.at(0));
+        return;
       }
+      console.log('JERE FETCHING DYNAMIC', url);
+      const { data } = await geoRefAxiosInstance.get<Q>(url);
+      const locations = data[key];
+      setLocations(locations);
+      setInitialLocation(locations.at(0));
     } catch (error) {
       console.log('error obteniendo locaciones');
     } finally {

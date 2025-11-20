@@ -48,212 +48,8 @@ import {
   Ciudad,
   GeoRefCitiesResponse,
 } from 'src/types/geoRefResponses/geoRefCities';
+import LocationPicker from '../shared/LocationPicker';
 
-interface LocationPickerProps {
-  handleSelectProvince: (val: string) => void;
-  handleSelectCity: (val: string) => void;
-  dynamicParams?: string | number[];
-}
-const LocationPicker = ({
-  handleSelectProvince,
-  handleSelectCity,
-}: LocationPickerProps) => {
-  const theme = useTheme();
-
-  const [selectedProvince, setSelectedProvince] = useState<ListItem>(
-    {} as ListItem
-  );
-  const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
-  const handleSelectProvinceInner = (province: Provincia) => {
-    setSelectedProvince({
-      _id: province.id ?? '',
-      value: province.iso_nombre ?? '',
-    });
-  };
-  const handleSelectCityInner = (city: Ciudad) => {
-    setSelectedCity({
-      _id: city.id ?? '',
-      value: city.nombre ?? '',
-    });
-  };
-  const { loadingLocations: loadingProvinces, locations: provinces } =
-    useGetLocations<Provincia, GeoRefProvincesResponse<Provincia>>({
-      url: geoRefAxiosInstanceEndpoints.PROVINCES,
-      key: 'provincias',
-      setInitialLocation: handleSelectProvinceInner,
-    });
-  const { locations: cities, loadingLocations: loadingCities } =
-    useGetLocations<Ciudad, GeoRefCitiesResponse>({
-      url: geoRefAxiosInstanceEndpoints.MUNICIPIOS(
-        selectedProvince._id ?? '02'
-      ),
-      key: 'municipios',
-      setInitialLocation: handleSelectCityInner,
-      dynamicParams: [selectedProvince._id],
-    });
-  useEffect(() => {
-    handleSelectProvince(selectedProvince.value);
-  }, [selectedProvince._id]);
-  useEffect(() => {
-    if (selectedProvince._id) {
-      handleSelectCity(selectedCity.value);
-    }
-  }, [selectedCity._id, selectedProvince._id]);
-
-  const loadingLocations = loadingProvinces || loadingCities;
-  if (loadingLocations) {
-    return <AppLoading></AppLoading>;
-  }
-  return (
-    (provinces.length > 0 && !loadingLocations && (
-      <>
-        <AppReactNativePaperSelect
-          multiEnable={false}
-          value={selectedProvince.value}
-          selectedArrayList={[selectedProvince]}
-          theme={theme}
-          dialogStyle={{ backgroundColor: theme.colors.background }}
-          hideSearchBox={true}
-          onSelection={(val) => {
-            setSelectedProvince({
-              _id: val.selectedList.at(0)?._id ?? '',
-              value: val.selectedList.at(0)?.value ?? '',
-            });
-          }}
-          arrayList={provinces.map((el) => ({
-            ...el,
-            _id: el.id,
-            label: el.iso_nombre,
-            value: el.iso_nombre,
-          }))}
-          label='Provincia'
-        ></AppReactNativePaperSelect>
-
-        <AppReactNativePaperSelect
-          multiEnable={false}
-          value={selectedCity.value}
-          selectedArrayList={[selectedCity]}
-          theme={theme}
-          dialogStyle={{ backgroundColor: theme.colors.background }}
-          hideSearchBox={true}
-          onSelection={(val) => {
-            setSelectedCity({
-              _id: val.selectedList.at(0)?._id ?? '',
-              value: val.selectedList.at(0)?.value ?? '',
-            });
-          }}
-          arrayList={cities.map((el) => ({
-            ...el,
-            _id: el.id,
-            label: el.nombre,
-            value: el.nombre,
-          }))}
-          label='Ciudad'
-        ></AppReactNativePaperSelect>
-      </>
-    )) || <></>
-  );
-};
-const LocationPicker1 = ({ handleSelectProvince }: LocationPickerProps) => {
-  const [provinces, setProvinces] = useState<Provincia[]>([]);
-  const [selectedProvince, setSelectedProvince] = useState<ListItem>(
-    {} as ListItem
-  );
-
-  useEffect(() => {
-    handleSelectProvince(selectedProvince.value);
-    if (selectedProvince._id) {
-    }
-  }, [selectedProvince._id]);
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const theme = useTheme();
-  const isFetching = useRef(false);
-  const getProvinces = async () => {
-    setLoading(true);
-
-    try {
-      const {
-        data: { provincias },
-      } = await geoRefAxiosInstance.get<GeoRefProvincesResponse<Provincia>>(
-        geoRefAxiosInstanceEndpoints.PROVINCES
-      );
-
-      setProvinces(provincias);
-      setSelectedProvince({
-        _id: provincias.at(0)?.id ?? '',
-        value: provincias.at(0)?.iso_nombre ?? '',
-      });
-    } catch (error) {
-      console.log('error obteniendo provincias');
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    isFetching.current = true;
-    if (isFetching.current) {
-      getProvinces();
-    }
-    () => {
-      isFetching.current = false;
-      return;
-    };
-  }, []);
-  if (loading) {
-    return <AppLoading></AppLoading>;
-  }
-  return (
-    (provinces.length > 0 && !loading && (
-      <>
-        <AppReactNativePaperSelect
-          multiEnable={false}
-          value={selectedProvince.value}
-          selectedArrayList={[selectedProvince]}
-          theme={theme}
-          dialogStyle={{ backgroundColor: theme.colors.background }}
-          hideSearchBox={true}
-          onSelection={(val) =>
-            setSelectedProvince({
-              _id: val.selectedList.at(0)?._id ?? '',
-              value: val.selectedList.at(0)?.value ?? '',
-            })
-          }
-          arrayList={provinces.map((el) => ({
-            ...el,
-            _id: el.id,
-            label: el.iso_nombre,
-            value: el.iso_nombre,
-          }))}
-          label='Provincia'
-        ></AppReactNativePaperSelect>
-
-        {/*   <AppReactNativePaperSelect
-          multiEnable={false}
-          value={selectedProvince.value}
-          selectedArrayList={[selectedProvince]}
-          theme={theme}
-          dialogStyle={{ backgroundColor: theme.colors.background }}
-          hideSearchBox={true}
-          onSelection={
-            (val) => {}
-            // setSelectedProvince({
-            //   _id: val.selectedList.at(0)?._id ?? '',
-            //   value: val.selectedList.at(0)?.value ?? '',
-            // })
-          }
-          arrayList={provinces.map((el) => ({
-            ...el,
-            _id: el.id,
-            label: el.iso_nombre,
-            value: el.iso_nombre,
-          }))}
-          label='Ciudad'
-        ></AppReactNativePaperSelect> */}
-      </>
-    )) || <></>
-  );
-};
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
 
@@ -299,81 +95,7 @@ const NewJobOffer = () => {
         return base as IJobOfferRemote;
     }
   };
-  /* 
-  const generateJobOfferValidationSchema = (jobLocation: JobLocation) => {
-    const baseValidationSchema = Yup.object({
-      title: Yup.string().required('campo obligatorio'),
-      description: Yup.string().required('campo obligatorio'),
 
-      salary: Yup.number()
-        .min(200, 'No puede ser menor a 200$')
-        .required('campo obligatorio'),
-      seniority: Yup.string<Seniority>().required('campo obligatorio'),
-      shiftTime: Yup.string<ShiftTime>().required('campo obligatorio'),
-      JobLocation: Yup.string<JobLocation>()
-        .required('campo obligatorio')
-        .oneOf([JobLocation.HYBRID, JobLocation.ON_SITE, JobLocation.REMOTE]),
-      skills: Yup.array<ISkill>()
-
-        .required()
-        .min(1, 'elegir al menos una skill'),
-      city: Yup.string().when('JobLocation', {
-        is: (val: string) =>
-          val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
-        then(schema) {
-          return schema.required('campo obligatorio');
-        },
-        otherwise(schema) {
-          return schema.notRequired();
-        },
-      }),
-      province: Yup.string().when('JobLocation', {
-        is: (val: string) =>
-          val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
-        then(schema) {
-          return schema.required('campo obligatorio');
-        },
-        otherwise(schema) {
-          return schema.notRequired();
-        },
-      }),
-    });
-
-    switch (jobLocation) {
-      case JobLocation.ON_SITE:
-        return baseValidationSchema.shape({
-          jobLocation: Yup.string<JobLocation>()
-            .oneOf([JobLocation.ON_SITE])
-            .required(),
-          city: Yup.string().required('campo obligatorio'),
-
-          province: Yup.string().required('campo obligatorio'),
-        });
-
-      case JobLocation.HYBRID:
-        return baseValidationSchema.shape({
-          jobLocation: Yup.string<JobLocation>()
-            .oneOf([JobLocation.HYBRID])
-            .required(),
-          city: Yup.string().required('campo obligatorio'),
-
-          province: Yup.string().required('campo obligatorio'),
-        });
-
-      case JobLocation.REMOTE:
-        return baseValidationSchema.shape({
-          jobLocation: Yup.string<JobLocation>()
-            .oneOf([JobLocation.REMOTE])
-            .required(),
-        });
-      default:
-        return baseValidationSchema.shape({
-          jobLocation: Yup.string<JobLocation>()
-            .oneOf([JobLocation.REMOTE])
-            .required(),
-        });
-    }
-  }; */
   const generateJobOfferValidationSchema = () => {
     const baseValidationSchema = Yup.object<IJobOffer>({
       title: Yup.string().required('campo obligatorio'),
@@ -428,35 +150,12 @@ const NewJobOffer = () => {
     generateJobOfferForm(JobLocation.REMOTE)
   );
 
-  // const [jobOfferValidationSchema, setJobOfferValidationSchema] = useState(
-  //   generateJobOfferValidationSchema(JobLocation.REMOTE)
-  // );
   const jobOfferValidationSchema = useMemo(() => {
-    console.log('running use memo');
     return generateJobOfferValidationSchema();
   }, [jobOfferForm.jobLocation]);
 
-  /*   const jobOfferValidationSchema = useMemo(() => {
-    console.log('running use memo');
-    return generateJobOfferValidationSchema(jobOfferForm.jobLocation);
-  }, [jobOfferForm.jobLocation]); */
-
   useEffect(() => {
-    // console.log('changing job location');
-    // setJobOfferValidationSchema(
-    //   generateJobOfferValidationSchema(jobOfferForm.jobLocation)
-    // );
-    // console.log('changing job location', jobOfferForm.jobLocation);
-    // setJobOfferValidationSchema(
-    //   generateJobOfferValidationSchema(jobOfferForm.jobLocation)
-    // );
     setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation));
-
-    // console.log('JOBOFFERFORM', jobOfferForm);
-    // console.log(
-    //   'JOBOFFERFORMVALIDATIONSCHEMA',
-    //   JSON.stringify(jobOfferValidationSchema, null, 3)
-    // );
   }, [jobOfferForm.jobLocation]);
 
   const [loading, setLoading] = useState(false);
@@ -587,27 +286,10 @@ const NewJobOffer = () => {
                             },
                           ]}
                           handleChange={(val: JobLocation) => {
-                            // setValues(generateJobOfferForm(val), true);
-                            // setValues(generateJobOfferForm(val), true);
-                            // setJobOfferForm(generateJobOfferForm(val));
-                            // setValues(generateJobOfferForm(val), true);
                             handleInputValue('jobLocation', val);
 
-                            // console.log('current val', values.jobLocation);
-                            //  generateJobOfferValidationSchema(val);
                             setJobOfferForm(generateJobOfferForm(val));
                           }}
-                          /*     handleChange={(
-                            val: JobLocation,
-                            cb = (val: JobLocation) => {
-                              return setJobOfferValidationSchema(
-                                generateJobOfferValidationSchema(val)
-                              );
-                            }
-                          ) => {
-                            setValues(generateJobOfferForm(val), true);
-                            return cb(val);
-                          }} */
                         ></AppSegmentedButtons>
                         <Text>{values.jobLocation}</Text>
                         {jobOfferHasLocation(values) ? (
@@ -630,8 +312,9 @@ const NewJobOffer = () => {
                       </View>
                       <View style={{ ...utilityStyles.inputsContainer }}>
                         <AppSubtitle textAlign='left'>Turno</AppSubtitle>
-                        {/*   <AppSegmentedButtons
-                          defaultValue={ShiftTime.PART_TIME}
+                        <AppSegmentedButtons
+                          value={values.shiftTime}
+                          defaultValue={values.shiftTime}
                           values={[
                             {
                               value: ShiftTime.PART_TIME,
@@ -649,9 +332,9 @@ const NewJobOffer = () => {
                           handleChange={(val: ShiftTime) => {
                             handleInputValue('shiftTime', val);
                           }}
-                        ></AppSegmentedButtons> */}
+                        ></AppSegmentedButtons>
                       </View>
-                      <Text>{JSON.stringify(errors)}</Text>
+
                       <View
                         style={{
                           ...utilityStyles.inputsContainer,
