@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   IJobOffer,
   IJobOfferGeneral,
@@ -30,14 +30,31 @@ import { InputHelper } from '../../ui/AppFormInputs';
 
 import LocationPicker from '../shared/LocationPicker';
 import GeoLocationPicker from '../shared/GeoLocationPicker';
+import { AuthContext } from 'src/appContext/AuthContext';
+import AppLoading from '@ui/AppLoading';
+import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
-
+  const {
+    authState: { user },
+    loading: loadingUser,
+  } = useContext(AuthContext);
+  if (loadingUser) {
+    return <AppLoading></AppLoading>;
+  }
+  if (!user) {
+    return (
+      <View>
+        <Text>Error buscando usuario</Text>
+      </View>
+    );
+  }
   const generateJobOfferForm = (jobLocation: JobLocation) => {
     const base: IJobOfferGeneral = {
       title: '',
       company: '',
+      recruiter_id: user.id,
       description: '',
       jobLocation: JobLocation.REMOTE,
       seniority: Seniority.JUNIOR,
@@ -92,9 +109,6 @@ const NewJobOffer = () => {
         .required('campo obligatorio')
         .oneOf([JobLocation.HYBRID, JobLocation.ON_SITE, JobLocation.REMOTE]),
 
-      /* skills: Yup.array<ISkill>()
-        .min(1, 'elegir al menos una skill')
-        .required(), */
       skills: Yup.array<ISkill>()
         .default([])
         .min(1, 'elegir al menos una skill')
@@ -149,7 +163,9 @@ const NewJobOffer = () => {
   async function handleSubmit(values: IJobOffer) {
     setLoading(true);
     console.log(values);
+
     try {
+      const newJobOfferResponse = await createJobOffer(values);
     } catch (error) {
       console.log('error', error);
     } finally {

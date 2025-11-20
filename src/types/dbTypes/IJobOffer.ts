@@ -29,6 +29,7 @@ export interface IJobOfferHybrid extends IJobOfferGeneral {
 export interface IJobOfferGeneral {
   title: string;
   company: string;
+  recruiter_id: string;
   description: string;
   skills: Array<ISkill>;
   seniority: Seniority;

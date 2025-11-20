@@ -8,6 +8,7 @@ import { Role } from 'src/types/authContextTypes/userRole';
 import utilityStyles from 'src/styles/utilityStyles';
 import RecruiterNavigator from './recruiterNavigator/RecruiterNavigator';
 import ProfessionalNavigator from './ProfessionalNavigator';
+import { RecruiterContextProvider } from 'src/appContext/RecruiterContext';
 
 const NavigatorByRole = () => {
   const {
@@ -21,7 +22,11 @@ const NavigatorByRole = () => {
       return <ProfessionalNavigator></ProfessionalNavigator>;
 
     case Role.RECRUITER:
-      return <RecruiterNavigator></RecruiterNavigator>;
+      return (
+        <RecruiterContextProvider>
+          <RecruiterNavigator></RecruiterNavigator>
+        </RecruiterContextProvider>
+      );
 
     default:
       return (

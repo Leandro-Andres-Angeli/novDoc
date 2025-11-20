@@ -12,9 +12,13 @@ import AppHeader from '@ui/AppHeader';
 
 import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
-import AppButton from '@ui/AppButton';
-import AppButtonText from '../../../ui/AppButtonText';
+
 import NewJobOfferScreen from 'src/screens/private/recruiter/NewJobOfferScreen';
+import {
+  RecruiterContext,
+  RecruiterContextProvider,
+} from 'src/appContext/RecruiterContext';
+import AppLoading from '@ui/AppLoading';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -33,16 +37,19 @@ const SwipeRecruiter = () => {
     </View>
   );
 };
-const Onboarding = () => (
-  <View style={{ ...utilityStyles.flex }}>
-    <Text>Recruiter</Text>
-  </View>
-);
-const Test = () => (
-  <View style={{ ...utilityStyles.flex }}>
-    <Text>Test</Text>
-  </View>
-);
+
+const Favorites = () => {
+  const { loading: loadingJobOffers, jobOffers } = useContext(RecruiterContext);
+  if (loadingJobOffers) {
+    return <AppLoading></AppLoading>;
+  }
+  return (
+    <View style={{ ...utilityStyles.flex }}>
+      <Text>Test</Text>
+      <Text> {JSON.stringify(jobOffers)} </Text>
+    </View>
+  );
+};
 const Add = () => (
   <View style={{ ...utilityStyles.flex }}>
     <Text>Test</Text>
@@ -136,7 +143,7 @@ const RecruiterNavigator = () => {
           })
         }
         name={RECRUITER_NAVIGATOR_ROUTES.FAVORITES}
-        component={Test}
+        component={Favorites}
       ></Tab.Screen>
       <Tab.Screen
         options={(props) =>
