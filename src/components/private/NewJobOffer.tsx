@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, Keyboard } from 'react-native';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   IJobOffer,
   IJobOfferGeneral,
@@ -13,12 +13,7 @@ import {
 import * as Yup from 'yup';
 import { Toast } from 'toastify-react-native';
 import AppForm from '../form/AppForm';
-import {
-  ActivityIndicator,
-  Button,
-  ListItemProps,
-  useTheme,
-} from 'react-native-paper';
+import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 import {
   KeyboardAwareScrollView,
@@ -26,28 +21,13 @@ import {
 } from 'react-native-keyboard-controller';
 import { AppFormInputWithHelper } from '@ui/AppFormInputs';
 import AppSegmentedButtons from '../AppSegmentedButtons';
-import geoRefAxiosInstance, {
-  geoRefAxiosInstanceEndpoints,
-} from 'axios/geoRef';
-import {
-  GeoRefProvincesResponse,
-  Provincia,
-} from 'src/types/geoRefResponses/geoRefProvinces';
-import AppLoading from '@ui/AppLoading';
-import AppReactNativePaperSelect, {
-  AppReactNativePaperSelectMultiple,
-} from '../../ui/AppReactNativePaperSelect';
-import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
+
+import { AppReactNativePaperSelectMultiple } from '../../ui/AppReactNativePaperSelect';
 
 import AppSubtitle from '../../ui/AppSubtitle';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { InputHelper } from '../../ui/AppFormInputs';
-import useGetLocations from 'src/hooks/useGetLocations';
 
-import {
-  Ciudad,
-  GeoRefCitiesResponse,
-} from 'src/types/geoRefResponses/geoRefCities';
 import LocationPicker from '../shared/LocationPicker';
 
 const NewJobOffer = () => {
