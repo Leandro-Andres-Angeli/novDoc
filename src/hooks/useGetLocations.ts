@@ -94,14 +94,12 @@ const useGetLocations = <T, Q extends Record<string, any>>({
     setLoading(true);
 
     try {
-      console.log('URL', url);
       if (url.includes('municipios?provincia=78')) {
-        console.log('JERE');
         setLocations(SANTA_CRUZ_DATA.municipios as unknown as T[]);
         setInitialLocation(SANTA_CRUZ_DATA.municipios.at(0) as unknown as T);
         return;
       }
-      console.log('JERE FETCHING DYNAMIC', url);
+
       const { data } = await geoRefAxiosInstance.get<Q>(url);
       const locations = data[key];
       setLocations(locations);

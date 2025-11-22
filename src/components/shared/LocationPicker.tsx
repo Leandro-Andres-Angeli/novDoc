@@ -57,7 +57,10 @@ const LocationPicker = ({
       dynamicParams: [selectedProvince._id],
     });
   useEffect(() => {
-    handleSelectProvince(selectedProvince.value);
+    if (selectedProvince._id) {
+      console.log('setting province');
+      handleSelectProvince(selectedProvince.value);
+    }
   }, [selectedProvince._id]);
   useEffect(() => {
     if (selectedProvince._id) {

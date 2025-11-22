@@ -1,5 +1,11 @@
-import { View, Text } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { View } from 'react-native';
+import React, {
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   IJobOffer,
   IJobOfferGeneral,
@@ -13,7 +19,13 @@ import {
 import * as Yup from 'yup';
 import { Toast } from 'toastify-react-native';
 import AppForm from '../form/AppForm';
-import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Chip,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 import {
   KeyboardAwareScrollView,
@@ -33,6 +45,7 @@ import GeoLocationPicker from '../shared/GeoLocationPicker';
 import { AuthContext } from 'src/appContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
+import AppLocationSelected from '@ui/AppLocationSelected';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -159,6 +172,7 @@ const NewJobOffer = () => {
   }, [jobOfferForm.jobLocation]);
 
   const [loading, setLoading] = useState(false);
+  const [loadingFormLocation, setLoadingFormLocation] = useState(false);
 
   async function handleSubmit(values: IJobOffer) {
     setLoading(true);
@@ -208,7 +222,8 @@ const NewJobOffer = () => {
         }) => {
           return (
             <>
-              <Text>{JSON.stringify(errors)}</Text>
+              {/* <Text>{JSON.stringify(errors)}</Text>
+              <Text>Values{JSON.stringify(values)}</Text> */}
               <View
                 style={[
                   {
@@ -311,9 +326,41 @@ const NewJobOffer = () => {
                             setJobOfferForm(generateJobOfferForm(val));
                           }}
                         ></AppSegmentedButtons>
-                        <Text>{values.jobLocation}</Text>
+
                         {jobOfferHasLocation(values) && (
-                          <GeoLocationPicker></GeoLocationPicker>
+                          <AppLocationSelected
+                            loadingCondition={loadingFormLocation}
+                          >
+                            <>
+                              <Text variant='labelMedium'>
+                                Locacion seleccionada
+                              </Text>
+                              <View style={utilityStyles.flex}>
+                                <Chip>
+                                  {values.province} {values.city}
+                                </Chip>
+                                <Chip>{values.city}</Chip>
+                              </View>
+                              {/*  <Text variant='labelMedium'>
+                                {values.city} {values.province}
+                              </Text> */}
+                            </>
+                          </AppLocationSelected>
+                        )}
+
+                        {jobOfferHasLocation(values) && (
+                          <GeoLocationPicker
+                            handleLoading={(val: boolean) =>
+                              setLoadingFormLocation(val)
+                            }
+                            handleSelectProvince={(val) => {
+                              setFieldValue('province', val);
+                            }}
+                            handleSelectCity={(val) => {
+                              setLoadingFormLocation(true);
+                              setFieldValue('city', val);
+                            }}
+                          ></GeoLocationPicker>
                         )}
                         {jobOfferHasLocation(values) ? (
                           <View style={{ ...utilityStyles.inputsContainer }}>
