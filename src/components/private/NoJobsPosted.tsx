@@ -1,7 +1,12 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Image, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
+import RECRUITER_NAVIGATOR_ROUTES from '../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 
 const NoJobsPosted = () => {
+  const navigator =
+    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
   return (
     <View style={styles.container}>
       {/* Empty State */}
@@ -25,7 +30,9 @@ const NoJobsPosted = () => {
 
         <Button
           mode='contained'
-          onPress={() => {}}
+          onPress={() =>
+            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS, {})
+          }
           style={styles.button}
           labelStyle={styles.buttonLabel}
         >
