@@ -11,6 +11,7 @@ import MapView, {
 } from 'react-native-maps';
 import { Text } from 'react-native-paper';
 import * as Location from 'expo-location';
+import { Toast } from 'toastify-react-native';
 
 interface AppMapProps {
   handleSelectMarker?: (...args: Array<string>) => void;
@@ -50,12 +51,13 @@ const AppMap = (props: AppMapProps) => {
         throw Error('Error getting reversed geo');
       }
 
-      console.log('coords data', coordinatesData);
       if (props.handleSelectMarker) {
         props.handleSelectMarker(city, coordinatesData.region);
       }
     } catch (error) {
       console.log('err', error);
+      const parsedError = error as unknown as Error;
+      Toast.error(parsedError.message ?? 'Error in geo');
     }
   };
   return (
