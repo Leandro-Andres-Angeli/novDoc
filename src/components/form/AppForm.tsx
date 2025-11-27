@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 
-import { FormikProps, FormikValues, useFormik } from 'formik';
+import {
+  FormikHelpers,
+  FormikProps,
+  FormikState,
+  FormikValues,
+  useFormik,
+} from 'formik';
 import { Keyboard } from 'react-native';
 import * as Yup from 'yup';
 export interface FormChildrenProps<T> extends FormikProps<T> {
@@ -9,7 +15,7 @@ export interface FormChildrenProps<T> extends FormikProps<T> {
   loadingPostIndicator?: boolean;
 }
 export interface AppFormProps<T> extends FormikValues {
-  handleSubmit: (values: any) => Promise<void>;
+  handleSubmit: (values: any, helpers: FormikHelpers<any>) => Promise<void>;
   formFields: T;
   validationSchema?: Yup.Schema<T>;
   loadingPostIndicator?: boolean;
@@ -20,12 +26,14 @@ function AppForm<T extends FormikValues>({
   formFields,
   validationSchema,
   loadingPostIndicator,
+
   children,
 }: AppFormProps<T>) {
   const formikProps = useFormik({
     initialValues: formFields,
     validationSchema,
-    onSubmit: handleSubmit,
+    onSubmit: (values: T, helpers: FormikHelpers<any>) =>
+      handleSubmit(values, helpers),
   });
 
   const handleInputValue = <K extends keyof T>(key: K, value: T[K]) => {

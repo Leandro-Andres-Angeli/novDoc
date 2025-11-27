@@ -4,12 +4,11 @@ import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import MapView, {
   LatLng,
   MapPressEvent,
-  MapStyleElement,
   MapViewProps,
   Marker,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
-import { Text } from 'react-native-paper';
+
 import * as Location from 'expo-location';
 import { Toast } from 'toastify-react-native';
 

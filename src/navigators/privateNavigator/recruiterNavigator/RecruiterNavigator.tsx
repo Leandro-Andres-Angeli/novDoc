@@ -60,7 +60,7 @@ const Acc = () => (
     <Text>Test</Text>
   </View>
 );
-type RecruiterNavigatorRootParams = {
+export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
   [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};

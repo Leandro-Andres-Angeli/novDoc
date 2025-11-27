@@ -47,9 +47,14 @@ import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';
 import AppMap from '../shared/AppMap';
+
 import AppTypeOfLocationSelection, {
   LocationSelectionType,
 } from '../shared/AppTypeOfLocationSelection';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
+import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
+import { FormikHelpers } from 'formik';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -177,13 +182,27 @@ const NewJobOffer = () => {
 
   const [loading, setLoading] = useState(false);
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
-
-  async function handleSubmit(values: IJobOffer) {
+  const navigator =
+    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
+  async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
     setLoading(true);
     console.log(values);
 
     try {
       const newJobOfferResponse = await createJobOffer(values);
+      console.log(newJobOfferResponse);
+      if (newJobOfferResponse.success) {
+        Toast.show({
+          onHide: () => {
+            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.SWIPE, {});
+          },
+          text1: newJobOfferResponse.message,
+          visibilityTime: 700,
+          autoHide: true,
+        });
+        helpers.resetForm();
+        return;
+      } else Toast.error(newJobOfferResponse.message);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -385,7 +404,7 @@ const NewJobOffer = () => {
                                     <View>
                                       <Text>Seleccionar en el mapa</Text>
                                       <AppMap
-                                        mapStyles={{ height: 400 }}
+                                        mapStyles={{ height: 300 }}
                                         mapProps={{
                                           region: {
                                             latitude: -34.599553,
