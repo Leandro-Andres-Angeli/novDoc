@@ -10,9 +10,10 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 import { Text } from 'react-native-paper';
-import { measure } from 'react-native-reanimated';
+import * as Location from 'expo-location';
+
 interface AppMapProps {
-  //   handlePress?: () => void;
+  handleSelectMarker?: (...args: Array<string>) => void;
   //   handleDoublePress?: () => void;
   mapStyles?: StyleProp<ViewStyle>;
   mapProps?: MapViewProps;
@@ -23,24 +24,39 @@ const AppMap = (props: AppMapProps) => {
   const mapRef = useRef<MapView>(null);
 
   const localHandlePress = async (e: MapPressEvent) => {
-    console.log('here');
     setMarkerVisible(true);
-    const {
-      nativeEvent: { coordinate },
-    } = e;
-    setMarkerCoords(coordinate);
-    setTimeout(() => {
-      if (mapRef.current) {
-        mapRef.current.animateToRegion(
-          {
-            ...coordinate,
-            latitudeDelta: 0.0922, // This determines the initial zoom
-            longitudeDelta: 0.0421,
-          },
-          1000
-        );
+    try {
+      const {
+        nativeEvent: { coordinate },
+      } = e;
+      setMarkerCoords(coordinate);
+      setTimeout(() => {
+        if (mapRef.current) {
+          mapRef.current.animateToRegion(
+            {
+              ...coordinate,
+              latitudeDelta: 0.0922, // This determines the initial zoom
+              longitudeDelta: 0.0421,
+            },
+            1000
+          );
+        }
+      }, 0);
+
+      const [coordinatesData] = await Location.reverseGeocodeAsync(coordinate);
+      console.log('coords data', coordinatesData);
+      const city = coordinatesData.district ?? coordinatesData.city ?? null;
+      if (!city || !coordinatesData.region) {
+        throw Error('Error getting reversed geo');
       }
-    }, 0);
+
+      console.log('coords data', coordinatesData);
+      if (props.handleSelectMarker) {
+        props.handleSelectMarker(city, coordinatesData.region);
+      }
+    } catch (error) {
+      console.log('err', error);
+    }
   };
   return (
     <>

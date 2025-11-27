@@ -398,6 +398,13 @@ const NewJobOffer = () => {
                                           zoomControlEnabled: true,
                                           zoomTapEnabled: true,
                                         }}
+                                        handleSelectMarker={(...args) => {
+                                          console.log('args', args);
+                                          const [city, region] = args;
+
+                                          setFieldValue('province', region);
+                                          setFieldValue('city', city);
+                                        }}
                                       ></AppMap>
                                     </View>
                                   );
