@@ -46,6 +46,7 @@ import { AuthContext } from 'src/appContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';
+import AppMap from '../shared/AppMap';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -222,8 +223,6 @@ const NewJobOffer = () => {
         }) => {
           return (
             <>
-              {/* <Text>{JSON.stringify(errors)}</Text>
-              <Text>Values{JSON.stringify(values)}</Text> */}
               <View
                 style={[
                   {
@@ -339,11 +338,7 @@ const NewJobOffer = () => {
                                 <Chip>
                                   {values.province} {values.city}
                                 </Chip>
-                                <Chip>{values.city}</Chip>
                               </View>
-                              {/*  <Text variant='labelMedium'>
-                                {values.city} {values.province}
-                              </Text> */}
                             </>
                           </AppLocationSelected>
                         )}
@@ -363,6 +358,31 @@ const NewJobOffer = () => {
                           ></GeoLocationPicker>
                         )}
                         {jobOfferHasLocation(values) ? (
+                          <View>
+                            <Text> O seleccionar en el mapa</Text>
+                            <AppMap
+                              mapStyles={{ height: 400 }}
+                              mapProps={{
+                                region: {
+                                  latitude: -38.416097,
+                                  longitude: -63.616672,
+                                  longitudeDelta: 0.1,
+                                  latitudeDelta: 0.1,
+                                },
+                                zoomEnabled: true,
+                                zoomControlEnabled: true,
+                                zoomTapEnabled: true,
+
+                                onPress: () => {
+                                  console.log('this', this);
+                                },
+                              }}
+                            ></AppMap>
+                          </View>
+                        ) : (
+                          <></>
+                        )}
+                        {jobOfferHasLocation(values) ? (
                           <View style={{ ...utilityStyles.inputsContainer }}>
                             <LocationPicker
                               handleSelectProvince={(val) => {
@@ -376,9 +396,11 @@ const NewJobOffer = () => {
                         ) : (
                           <></>
                         )}
+                        {/* testing data */}
                         {jobOfferHasLocation(values) && (
                           <Text> {values.province}</Text>
                         )}
+                        {/* testing data */}
                       </View>
                       <View style={{ ...utilityStyles.inputsContainer }}>
                         <AppSegmentedButtons

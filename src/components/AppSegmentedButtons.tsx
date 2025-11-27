@@ -10,7 +10,6 @@ interface AppSegmentButtonProps<T = string> {
 }
 
 export function AppSegmentedButtons({
-  defaultValue,
   values,
   value,
   handleChange,
