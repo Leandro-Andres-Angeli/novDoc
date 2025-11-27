@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { SegmentedButtons } from 'react-native-paper';
+import { SegmentedButtons, Text } from 'react-native-paper';
 
 interface AppSegmentButtonProps<T = string> {
   values: { value: T; label: string }[];

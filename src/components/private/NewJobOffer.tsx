@@ -47,6 +47,9 @@ import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';
 import AppMap from '../shared/AppMap';
+import AppTypeOfLocationSelection, {
+  LocationSelectionType,
+} from '../shared/AppTypeOfLocationSelection';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -325,14 +328,13 @@ const NewJobOffer = () => {
                             setJobOfferForm(generateJobOfferForm(val));
                           }}
                         ></AppSegmentedButtons>
-
                         {jobOfferHasLocation(values) && (
                           <AppLocationSelected
                             loadingCondition={loadingFormLocation}
                           >
                             <>
                               <Text variant='labelMedium'>
-                                Locacion seleccionada
+                                Locación seleccionada
                               </Text>
                               <View style={utilityStyles.flex}>
                                 <Chip>
@@ -342,8 +344,82 @@ const NewJobOffer = () => {
                             </>
                           </AppLocationSelected>
                         )}
-
                         {jobOfferHasLocation(values) && (
+                          <AppTypeOfLocationSelection>
+                            {({ locationSelectionType }) => {
+                              switch (locationSelectionType) {
+                                case LocationSelectionType.SELECT_LIST:
+                                  return (
+                                    <View
+                                      style={{
+                                        ...utilityStyles.inputsContainer,
+                                      }}
+                                    >
+                                      <LocationPicker
+                                        handleSelectProvince={(val) => {
+                                          setFieldValue('province', val);
+                                        }}
+                                        handleSelectCity={(val) => {
+                                          setFieldValue('city', val);
+                                        }}
+                                      ></LocationPicker>
+                                    </View>
+                                  );
+                                case LocationSelectionType.CURRENT_USER_LOCATION:
+                                  return (
+                                    <GeoLocationPicker
+                                      handleLoading={(val: boolean) =>
+                                        setLoadingFormLocation(val)
+                                      }
+                                      handleSelectProvince={(val) => {
+                                        setFieldValue('province', val);
+                                      }}
+                                      handleSelectCity={(val) => {
+                                        setLoadingFormLocation(true);
+                                        setFieldValue('city', val);
+                                      }}
+                                    ></GeoLocationPicker>
+                                  );
+                                case LocationSelectionType.MAP:
+                                  return (
+                                    <View>
+                                      <Text>Seleccionar en el mapa</Text>
+                                      <AppMap
+                                        mapStyles={{ height: 400 }}
+                                        mapProps={{
+                                          region: {
+                                            latitude: -34.599553,
+                                            longitude: -58.50361,
+                                            latitudeDelta: 0.0922, // This determines the initial zoom
+                                            longitudeDelta: 0.0421,
+                                          },
+                                          showsUserLocation: true,
+                                          zoomEnabled: true,
+                                          zoomControlEnabled: true,
+                                          zoomTapEnabled: true,
+                                        }}
+                                      ></AppMap>
+                                    </View>
+                                  );
+                              }
+                            }}
+                          </AppTypeOfLocationSelection>
+                        )}
+                        {/*        {jobOfferHasLocation(values) && (
+                          <AppTypeOfLocationSelection>
+                             {( { locationSelectionType } )=>  {
+                             switch(locationSelectionType){
+                              case LocationSelectionType.SELECT_LIST : 
+                              return
+                             }
+                             }
+                             
+                             
+                             }
+                          </AppTypeOfLocationSelection>
+                        )} */}
+
+                        {/*   {jobOfferHasLocation(values) && (
                           <GeoLocationPicker
                             handleLoading={(val: boolean) =>
                               setLoadingFormLocation(val)
@@ -356,8 +432,8 @@ const NewJobOffer = () => {
                               setFieldValue('city', val);
                             }}
                           ></GeoLocationPicker>
-                        )}
-                        {jobOfferHasLocation(values) ? (
+                        )} */}
+                        {/*    {jobOfferHasLocation(values) ? (
                           <View>
                             <Text> O seleccionar en el mapa</Text>
                             <AppMap
@@ -381,8 +457,8 @@ const NewJobOffer = () => {
                           </View>
                         ) : (
                           <></>
-                        )}
-                        {jobOfferHasLocation(values) ? (
+                        )} */}
+                        {/*   {jobOfferHasLocation(values) ? (
                           <View style={{ ...utilityStyles.inputsContainer }}>
                             <LocationPicker
                               handleSelectProvince={(val) => {
@@ -395,11 +471,11 @@ const NewJobOffer = () => {
                           </View>
                         ) : (
                           <></>
-                        )}
+                        )} */}
                         {/* testing data */}
-                        {jobOfferHasLocation(values) && (
+                        {/* {jobOfferHasLocation(values) && (
                           <Text> {values.province}</Text>
-                        )}
+                        )} */}
                         {/* testing data */}
                       </View>
                       <View style={{ ...utilityStyles.inputsContainer }}>
