@@ -19,6 +19,7 @@ import {
   RecruiterContextProvider,
 } from 'src/appContext/RecruiterContext';
 import AppLoading from '@ui/AppLoading';
+import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -77,6 +78,7 @@ const RecruiterNavigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
+        headerShown: false,
       }}
     >
       <Tab.Screen
@@ -156,7 +158,7 @@ const RecruiterNavigator = () => {
           })
         }
         name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
-        component={Acc}
+        component={RecruiterProfileScreen}
       ></Tab.Screen>
       <Tab.Screen
         options={(props) => {

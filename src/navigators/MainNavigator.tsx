@@ -11,11 +11,14 @@ import PrivateNavigator from './privateNavigator/PrivateNavigator';
 
 function MainNavigator() {
   const {
+    loading,
     authState: { logged },
   } = useContext(AuthContext);
 
   useOnAuthStateChangeListener();
-
+  if (loading) {
+    return <AppLoading></AppLoading>;
+  }
   let content = <PrivateNavigator></PrivateNavigator>;
   if (!logged) {
     content = <PublicNavigator></PublicNavigator>;

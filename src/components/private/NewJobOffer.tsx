@@ -13,6 +13,7 @@ import {
   IJobOfferOnSite,
   IJobOfferRemote,
   JobLocation,
+  JobOfferStatus,
   Seniority,
   ShiftTime,
 } from 'src/types/dbTypes/IJobOffer';
@@ -83,6 +84,7 @@ const NewJobOffer = () => {
       salary: 0,
       shiftTime: ShiftTime.FULL_TIME,
       skills: [],
+      status: JobOfferStatus.ACTIVE,
     };
     switch (jobLocation) {
       case JobLocation.ON_SITE:

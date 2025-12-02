@@ -7,6 +7,7 @@ export interface IUser {
   lastName: string;
   email: string;
   role: Role;
+  avatarUrl: string | undefined;
 }
 export interface IProfessional extends IUser {
   skills: Array<string>;

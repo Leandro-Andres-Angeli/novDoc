@@ -16,6 +16,7 @@ import {
 } from 'react';
 import { IJobOffer } from '../types/dbTypes/IJobOffer';
 import { AuthContext } from './AuthContext';
+import { Unsubscribe } from 'firebase/auth';
 
 export interface RecruiterContextInterface {
   jobOffers: Record<string, any>[];
@@ -48,10 +49,6 @@ export const RecruiterContextProvider = (
     const subscription = onSnapshot(
       q,
       function (doc) {
-        console.log('listening');
-        console.log('args', arguments);
-        console.log(doc.docs);
-        console.log(doc.docChanges());
         doc.docs.map((el) => console.log(el.data()));
         setJobOffers(doc.docs.map((el) => ({ id: el.id, ...el.data() })));
         setLoading(false);
@@ -67,8 +64,13 @@ export const RecruiterContextProvider = (
     return subscription;
   };
   useEffect(() => {
-    jobOfferUpdateListener();
-  }, []);
+    const unsubscribe = jobOfferUpdateListener();
+    return () => {
+      if (unsubscribe) {
+        return unsubscribe();
+      }
+    };
+  }, [user]);
 
   return (
     <RecruiterContext.Provider value={{ error, loading, jobOffers }}>

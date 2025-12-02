@@ -16,6 +16,11 @@ export enum ShiftTime {
   PART_TIME = 'part-time',
   CONTRACTOR = 'contractor',
 }
+export enum JobOfferStatus {
+  ACTIVE = 'activa',
+  CLOSED = 'cerrada',
+  PAUSED = 'pausada',
+}
 export interface IJobOfferOnSite extends IJobOfferGeneral {
   jobLocation: JobLocation.ON_SITE;
   province: string;
@@ -36,6 +41,7 @@ export interface IJobOfferGeneral {
   jobLocation: JobLocation;
   shiftTime: ShiftTime;
   salary: number;
+  status: JobOfferStatus;
 }
 
 export interface IJobOfferRemote extends Omit<IJobOfferGeneral, 'jobLocation'> {
