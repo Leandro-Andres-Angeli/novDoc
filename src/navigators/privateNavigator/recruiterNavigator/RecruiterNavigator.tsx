@@ -51,16 +51,7 @@ const Favorites = () => {
     </View>
   );
 };
-const Add = () => (
-  <View style={{ ...utilityStyles.flex }}>
-    <Text>Test</Text>
-  </View>
-);
-const Acc = () => (
-  <View style={{ ...utilityStyles.flex }}>
-    <Text>Test</Text>
-  </View>
-);
+
 export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
   [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {};
@@ -78,7 +69,6 @@ const RecruiterNavigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
-        headerShown: false,
       }}
     >
       <Tab.Screen

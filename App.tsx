@@ -48,11 +48,16 @@ const Providers = ({ children }: PropsWithChildren) => {
     <AuthContextProvider>
       <PaperProvider theme={CombinedDefaultTheme}>
         <NavigationContainer theme={CombinedDefaultTheme}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <KeyboardProvider>
-              <ToastProvider>{children}</ToastProvider>
-            </KeyboardProvider>
-          </SafeAreaView>
+          <KeyboardProvider>
+            <ToastProvider>
+              <SafeAreaView
+                edges={['right', 'left', 'top']}
+                style={{ flex: 1 }}
+              >
+                {children}
+              </SafeAreaView>
+            </ToastProvider>
+          </KeyboardProvider>
         </NavigationContainer>
       </PaperProvider>
     </AuthContextProvider>

@@ -42,6 +42,12 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
           "isAndroidForegroundServiceEnabled": true
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir a  $(PRODUCT_NAME) acceder a la cámara ?"
+        }
       ]
     ],
     "web": {
