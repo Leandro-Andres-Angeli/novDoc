@@ -1,13 +1,12 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
-import { Button } from 'react-native-paper';
-
-const AppPictureSelector = () => {
+import React, { PropsWithChildren } from 'react';
+import { Button, Icon } from 'react-native-paper';
+import AppButton from '../../ui/AppButton';
+import AppButtonText from '../../ui/AppButtonText';
+interface AppPictureSelectorProps extends PropsWithChildren {}
+const AppPictureSelector = (props: AppPictureSelectorProps) => {
   return (
     <View style={localStyles.modalContainer}>
-      {/* Handle Bar */}
-
-      {/* Upload Options */}
       <View style={localStyles.optionsContainer}>
         <Button
           mode='text'
@@ -17,7 +16,7 @@ const AppPictureSelector = () => {
           labelStyle={localStyles.optionButtonLabel}
           icon='image-outline'
         >
-          Upload from Gallery
+          Subir foto desde galería
         </Button>
 
         <Button
@@ -28,18 +27,10 @@ const AppPictureSelector = () => {
           labelStyle={localStyles.optionButtonLabel}
           icon='camera-outline'
         >
-          Take Photo with Camera
+          Tomar foto con cámara
         </Button>
 
-        <Button
-          mode='contained'
-          //   onPress={hideModal}
-          style={localStyles.cancelButton}
-          buttonColor='#E5E5E5'
-          textColor='#333'
-        >
-          Cancel
-        </Button>
+        {props.children}
       </View>
     </View>
   );
@@ -56,13 +47,12 @@ const localStyles = StyleSheet.create({
     gap: 12,
   },
   optionButton: {
-    backgroundColor: '#F8F8F8',
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   optionButtonContent: {
     paddingVertical: 12,
-    flexDirection: 'row-reverse',
+
     justifyContent: 'space-between',
   },
   optionButtonLabel: {
@@ -72,12 +62,12 @@ const localStyles = StyleSheet.create({
     flex: 1,
     textAlign: 'left',
   },
-  cancelButton: {
-    borderRadius: 12,
-    marginTop: 12,
-    marginBottom: 12,
-    paddingVertical: 8,
-  },
+  // cancelButton: {
+  //   borderRadius: 12,
+  //   marginTop: 12,
+  //   marginBottom: 12,
+  //   paddingVertical: 8,
+  // },
 });
 
 export default AppPictureSelector;

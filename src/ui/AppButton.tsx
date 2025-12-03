@@ -6,6 +6,7 @@ import { ButtonProps, useTheme } from 'react-native-paper';
 const ButtonStyled = styled.TouchableOpacity<{
   isLandscape: boolean;
   bgColor: string;
+  borderRadius?: number;
 }>`
   background-color: ${(props) => props.bgColor};
   border-radius: 12px;
@@ -14,6 +15,7 @@ const ButtonStyled = styled.TouchableOpacity<{
   align-items: center;
   padding-horizontal: 20px;
   ${(props) => props.isLandscape && 'min-width: 200px;'}
+  ${(props) => props.borderRadius && `borderRadius: ${props.borderRadius}`}
 `;
 
 const AppButton = (

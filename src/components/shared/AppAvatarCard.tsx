@@ -1,10 +1,18 @@
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { Card, IconButton, Modal, Text, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Card,
+  IconButton,
+  Modal,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import useModal from 'src/hooks/useModal';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import useOpenElement from 'src/hooks/useModal';
 import AppPictureSelector from './AppPictureSelector';
+import utilityStyles from 'src/styles/utilityStyles';
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
@@ -86,7 +94,17 @@ const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
             top: 5,
           }}
         >
-          <AppPictureSelector></AppPictureSelector>
+          <AppPictureSelector>
+            <Button
+              mode='contained'
+              //   onPress={hideModal}
+
+              style={{ ...utilityStyles.muteButton, ...utilityStyles.btn }}
+              textColor={utilityStyles.muteButtonColor.color}
+            >
+              Cancelar
+            </Button>
+          </AppPictureSelector>
         </View>
       </RBSheet>
     </>

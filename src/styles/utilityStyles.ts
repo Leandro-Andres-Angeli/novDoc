@@ -75,6 +75,22 @@ const utilityStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
+  btnBorderRadius: {
+    borderRadius: 12,
+  },
+  muteButtonBgColor: {
+    backgroundColor: '#E5E5E5',
+  },
+  muteButtonColor: {
+    color: '#333',
+  },
+  muteButton: {
+    color: '#333',
+    backgroundColor: '#E5E5E5',
+  },
+  btn: {
+    paddingVertical: 8,
+  },
 });
 
 export default utilityStyles;
