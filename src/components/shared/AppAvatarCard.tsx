@@ -1,11 +1,11 @@
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { Card, IconButton, Modal, Text, useTheme } from 'react-native-paper';
 import useModal from 'src/hooks/useModal';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import useOpenElement from 'src/hooks/useModal';
 import AppPictureSelector from './AppPictureSelector';
-
+const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
   avatarPic: string;
@@ -71,12 +71,23 @@ const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
             marginRight: 'auto',
             borderTopStartRadius: 10,
             borderTopEndRadius: 10,
-            paddingBottom: 10,
+          },
+          draggableIcon: {
+            top: -5,
+            height: 5,
           },
         }}
         ref={refRBSheet}
       >
-        <AppPictureSelector></AppPictureSelector>
+        <View
+          style={{
+            position: 'absolute',
+            width: '100%',
+            top: 5,
+          }}
+        >
+          <AppPictureSelector></AppPictureSelector>
+        </View>
       </RBSheet>
     </>
   );

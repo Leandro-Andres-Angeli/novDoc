@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Children, useEffect, PropsWithChildren } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { db } from './firebase/config';
 import ToastManager from 'toastify-react-native';
 import { logger } from 'react-native-logs';
@@ -52,7 +52,7 @@ const Providers = ({ children }: PropsWithChildren) => {
             <ToastProvider>
               <SafeAreaView
                 edges={['right', 'left', 'top']}
-                style={{ flex: 1 }}
+                style={{ height: Dimensions.get('window').height, flex: 1 }}
               >
                 {children}
               </SafeAreaView>

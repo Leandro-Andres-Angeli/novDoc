@@ -25,7 +25,7 @@ function MainNavigator() {
   }
   return (
     <>
-      <Button onPress={() => signOut(auth)} title='signout'></Button>
+      {/* <Button onPress={() => signOut(auth)} title='signout'></Button> */}
       {content}
     </>
   );
