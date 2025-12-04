@@ -1,14 +1,7 @@
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
-import React, { useRef, useState } from 'react';
-import {
-  Button,
-  Card,
-  IconButton,
-  Modal,
-  Text,
-  useTheme,
-} from 'react-native-paper';
-import useModal from 'src/hooks/useModal';
+import React, { useRef } from 'react';
+import { Button, Card, IconButton, Text, useTheme } from 'react-native-paper';
+
 import RBSheet from 'react-native-raw-bottom-sheet';
 import useOpenElement from 'src/hooks/useModal';
 import AppPictureSelector from './AppPictureSelector';

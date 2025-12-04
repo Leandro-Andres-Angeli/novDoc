@@ -5,7 +5,7 @@ import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
 import { AuthContext } from 'src/appContext/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button, Icon, IconButton, Text, useTheme } from 'react-native-paper';
+import { IconButton, Text, useTheme } from 'react-native-paper';
 import { bottomNavigationsOptions } from '@utils/styling/bottomNavigationOptions';
 
 import AppHeader from '@ui/AppHeader';
@@ -18,7 +18,7 @@ import { RecruiterContext } from 'src/appContext/RecruiterContext';
 
 import AppLoading from '@ui/AppLoading';
 import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
-import { getLocales, getCalendars } from 'expo-localization';
+import { getLocales } from 'expo-localization';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -44,6 +44,7 @@ const Favorites = () => {
     return <AppLoading></AppLoading>;
   }
   const [{ languageTag }] = getLocales();
+  console.log('lang', languageTag);
   return (
     <View style={{ ...utilityStyles.flex }}>
       <Text>Test</Text>
