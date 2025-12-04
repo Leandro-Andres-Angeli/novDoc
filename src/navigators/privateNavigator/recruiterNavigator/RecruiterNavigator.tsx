@@ -44,7 +44,7 @@ const Favorites = () => {
     return <AppLoading></AppLoading>;
   }
   const [{ languageTag }] = getLocales();
-  console.log('lang', languageTag);
+
   return (
     <View style={{ ...utilityStyles.flex }}>
       <Text>Test</Text>
