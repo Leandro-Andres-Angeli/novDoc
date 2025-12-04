@@ -49,7 +49,11 @@
         {
           "cameraPermission": "Permitir a  $(PRODUCT_NAME) acceder a la cámara ?"
         }
-      ]
+      ],
+      [
+        "react-native-localize"
+      ],
+      "expo-localization"
     ],
     "web": {
       "favicon": "./assets/favicon.png"

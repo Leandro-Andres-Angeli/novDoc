@@ -14,14 +14,11 @@ import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 
 import NewJobOfferScreen from 'src/screens/private/recruiter/NewJobOfferScreen';
-import {
-  RecruiterContext,
-  RecruiterContextProvider,
-} from 'src/appContext/RecruiterContext';
+import { RecruiterContext } from 'src/appContext/RecruiterContext';
+
 import AppLoading from '@ui/AppLoading';
 import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
-import { getDeviceLocale } from 'react-native-get-device-locale';
-import { string } from 'yup';
+import { getLocales, getCalendars } from 'expo-localization';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -46,16 +43,7 @@ const Favorites = () => {
   if (loadingJobOffers) {
     return <AppLoading></AppLoading>;
   }
-  const [locale, setLocale] = useState<string>();
-  const handleDeviceLocale = async () => {
-    const deviceLocale = await getDeviceLocale('es_MX');
-    setLocale(deviceLocale);
-  };
-  useEffect(() => {
-    handleDeviceLocale();
-  }, []);
-
-  console.log('LLLL', locale);
+  const [{ languageTag }] = getLocales();
   return (
     <View style={{ ...utilityStyles.flex }}>
       <Text>Test</Text>
@@ -64,7 +52,7 @@ const Favorites = () => {
         {JSON.stringify(
           jobOffers.map((el) => ({
             ...el,
-            createdAt: el.createdAt.toDate(),
+            createdAt: el.createdAt.toDate().toLocaleDateString(languageTag),
           }))
         )}{' '}
       </Text>
