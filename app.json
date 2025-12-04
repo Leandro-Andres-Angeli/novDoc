@@ -3,6 +3,7 @@
     "name": "matchApp",
     "slug": "matchApp",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "default",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",

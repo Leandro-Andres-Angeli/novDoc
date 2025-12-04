@@ -14,12 +14,17 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { IJobOffer } from '../types/dbTypes/IJobOffer';
+import {
+  IJobOffer,
+  IJobOfferGeneral,
+  IJobOfferHybrid,
+  IJobOfferOnSite,
+} from '../types/dbTypes/IJobOffer';
 import { AuthContext } from './AuthContext';
 import { Unsubscribe } from 'firebase/auth';
 
 export interface RecruiterContextInterface {
-  jobOffers: Record<string, any>[];
+  jobOffers: IJobOffer[];
   loading: boolean;
   error: string;
 }
@@ -36,7 +41,7 @@ export const RecruiterContextProvider = (
   const jobOffersCollection = collection(db, 'jobOffers').withConverter(
     genericConverter<IJobOffer>()
   );
-  const [jobOffers, setJobOffers] = useState<Record<string, any>[]>([]);
+  const [jobOffers, setJobOffers] = useState<IJobOffer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const q = query(jobOffersCollection, where('recruiter_id', '==', user?.id));

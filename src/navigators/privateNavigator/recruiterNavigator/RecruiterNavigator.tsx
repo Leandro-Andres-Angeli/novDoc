@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
@@ -20,6 +20,8 @@ import {
 } from 'src/appContext/RecruiterContext';
 import AppLoading from '@ui/AppLoading';
 import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
+import { getDeviceLocale } from 'react-native-get-device-locale';
+import { string } from 'yup';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -44,10 +46,28 @@ const Favorites = () => {
   if (loadingJobOffers) {
     return <AppLoading></AppLoading>;
   }
+  const [locale, setLocale] = useState<string>();
+  const handleDeviceLocale = async () => {
+    const deviceLocale = await getDeviceLocale('es_MX');
+    setLocale(deviceLocale);
+  };
+  useEffect(() => {
+    handleDeviceLocale();
+  }, []);
+
+  console.log('LLLL', locale);
   return (
     <View style={{ ...utilityStyles.flex }}>
       <Text>Test</Text>
-      <Text> {JSON.stringify(jobOffers)} </Text>
+      <Text>
+        {' '}
+        {JSON.stringify(
+          jobOffers.map((el) => ({
+            ...el,
+            createdAt: el.createdAt.toDate(),
+          }))
+        )}{' '}
+      </Text>
     </View>
   );
 };

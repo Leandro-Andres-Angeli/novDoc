@@ -56,6 +56,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 import { FormikHelpers } from 'formik';
+import { Timestamp } from 'firebase/firestore';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -74,6 +75,7 @@ const NewJobOffer = () => {
     );
   }
   const generateJobOfferForm = (jobLocation: JobLocation) => {
+    const creationDate = Timestamp.fromDate(new Date());
     const base: IJobOfferGeneral = {
       title: '',
       company: '',
@@ -85,6 +87,7 @@ const NewJobOffer = () => {
       shiftTime: ShiftTime.FULL_TIME,
       skills: [],
       status: JobOfferStatus.ACTIVE,
+      createdAt: creationDate,
     };
     switch (jobLocation) {
       case JobLocation.ON_SITE:

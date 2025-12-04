@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore';
 import { ISkill } from './ISkills';
 
 export enum Seniority {
@@ -42,6 +43,7 @@ export interface IJobOfferGeneral {
   shiftTime: ShiftTime;
   salary: number;
   status: JobOfferStatus;
+  createdAt: Timestamp;
 }
 
 export interface IJobOfferRemote extends Omit<IJobOfferGeneral, 'jobLocation'> {
