@@ -1,44 +1,6 @@
+import { View, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
-import {
-  Appbar,
-  Text,
-  Chip,
-  Avatar,
-  Button,
-  Divider,
-} from 'react-native-paper';
-import { ChevronLeft, Edit, Filter } from 'lucide-react-native';
-
-const candidates = [
-  {
-    id: 1,
-    name: 'Elena García',
-    avatar: 'https://i.pravatar.cc/150?img=1',
-    skills: ['SwiftUI', 'UIKit', 'MVVM'],
-    status: 'Pendiente',
-    statusColor: '#FFF9E6',
-    statusTextColor: '#8B7000',
-  },
-  {
-    id: 2,
-    name: 'Carlos Rodríguez',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-    skills: ['Swift', 'Combine', 'Firebase'],
-    status: 'Revisado',
-    statusColor: '#E3F2FD',
-    statusTextColor: '#1565C0',
-  },
-  {
-    id: 3,
-    name: 'Sofía Martínez',
-    avatar: 'https://i.pravatar.cc/150?img=5',
-    skills: ['Swift', 'Core Data', 'TDD'],
-    status: 'Entrevista',
-    statusColor: '#F3E5F5',
-    statusTextColor: '#6A1B9A',
-  },
-];
+import { Chip, Text, Button } from 'react-native-paper';
 
 const requirements = [
   'Swift',
@@ -48,25 +10,9 @@ const requirements = [
   'REST APIs',
   'Git',
 ];
-
-export default function JobDetailsScreen() {
+const JobDetail = () => {
   return (
     <View style={styles.container}>
-      <Appbar.Header elevated style={styles.header}>
-        <Appbar.Action
-          icon={() => <ChevronLeft size={24} color='#000' />}
-          onPress={() => console.log('Back')}
-        />
-        <Appbar.Content
-          title='Detalles de Oferta'
-          titleStyle={styles.headerTitle}
-        />
-        <Appbar.Action
-          icon={() => <Edit size={20} color='#000' />}
-          onPress={() => console.log('Edit')}
-        />
-      </Appbar.Header>
-
       <ScrollView style={styles.content}>
         {/* Job Title Section */}
         <View style={styles.section}>
@@ -160,71 +106,6 @@ export default function JobDetailsScreen() {
           </View>
         </View>
 
-        {/* Candidates Section */}
-        <View style={styles.section}>
-          <View style={styles.candidatesHeader}>
-            <Text variant='titleMedium' style={styles.sectionTitle}>
-              Candidatos Interesados
-            </Text>
-            <Button
-              mode='text'
-              icon={() => <Filter size={16} color='#666' />}
-              onPress={() => console.log('Filter')}
-              compact
-              textColor='#666'
-            >
-              Filtrar
-            </Button>
-          </View>
-
-          {candidates.map((candidate, index) => (
-            <View key={candidate.id}>
-              <View style={styles.candidateCard}>
-                <Avatar.Image size={48} source={{ uri: candidate.avatar }} />
-                <View style={styles.candidateInfo}>
-                  <View style={styles.candidateHeader}>
-                    <Text variant='titleSmall' style={styles.candidateName}>
-                      {candidate.name}
-                    </Text>
-                    <View
-                      style={[
-                        styles.statusBadge,
-                        { backgroundColor: candidate.statusColor },
-                      ]}
-                    >
-                      <Text
-                        variant='labelSmall'
-                        style={[
-                          styles.statusText,
-                          { color: candidate.statusTextColor },
-                        ]}
-                      >
-                        {candidate.status}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.skillsContainer}>
-                    {candidate.skills.map((skill, idx) => (
-                      <Chip
-                        key={idx}
-                        mode='flat'
-                        compact
-                        style={styles.skillChip}
-                        textStyle={styles.skillChipText}
-                      >
-                        {skill}
-                      </Chip>
-                    ))}
-                  </View>
-                </View>
-              </View>
-              {index < candidates.length - 1 && (
-                <Divider style={styles.divider} />
-              )}
-            </View>
-          ))}
-        </View>
-
         {/* Close Button */}
         <Button
           mode='contained'
@@ -239,7 +120,7 @@ export default function JobDetailsScreen() {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -386,3 +267,5 @@ const styles = StyleSheet.create({
     height: 48,
   },
 });
+
+export default JobDetail;

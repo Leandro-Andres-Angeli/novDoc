@@ -17,12 +17,10 @@ import NewJobOfferScreen from 'src/screens/private/recruiter/NewJobOfferScreen';
 import { RecruiterContext } from 'src/appContext/RecruiterContext';
 
 import AppLoading from '@ui/AppLoading';
-import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
+
 import { getLocales } from 'expo-localization';
 import { CustomTheme } from 'App';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
-import { NavigationProp } from '@react-navigation/native';
-import JobDetail from '@components/shared/JobDetailScreen';
+
 import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
@@ -73,9 +71,6 @@ export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.FAVORITES]: {};
-  [RECRUITER_NAVIGATOR_ROUTES.JOB_POSTING_DETAIL]: {
-    jobPosting: IJobPostingDB;
-  };
 };
 const Tab = createBottomTabNavigator<RecruiterNavigatorRootParams>();
 

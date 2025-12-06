@@ -4,7 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 import RecruiterProfileScreen from './RecruiterProfileScreen';
-import JobDetail from '@components/shared/JobDetailScreen';
+import JobDetailsScreen from 'src/screens/private/shared/JobDetailScreen';
+import { useTheme } from 'react-native-paper';
+
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',
   JOB_POSTING_DETAILS: 'JOB_POSTING_DETAILS',
@@ -17,6 +19,7 @@ export type RecruiterProfileStackRootParams = {
 };
 const Stack = createNativeStackNavigator();
 const RecruiterProfileStack = () => {
+  const theme = useTheme();
   return (
     <Stack.Navigator
       initialRouteName={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
@@ -28,7 +31,12 @@ const RecruiterProfileStack = () => {
       ></Stack.Screen>
       <Stack.Screen
         name={RecruiterProfileStackRoutes.JOB_POSTING_DETAILS}
-        component={JobDetail}
+        component={JobDetailsScreen}
+        options={{
+          headerShown: true,
+          title: 'Detalle de la oferta',
+          headerStyle: { backgroundColor: theme.colors.background },
+        }}
       ></Stack.Screen>
     </Stack.Navigator>
   );
