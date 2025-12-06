@@ -1,6 +1,7 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { Chip, Text, Button } from 'react-native-paper';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 const requirements = [
   'Swift',
@@ -10,17 +11,20 @@ const requirements = [
   'REST APIs',
   'Git',
 ];
-const JobDetail = () => {
+interface JobDetailProp {
+  jobPosting: IJobPostingDB;
+}
+const JobDetail = ({ jobPosting }: JobDetailProp) => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
         {/* Job Title Section */}
         <View style={styles.section}>
           <Text variant='headlineSmall' style={styles.jobTitle}>
-            Desarrollador Senior iOS
+            {jobPosting.title}
           </Text>
           <Text variant='bodyMedium' style={styles.company}>
-            Tech Solutions Inc. - Remoto, España
+            {jobPosting.company}
           </Text>
         </View>
 

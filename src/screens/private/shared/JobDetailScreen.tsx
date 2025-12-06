@@ -1,21 +1,22 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
-import {
-  Appbar,
-  Text,
-  Chip,
-  Avatar,
-  Button,
-  Divider,
-} from 'react-native-paper';
-import { ChevronLeft, Edit, Filter } from 'lucide-react-native';
+
 import JobDetail from '../../../components/shared/JobDetail';
 import Candidates from '../../../components/private/recruiter/Candidates';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { JobPostingNavigation } from '@utils/JobPostingNavigation';
+import JobPostingCard from '../../../components/jobPostingCard/JobPostingCard';
+import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
+import RECRUITER_NAVIGATOR_ROUTES from '../../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
+import {
+  RecruiterProfileStackRootParams,
+  RecruiterProfileStackRoutes,
+} from '../recruiter/RecruiterProfileStack';
+import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 
-export default function JobDetailsScreen() {
+export default function JobDetailsScreen({}) {
   return (
     <>
-      <JobDetail></JobDetail>
+      {/* <JobDetail ></JobDetail> */}
       <Candidates></Candidates>
     </>
   );
