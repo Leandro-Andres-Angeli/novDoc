@@ -41,11 +41,11 @@ const Providers = ({ children }: PropsWithChildren) => {
       ...MD3LightTheme.colors,
       ...LightTheme.colors,
       primary: COLORS.primary,
-      primaryDynamicOpacity(opacity = 0.6) {
+      primaryDynamicOpacity(opacity = 0.2) {
         return `${COLORS.primary.replace(/1\)/, opacity.toString() + ')')}`;
       },
       secondaryContainer: COLORS.secondaryContainer,
-      // onPrimaryContainer: 'red',
+
       surfaceVariant: '#f2f1f1ff',
     },
     fonts: {

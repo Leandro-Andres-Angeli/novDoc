@@ -2,16 +2,23 @@ import { View, Text } from 'react-native';
 import React, { useContext } from 'react';
 import { RecruiterContext } from 'src/appContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
-import { IJobOffer, IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
-import { Divider } from 'react-native-paper';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+
 import utilityStyles from 'src/styles/utilityStyles';
 import JobPostingCard from '@components/jobPostingCard/JobPostingCard';
+import { isEmptyArray } from 'formik';
+import JobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
+import { useTheme } from 'react-native-paper';
+import { CustomTheme } from 'App';
 
 const JobOffersList = () => {
   const { jobOffers } = useContext(RecruiterContext);
-
+  const theme = useTheme<CustomTheme>();
+  if (isEmptyArray(jobOffers)) {
+    return <JobPostingEmptyState></JobPostingEmptyState>;
+  }
   return (
-    <View style={[utilityStyles.container, utilityStyles.flex]}>
+    <View style={[utilityStyles.container, utilityStyles.flex, ,]}>
       <GenericList<IJobPostingDB>
         renderItem={({ item }) => (
           <JobPostingCard jobPosting={item}></JobPostingCard>

@@ -19,6 +19,7 @@ import { RecruiterContext } from 'src/appContext/RecruiterContext';
 import AppLoading from '@ui/AppLoading';
 import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
 import { getLocales } from 'expo-localization';
+import { CustomTheme } from 'App';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -70,12 +71,15 @@ export type RecruiterNavigatorRootParams = {
 const Tab = createBottomTabNavigator<RecruiterNavigatorRootParams>();
 
 const RecruiterNavigator = () => {
-  const theme = useTheme();
+  const theme = useTheme<CustomTheme>();
   return (
     <Tab.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.background,
+        },
+        sceneStyle: {
+          backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
         },
       }}
     >

@@ -10,10 +10,15 @@ interface JobPostingCardProps {
 const JobPostingCard = (props: JobPostingCardProps) => {
   const { jobPosting } = props;
   const theme = useTheme<CustomTheme>();
-  console.log('theme p', theme.colors.primary);
-  console.log(theme.colors.primaryDynamicOpacity());
+
   return (
-    <AppCardWrapper styles={{ marginBottom: 0, marginHorizontal: 0 }}>
+    <AppCardWrapper
+      styles={{
+        marginBottom: 0,
+        marginHorizontal: 0,
+        backgroundColor: theme.colors.onPrimary,
+      }}
+    >
       <Card.Content>
         <View style={styles.header}>
           <View style={styles.headerLeft}>

@@ -19,7 +19,7 @@ import {
 } from 'src/types/dbTypes/IJobOffer';
 import * as Yup from 'yup';
 import { Toast } from 'toastify-react-native';
-import AppForm from '../form/AppForm';
+
 import {
   ActivityIndicator,
   Button,
@@ -32,31 +32,30 @@ import {
   KeyboardAwareScrollView,
   useKeyboardState,
 } from 'react-native-keyboard-controller';
-import { AppFormInputWithHelper } from '@ui/AppFormInputs';
-import AppSegmentedButtons from '../AppSegmentedButtons';
+import { AppFormInputWithHelper, InputHelper } from '@ui/AppFormInputs';
 
-import { AppReactNativePaperSelectMultiple } from '../../ui/AppReactNativePaperSelect';
-
-import AppSubtitle from '../../ui/AppSubtitle';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
-import { InputHelper } from '../../ui/AppFormInputs';
 
-import LocationPicker from '../shared/LocationPicker';
-import GeoLocationPicker from '../shared/GeoLocationPicker';
 import { AuthContext } from 'src/appContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';
-import AppMap from '../shared/AppMap';
 
-import AppTypeOfLocationSelection, {
-  LocationSelectionType,
-} from '../shared/AppTypeOfLocationSelection';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 import { FormikHelpers } from 'formik';
 import { Timestamp } from 'firebase/firestore';
+import AppForm from '@components/form/AppForm';
+import AppSubtitle from '@ui/AppSubtitle';
+import AppSegmentedButtons from '@components/AppSegmentedButtons';
+import AppTypeOfLocationSelection, {
+  LocationSelectionType,
+} from '@components/shared/AppTypeOfLocationSelection';
+import LocationPicker from '@components/shared/LocationPicker';
+import GeoLocationPicker from '@components/shared/GeoLocationPicker';
+import AppMap from '@components/shared/AppMap';
+import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -199,7 +198,7 @@ const NewJobOffer = () => {
       if (newJobOfferResponse.success) {
         Toast.show({
           onHide: () => {
-            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.SWIPE, {});
+            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});
           },
           text1: newJobOfferResponse.message,
           visibilityTime: 700,
