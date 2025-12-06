@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React, { useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppSegmentedButtons from '../AppSegmentedButtons';
-import { PropsWithChildren, Children } from 'react';
 
 export enum LocationSelectionType {
   SELECT_LIST = 'lista',

@@ -32,6 +32,7 @@ export interface IJobOfferHybrid extends IJobOfferGeneral {
   province: string;
   city: string;
 }
+export type IJobPostingDB = IJobOffer & { id: string };
 export interface IJobOfferGeneral {
   title: string;
   company: string;

@@ -24,22 +24,34 @@ import * as SplashScreen from 'expo-splash-screen';
 import AuthContextProvider from './src/appContext/AuthContext';
 import COLORS from 'src/constants/COLORS';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
-
+export type CustomTheme = MD3Theme &
+  ReactNavigation.Theme & {
+    fonts: { iconFontSize: number };
+    colors: { primaryDynamicOpacity: (opacity?: number) => string };
+  };
 const Providers = ({ children }: PropsWithChildren) => {
   const { LightTheme, DarkTheme } = adaptNavigationTheme({
     reactNavigationLight: NavigationDefaultTheme,
     reactNavigationDark: NavigationDarkTheme,
   });
 
-  const CombinedDefaultTheme: MD3Theme & ReactNavigation.Theme = {
+  const CombinedDefaultTheme: CustomTheme = {
     ...merge(MD3LightTheme, LightTheme),
     colors: {
       ...MD3LightTheme.colors,
       ...LightTheme.colors,
       primary: COLORS.primary,
+      primaryDynamicOpacity(opacity = 0.6) {
+        return `${COLORS.primary.replace(/1\)/, opacity.toString() + ')')}`;
+      },
       secondaryContainer: COLORS.secondaryContainer,
       // onPrimaryContainer: 'red',
       surfaceVariant: '#f2f1f1ff',
+    },
+    fonts: {
+      ...MD3LightTheme.fonts,
+      ...LightTheme.fonts,
+      iconFontSize: 20,
     },
   };
 

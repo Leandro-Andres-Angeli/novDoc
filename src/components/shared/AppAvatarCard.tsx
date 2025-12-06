@@ -6,6 +6,8 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import useOpenElement from 'src/hooks/useModal';
 import AppPictureSelector from './AppPictureSelector';
 import utilityStyles from 'src/styles/utilityStyles';
+import { CustomTheme } from 'App';
+import AppCardWrapper from '@ui/AppCardWrapper';
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
@@ -24,13 +26,13 @@ type RBSheetType = {
 };
 
 const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
-  const theme = useTheme();
-  const { elementVisible, handleElementVisibility } = useOpenElement();
+  const theme = useTheme<CustomTheme>();
+  // const { elementVisible, handleElementVisibility } = useOpenElement();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
 
   return (
     <>
-      <Card style={localStyles.headerCard}>
+      <AppCardWrapper>
         <Card.Content style={localStyles.headerContent}>
           <View style={localStyles.avatarContainer}>
             <Image
@@ -47,7 +49,7 @@ const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
                 }
               }}
               icon='pencil'
-              size={20}
+              size={theme.fonts.iconFontSize}
               style={{
                 ...localStyles.editButton,
                 backgroundColor: theme.colors.onPrimary,
@@ -62,7 +64,7 @@ const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
             </Text>
           </View>
         </Card.Content>
-      </Card>
+      </AppCardWrapper>
       <RBSheet
         draggable={true}
         customStyles={{

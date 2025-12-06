@@ -49,13 +49,12 @@ const Favorites = () => {
     <View style={{ ...utilityStyles.flex }}>
       <Text>Test</Text>
       <Text>
-        {' '}
         {JSON.stringify(
           jobOffers.map((el) => ({
             ...el,
             createdAt: el.createdAt.toDate().toLocaleDateString(languageTag),
           }))
-        )}{' '}
+        )}
       </Text>
     </View>
   );

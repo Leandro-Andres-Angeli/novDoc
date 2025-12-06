@@ -1,5 +1,5 @@
 const COLORS = {
-  primary: '#38b2ac',
+  primary: 'rgba(56, 178, 172, 1)',
   secondaryContainer: '#38b2ac42',
 };
 export default COLORS;
