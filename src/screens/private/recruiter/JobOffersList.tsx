@@ -1,4 +1,4 @@
-import { View, TouchableWithoutFeedback, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import React, { useContext } from 'react';
 import { RecruiterContext } from 'src/appContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
@@ -11,12 +11,11 @@ import { isEmptyArray } from 'formik';
 import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
-import {
-  JobListNavigatorRootParams,
-  JOBS_LIST_ROUTES,
-} from 'src/navigators/privateNavigator/recruiterNavigator/jobsListNavigator/JobsListNavigator';
-import AppAvatarCard from '@components/shared/AppAvatarCard';
 import { AuthContext } from 'src/appContext/AuthContext';
+import {
+  RecruiterProfileStackRootParams,
+  RecruiterProfileStackRoutes,
+} from './RecruiterProfileStack';
 
 const JobOffersList = () => {
   const { jobOffers } = useContext(RecruiterContext);
@@ -25,7 +24,7 @@ const JobOffersList = () => {
   } = useContext(AuthContext);
   // const navigation = useNavigation<NavigationProp<JobPostingNavigation>>();
   const navigation =
-    useNavigation<NavigationProp<JobListNavigatorRootParams>>();
+    useNavigation<NavigationProp<RecruiterProfileStackRootParams>>();
 
   if (isEmptyArray(jobOffers)) {
     return (
@@ -41,9 +40,12 @@ const JobOffersList = () => {
               onPress={() => {
                 console.log('pressed');
                 // navigate to detail
-                navigation.navigate(JOBS_LIST_ROUTES.JOB_POSTING_DETAIL, {
-                  jobPosting: item,
-                });
+                navigation.navigate(
+                  RecruiterProfileStackRoutes.JOB_POSTING_DETAILS,
+                  {
+                    jobPosting: item,
+                  }
+                );
               }}
               key={item.id}
             >

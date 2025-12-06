@@ -202,23 +202,6 @@ const RecruiterNavigator = () => {
         name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
         component={NewJobOfferScreen}
       ></Tab.Screen>
-      {/* <Tab.Screen
-        name={RECRUITER_NAVIGATOR_ROUTES.JOB_POSTING_DETAIL}
-        component={JobDetail}
-        options={{
-          tabBarIconStyle: { display: 'none' },
-          tabBarLabelStyle: {
-            position: 'absolute',
-            textAlignVertical: 'center',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-
-          tabBarShowLabel: false,
-        }}
-      ></Tab.Screen> */}
     </Tab.Navigator>
   );
 };

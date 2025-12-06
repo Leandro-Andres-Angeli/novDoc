@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 import JobOffersList from 'src/screens/private/recruiter/JobOffersList';
-import JobDetail from '@components/shared/JobDetail';
 
 export const JOBS_LIST_ROUTES = {
   JOB_POSTING_DETAIL: 'JOB_POSTING_DETAIL',
@@ -25,11 +24,6 @@ const JobsListNavigator = () => {
       <Stack.Screen
         name={JOBS_LIST_ROUTES.JOB_POSTING_LIST}
         component={JobOffersList}
-      ></Stack.Screen>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name={JOBS_LIST_ROUTES.JOB_POSTING_DETAIL}
-        component={JobDetail}
       ></Stack.Screen>
     </Stack.Navigator>
   );
