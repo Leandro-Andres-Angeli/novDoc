@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 import RecruiterProfileScreen from './RecruiterProfileScreen';
-import JobDetail from '@components/shared/JobDetail';
+import JobDetail from '@components/shared/JobDetailScreen';
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',
   JOB_POSTING_DETAILS: 'JOB_POSTING_DETAILS',

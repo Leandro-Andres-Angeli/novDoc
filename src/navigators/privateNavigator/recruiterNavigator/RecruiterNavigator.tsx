@@ -22,7 +22,7 @@ import { getLocales } from 'expo-localization';
 import { CustomTheme } from 'App';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import { NavigationProp } from '@react-navigation/native';
-import JobDetail from '@components/shared/JobDetail';
+import JobDetail from '@components/shared/JobDetailScreen';
 import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {

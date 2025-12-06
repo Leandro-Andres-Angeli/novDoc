@@ -13,8 +13,6 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { AuthContext } from 'src/appContext/AuthContext';
 
-import RECRUITER_NAVIGATOR_ROUTES from '../../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
-import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import {
   RecruiterProfileStackRootParams,
   RecruiterProfileStackRoutes,
@@ -22,10 +20,7 @@ import {
 
 const JobOffersList = () => {
   const { jobOffers } = useContext(RecruiterContext);
-  const {
-    authState: { user },
-  } = useContext(AuthContext);
-  // const navigation = useNavigation<NavigationProp<JobPostingNavigation>>();
+
   const navigation =
     useNavigation<NavigationProp<RecruiterProfileStackRootParams>>();
 
