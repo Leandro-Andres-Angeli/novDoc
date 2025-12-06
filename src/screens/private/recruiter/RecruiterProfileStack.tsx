@@ -20,6 +20,7 @@ const RecruiterProfileStack = () => {
   return (
     <Stack.Navigator
       initialRouteName={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
+      screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
         name={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}

@@ -12,6 +12,9 @@ import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/Pr
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { AuthContext } from 'src/appContext/AuthContext';
+
+import RECRUITER_NAVIGATOR_ROUTES from '../../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
+import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import {
   RecruiterProfileStackRootParams,
   RecruiterProfileStackRoutes,
