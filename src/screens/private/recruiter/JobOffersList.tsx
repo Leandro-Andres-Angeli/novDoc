@@ -7,15 +7,18 @@ import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import utilityStyles from 'src/styles/utilityStyles';
 import JobPostingCard from '@components/jobPostingCard/JobPostingCard';
 import { isEmptyArray } from 'formik';
-import JobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
+
 import { useTheme } from 'react-native-paper';
 import { CustomTheme } from 'App';
+import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
 
 const JobOffersList = () => {
   const { jobOffers } = useContext(RecruiterContext);
-  const theme = useTheme<CustomTheme>();
+
   if (isEmptyArray(jobOffers)) {
-    return <JobPostingEmptyState></JobPostingEmptyState>;
+    return (
+      <ProfileProfileJobPostingEmptyState></ProfileProfileJobPostingEmptyState>
+    );
   }
   return (
     <View style={[utilityStyles.container, utilityStyles.flex, ,]}>

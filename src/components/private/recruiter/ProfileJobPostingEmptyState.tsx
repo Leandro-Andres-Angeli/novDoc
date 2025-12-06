@@ -3,10 +3,14 @@ import { View, StyleSheet } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 import { Briefcase } from 'lucide-react-native';
 import { CustomTheme } from 'App';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
+import RECRUITER_NAVIGATOR_ROUTES from '../../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 
-export default function JobPostingEmptyState() {
+export default function ProfileProfileJobPostingEmptyState() {
   const theme = useTheme<CustomTheme>();
-
+  const navigator =
+    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
   return (
     <View style={styles.container}>
       <View
@@ -31,7 +35,9 @@ export default function JobPostingEmptyState() {
 
       <Button
         mode='contained'
-        // onPress={handleCreateJobPosting}
+        onPress={() =>
+          navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS, {})
+        }
         style={styles.primaryButton}
         contentStyle={styles.buttonContent}
         icon='plus'

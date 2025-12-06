@@ -36,10 +36,14 @@ const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
         <Card.Content
           style={[
             localStyles.headerContent,
-            { backgroundColor: theme.colors.onPrimary },
+
+            {
+              borderRadius: utilityStyles.btnBorderRadius.borderRadius,
+              backgroundColor: theme.colors.onPrimary,
+            },
           ]}
         >
-          <View style={localStyles.avatarContainer}>
+          <View style={[localStyles.avatarContainer]}>
             <Image
               source={require('../../../assets/profileAvatar.png')}
               style={localStyles.avatar}

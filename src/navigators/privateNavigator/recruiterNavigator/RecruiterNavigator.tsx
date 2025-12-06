@@ -137,28 +137,30 @@ const RecruiterNavigator = () => {
         component={SwipeRecruiter}
       ></Tab.Screen>
       <Tab.Screen
-        options={(props) =>
-          bottomNavigationsOptions({
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
             ...props,
             iconName: 'heart-outline',
             iconNameFocused: 'heart',
             tabBarLabel: 'Favoritos',
             theme: theme,
-          })
-        }
+          });
+          return { ...iconOptions, headerShown: false };
+        }}
         name={RECRUITER_NAVIGATOR_ROUTES.FAVORITES}
         component={Favorites}
       ></Tab.Screen>
       <Tab.Screen
-        options={(props) =>
-          bottomNavigationsOptions({
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
             ...props,
             iconName: 'account-circle',
             iconNameFocused: 'account-circle-outline',
             tabBarLabel: 'Mi perfil',
             theme: theme,
-          })
-        }
+          });
+          return { ...iconOptions, headerShown: false };
+        }}
         name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
         component={RecruiterProfileScreen}
       ></Tab.Screen>
