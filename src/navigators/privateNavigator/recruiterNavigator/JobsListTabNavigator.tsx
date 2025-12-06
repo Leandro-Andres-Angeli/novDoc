@@ -5,10 +5,9 @@ import JOBS_LIST_TABS_ROUTES from './JOBS_LIST_TABS_ROUTES';
 
 import utilityStyles from 'src/styles/utilityStyles';
 import { useTheme } from 'react-native-paper';
-import GenericList from '@components/genericList/GenericList';
-import { RecruiterContext } from 'src/appContext/RecruiterContext';
-import JobOffersList from 'src/screens/private/recruiter/JobOffersList';
+
 import { CustomTheme } from 'App';
+import JobsListNavigator from './jobsListNavigator/JobsListNavigator';
 type JobsListTabNavigatorRootParams = {
   [JOBS_LIST_TABS_ROUTES.activa]: {};
   [JOBS_LIST_TABS_ROUTES.pausada]: {};
@@ -30,6 +29,7 @@ const JobsListTabNavigator = () => {
         tabBarItemStyle: {
           // width: 'auto',
         },
+
         tabBarIndicatorStyle: {},
         tabBarIndicatorContainerStyle: {
           transform: [{ scaleX: 0.97 }],
@@ -43,16 +43,16 @@ const JobsListTabNavigator = () => {
       <Tab.Screen
         name={JOBS_LIST_TABS_ROUTES.activa}
         options={{ title: `${JOBS_LIST_TABS_ROUTES.activa}s` }}
-        component={JobOffersList}
+        component={JobsListNavigator}
       ></Tab.Screen>
       <Tab.Screen
         name={JOBS_LIST_TABS_ROUTES.pausada}
         options={{ title: `${JOBS_LIST_TABS_ROUTES.pausada}s` }}
-        component={JobOffersList}
+        component={JobsListNavigator}
       ></Tab.Screen>
       <Tab.Screen
         name={JOBS_LIST_TABS_ROUTES.cerrada}
-        component={JobOffersList}
+        component={JobsListNavigator}
         options={{ title: `${JOBS_LIST_TABS_ROUTES.cerrada}s` }}
       ></Tab.Screen>
     </Tab.Navigator>

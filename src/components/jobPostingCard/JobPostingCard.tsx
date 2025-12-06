@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import AppCardWrapper from '@ui/AppCardWrapper';
 import { Card, IconButton, Text, useTheme } from 'react-native-paper';
@@ -46,11 +46,11 @@ const JobPostingCard = (props: JobPostingCardProps) => {
               </Text>
             </View>
           </View>
-          <IconButton
+          {/* <IconButton
             icon='dots-vertical'
             size={20}
             onPress={() => console.log('Menu pressed')}
-          />
+          /> */}
         </View>
         <View style={styles.candidateInfo}>
           <View style={styles.dot} />

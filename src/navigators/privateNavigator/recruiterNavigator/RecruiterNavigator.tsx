@@ -20,6 +20,10 @@ import AppLoading from '@ui/AppLoading';
 import RecruiterProfileScreen from 'src/screens/private/recruiter/RecruiterProfileScreen';
 import { getLocales } from 'expo-localization';
 import { CustomTheme } from 'App';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { NavigationProp } from '@react-navigation/native';
+import JobDetail from '@components/shared/JobDetail';
+import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -63,10 +67,15 @@ const Favorites = () => {
 
 export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
-  [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {};
+  [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {
+    // cardNavigator: NavigationProp<RecruiterNavigatorRootParams>;
+  };
   [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.FAVORITES]: {};
+  [RECRUITER_NAVIGATOR_ROUTES.JOB_POSTING_DETAIL]: {
+    jobPosting: IJobPostingDB;
+  };
 };
 const Tab = createBottomTabNavigator<RecruiterNavigatorRootParams>();
 
@@ -162,7 +171,7 @@ const RecruiterNavigator = () => {
           return { ...iconOptions, headerShown: false };
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
-        component={RecruiterProfileScreen}
+        component={RecruiterProfileStack}
       ></Tab.Screen>
       <Tab.Screen
         options={(props) => {
@@ -193,6 +202,23 @@ const RecruiterNavigator = () => {
         name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
         component={NewJobOfferScreen}
       ></Tab.Screen>
+      {/* <Tab.Screen
+        name={RECRUITER_NAVIGATOR_ROUTES.JOB_POSTING_DETAIL}
+        component={JobDetail}
+        options={{
+          tabBarIconStyle: { display: 'none' },
+          tabBarLabelStyle: {
+            position: 'absolute',
+            textAlignVertical: 'center',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+
+          tabBarShowLabel: false,
+        }}
+      ></Tab.Screen> */}
     </Tab.Navigator>
   );
 };

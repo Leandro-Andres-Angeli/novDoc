@@ -1,4 +1,11 @@
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  Dimensions,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import React, { useRef } from 'react';
 import { Button, Card, IconButton, Text, useTheme } from 'react-native-paper';
 
@@ -12,6 +19,7 @@ const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
   avatarPic: string;
+  style?: StyleProp<ViewStyle>;
 }
 type RBSheetType = {
   /**
@@ -25,14 +33,14 @@ type RBSheetType = {
   close: () => void;
 };
 
-const AppAvatarCard = ({ fullName, avatarPic }: AppAvatarCardProps) => {
+const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   const theme = useTheme<CustomTheme>();
   // const { elementVisible, handleElementVisibility } = useOpenElement();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
 
   return (
     <>
-      <AppCardWrapper>
+      <AppCardWrapper styles={{ ...StyleSheet.flatten(style) }}>
         <Card.Content
           style={[
             localStyles.headerContent,

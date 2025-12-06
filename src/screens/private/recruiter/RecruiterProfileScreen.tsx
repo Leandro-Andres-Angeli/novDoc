@@ -1,12 +1,11 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React, { useContext } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
-import AppAvatarCard from '../../../components/shared/AppAvatarCard';
+
 import { AuthContext } from 'src/appContext/AuthContext';
-import { JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
+
 import JobsListTabNavigator from '../../../navigators/privateNavigator/recruiterNavigator/JobsListTabNavigator';
-import { useTheme } from 'react-native-paper';
-import { CustomTheme } from 'App';
+import AppAvatarCard from '@components/shared/AppAvatarCard';
 
 const RecruiterProfileScreen = () => {
   const {
