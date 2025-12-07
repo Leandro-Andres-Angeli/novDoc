@@ -1,6 +1,6 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import React from 'react';
-import { Chip, Text, Button, useTheme } from 'react-native-paper';
+import React, { PropsWithChildren } from 'react';
+import { Chip, Text, Button, useTheme, Modal } from 'react-native-paper';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import { getLocales } from 'expo-localization';
 import { Seniority } from '../../types/dbTypes/IJobOffer';
@@ -9,6 +9,10 @@ import dateFormatter from '@utils/dateFormatter ';
 import { CustomTheme } from 'App';
 import jobOfferHasLocation from '@utils/jobOfferHasLocation';
 import utilityStyles from 'src/styles/utilityStyles';
+import useOpenElement from 'src/hooks/useOpenElement';
+import { boolean } from 'yup';
+import AppModal from '@ui/AppModal';
+import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
 
 const requirements = [
   'Swift',
@@ -21,100 +25,122 @@ const requirements = [
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
 }
+interface CloseJobPostModalProps extends PropsWithChildren {
+  elementVisible: boolean;
+}
+const CloseJobPostModal = ({
+  elementVisible,
+  children,
+}: CloseJobPostModalProps) => {
+  return (
+    <Modal visible={elementVisible}>
+      {children}
+      <Text>
+        {' '}
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui neque
+        quaerat vitae a reiciendis corporis beatae maxime voluptas rerum ipsam.
+        Nostrum impedit dolorum quaerat saepe. Doloremque suscipit facilis sunt
+        quaerat! Commodi fugiat labore doloribus, iusto voluptatibus similique
+        omnis esse ratione?
+      </Text>
+    </Modal>
+  );
+};
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
   console.log('jb', jobPosting);
   const [locale] = getLocales();
-
+  const { elementVisible, handleElementVisibility } = useOpenElement();
   const theme = useTheme<CustomTheme>();
 
   return (
-    <View
-      style={{
-        ...styles.container,
-        ...utilityStyles.contentContainer,
-        marginVertical: 16,
-      }}
-    >
-      <ScrollView style={styles.content}>
-        {/* Job Title Section */}
-        <View style={styles.section}>
-          <Text variant='headlineSmall' style={styles.jobTitle}>
-            {jobPosting.title}
-          </Text>
-          <Text variant='bodyMedium' style={styles.company}>
-            {jobPosting.company}
-          </Text>
-        </View>
-
-        {/* Job Info Cards */}
-        <View style={styles.infoContainer}>
-          <View style={styles.infoCard}>
-            <Text variant='bodySmall' style={styles.infoLabel}>
-              Salario
+    <>
+      <View
+        style={{
+          ...styles.container,
+          ...utilityStyles.contentContainer,
+          marginVertical: 16,
+        }}
+      >
+        <ScrollView style={styles.content}>
+          {/* Job Title Section */}
+          <View style={styles.section}>
+            <Text variant='headlineSmall' style={styles.jobTitle}>
+              {jobPosting.title}
             </Text>
-            <Text variant='titleMedium' style={styles.infoValue}>
-              {currencyFormatter(locale).format(jobPosting.salary)}
+            <Text variant='bodyMedium' style={styles.company}>
+              {jobPosting.company}
             </Text>
           </View>
 
-          <View style={styles.infoCard}>
-            <Text variant='bodySmall' style={styles.infoLabel}>
-              Tipo de Empleo
-            </Text>
-            <Text variant='titleMedium' style={styles.infoValue}>
-              {jobPosting.shiftTime}
-            </Text>
-          </View>
-        </View>
+          {/* Job Info Cards */}
+          <View style={styles.infoContainer}>
+            <View style={styles.infoCard}>
+              <Text variant='bodySmall' style={styles.infoLabel}>
+                Salario
+              </Text>
+              <Text variant='titleMedium' style={styles.infoValue}>
+                {currencyFormatter(locale).format(jobPosting.salary)}
+              </Text>
+            </View>
 
-        <View style={[styles.infoCard, styles.fullWidthCard]}>
-          <Text variant='bodySmall' style={styles.infoLabel}>
-            Modalidad
-          </Text>
-          <Text variant='titleMedium' style={styles.infoValue}>
-            {jobPosting.jobLocation}
-          </Text>
-        </View>
-        {jobOfferHasLocation(jobPosting) && (
+            <View style={styles.infoCard}>
+              <Text variant='bodySmall' style={styles.infoLabel}>
+                Tipo de Empleo
+              </Text>
+              <Text variant='titleMedium' style={styles.infoValue}>
+                {jobPosting.shiftTime}
+              </Text>
+            </View>
+          </View>
+
           <View style={[styles.infoCard, styles.fullWidthCard]}>
-            <Text variant='titleMedium' style={styles.infoValue}>
-              {jobPosting.province}
-            </Text>
             <Text variant='bodySmall' style={styles.infoLabel}>
-              {jobPosting.city}
+              Modalidad
+            </Text>
+            <Text variant='titleMedium' style={styles.infoValue}>
+              {jobPosting.jobLocation}
             </Text>
           </View>
-        )}
-        <View style={[styles.infoCard, styles.fullWidthCard]}>
-          <Text variant='bodySmall' style={styles.infoLabel}>
-            Seniority
-          </Text>
-          <Text variant='titleMedium' style={styles.infoValue}>
-            {jobPosting.seniority}
-          </Text>
-        </View>
+          {jobOfferHasLocation(jobPosting) && (
+            <View style={[styles.infoCard, styles.fullWidthCard]}>
+              <Text variant='titleMedium' style={styles.infoValue}>
+                {jobPosting.province}
+              </Text>
+              <Text variant='bodySmall' style={styles.infoLabel}>
+                {jobPosting.city}
+              </Text>
+            </View>
+          )}
+          <View style={[styles.infoCard, styles.fullWidthCard]}>
+            <Text variant='bodySmall' style={styles.infoLabel}>
+              Seniority
+            </Text>
+            <Text variant='titleMedium' style={styles.infoValue}>
+              {jobPosting.seniority}
+            </Text>
+          </View>
 
-        <View style={[styles.infoCard, styles.fullWidthCard]}>
-          <Text variant='bodySmall' style={styles.infoLabel}>
-            Fecha de publicacion
-          </Text>
-          <Text variant='titleMedium' style={styles.infoValue}>
-            {dateFormatter(locale).format(jobPosting.createdAt.toDate())}
-          </Text>
-        </View>
+          <View style={[styles.infoCard, styles.fullWidthCard]}>
+            <Text variant='bodySmall' style={styles.infoLabel}>
+              Fecha de publicacion
+            </Text>
+            <Text variant='titleMedium' style={styles.infoValue}>
+              {dateFormatter(locale).format(jobPosting.createdAt.toDate())}
+            </Text>
+          </View>
 
-        {/* Description Section */}
-        <View style={styles.section}>
-          <Text variant='titleMedium' style={styles.sectionTitle}>
-            Descripción del Puesto
-          </Text>
-          <Text variant='bodyMedium' style={styles.description}>
-            {jobPosting.description}
-          </Text>
-        </View>
+          {/* Description Section */}
+          <View style={styles.section}>
+            <Text variant='titleMedium' style={styles.sectionTitle}>
+              Descripción del Puesto
+            </Text>
+            <Text variant='bodyMedium' style={styles.description}>
+              {jobPosting.description}
+            </Text>
+          </View>
 
-        {/* Responsibilities Section  */}
-        {/*   <View style={styles.section}>
+          {/* Responsibilities Section  */}
+          {/*   <View style={styles.section}>
           <Text variant='titleMedium' style={styles.sectionTitle}>
             Responsabilidades
           </Text>
@@ -133,40 +159,55 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
           ))}
         </View> */}
 
-        {/* Requirements Section */}
-        <View style={styles.section}>
-          <Text variant='titleMedium' style={styles.sectionTitle}>
-            Requisitos
-          </Text>
-          <View style={styles.chipsContainer}>
-            {jobPosting.skills.map((req, index) => (
-              <Chip
-                key={index}
-                mode='flat'
-                style={{
-                  backgroundColor: theme.colors.primaryDynamicOpacity(0.08),
-                }}
-                textStyle={{ ...styles.chipText, color: theme.colors.primary }}
-              >
-                {req.name}
-              </Chip>
-            ))}
+          {/* Requirements Section */}
+          <View style={styles.section}>
+            <Text variant='titleMedium' style={styles.sectionTitle}>
+              Requisitos
+            </Text>
+            <View style={styles.chipsContainer}>
+              {jobPosting.skills.map((req, index) => (
+                <Chip
+                  key={index}
+                  mode='flat'
+                  style={{
+                    backgroundColor: theme.colors.primaryDynamicOpacity(0.08),
+                  }}
+                  textStyle={{
+                    ...styles.chipText,
+                    color: theme.colors.primary,
+                  }}
+                >
+                  {req.name}
+                </Chip>
+              ))}
+            </View>
           </View>
-        </View>
 
-        {/* Close Button */}
-        <Button
-          mode='contained'
-          onPress={() => console.log('Close offer')}
-          style={styles.closeButton}
-          buttonColor='#FFE5E5'
-          textColor='#C62828'
-          contentStyle={styles.closeButtonContent}
-        >
-          Cerrar Oferta
-        </Button>
-      </ScrollView>
-    </View>
+          {/* Close Button */}
+          <Button
+            mode='contained'
+            onPress={() => console.log('Close offer')}
+            style={styles.closeButton}
+            buttonColor='#FFE5E5'
+            textColor='#C62828'
+            contentStyle={styles.closeButtonContent}
+            onPressIn={() => handleElementVisibility()}
+          >
+            Cerrar Oferta
+          </Button>
+        </ScrollView>
+      </View>
+      {/* <CloseJobPostModal {...{ elementVisible }}></CloseJobPostModal> */}
+      <AppModal
+        onDismiss={() => handleElementVisibility(false)}
+        dismissable={true}
+        style={{ display: 'flex' }}
+        visible={elementVisible}
+        {...{ elementVisible }}
+      >
+        <ConfirmCloseJobPosting></ConfirmCloseJobPosting>
+      </AppModal>
+    </>
   );
 };
 
