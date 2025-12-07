@@ -15,14 +15,6 @@ import AppModal from '@ui/AppModal';
 import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
 import { updateJobOffer } from 'src/services/jobOffer/jobOffer.service';
 
-const requirements = [
-  'Swift',
-  'SwiftUI',
-  'UIKit',
-  'Core Data',
-  'REST APIs',
-  'Git',
-];
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
 }
@@ -173,17 +165,30 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
           </View>
 
           {/* Close Button */}
-          <Button
-            mode='contained'
-            onPress={() => console.log('Close offer')}
-            style={styles.closeButton}
-            buttonColor='#FFE5E5'
-            textColor='#C62828'
-            contentStyle={styles.closeButtonContent}
-            onPressIn={() => handleElementVisibility()}
-          >
-            Cerrar Oferta
-          </Button>
+          <View style={styles.btnContainer}>
+            <Button
+              mode='contained'
+              onPress={() => console.log('Close offer')}
+              // style={styles.closeButton}
+              buttonColor='#FFE5E5'
+              textColor='#C62828'
+              icon={'close'}
+              contentStyle={{ ...utilityStyles.btn }}
+              onPressIn={() => handleElementVisibility()}
+            >
+              Cerrar Oferta
+            </Button>
+            <Button
+              mode='contained'
+              onPress={() => console.log('Close offer')}
+              style={utilityStyles.btn}
+              buttonColor={theme.colors.primary}
+              icon={'pen'}
+              // contentStyle={styles.closeButtonContent}
+            >
+              Editar Oferta
+            </Button>
+          </View>
         </ScrollView>
       </View>
       {/* <CloseJobPostModal {...{ elementVisible }}></CloseJobPostModal> */}
@@ -278,6 +283,7 @@ const styles = StyleSheet.create({
     color: '#424242',
     lineHeight: 22,
   },
+  btnContainer: { gap: 8, marginVertical: 10 },
   chipsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
