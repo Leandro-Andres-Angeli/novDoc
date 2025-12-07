@@ -14,6 +14,9 @@ import { boolean } from 'yup';
 import AppModal from '@ui/AppModal';
 import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
 import { updateJobOffer } from 'src/services/jobOffer/jobOffer.service';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RecruiterProfileStackRootParams } from 'src/screens/private/recruiter/RecruiterProfileStack';
 
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
@@ -22,6 +25,9 @@ interface JobDetailProp {
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
   const [locale] = getLocales();
   const { elementVisible, handleElementVisibility } = useOpenElement();
+
+  const navigator =
+    useNavigation<NativeStackNavigationProp<RecruiterProfileStackRootParams>>();
   const theme = useTheme<CustomTheme>();
   const confirmCloseJobPosting = async () => {
     try {
@@ -180,10 +186,13 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
             </Button>
             <Button
               mode='contained'
-              onPress={() => console.log('Close offer')}
+              onPress={() =>
+                navigator.navigate('EDIT_JOB_POSTING', { jobPosting })
+              }
               style={utilityStyles.btn}
               buttonColor={theme.colors.primary}
               icon={'pen'}
+
               // contentStyle={styles.closeButtonContent}
             >
               Editar Oferta

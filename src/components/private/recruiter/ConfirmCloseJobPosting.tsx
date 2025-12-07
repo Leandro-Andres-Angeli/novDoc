@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Portal, Modal, Text, Button, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { JobDetailsScreenProps } from 'src/screens/private/shared/JobDetailScreen';
+import {
+  RecruiterProfileStackRootParams,
+  RecruiterProfileStackRoutes,
+} from 'src/screens/private/recruiter/RecruiterProfileStack';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 interface ConfirmCloseJobPostingProps {
   handleConfirm: () => void;
   handleCancel: () => void;
@@ -10,6 +18,16 @@ const ConfirmCloseJobPosting = ({
   handleCancel,
   handleConfirm,
 }: ConfirmCloseJobPostingProps) => {
+  const route: RouteProp<
+    {
+      [RecruiterProfileStackRoutes.JOB_POSTING_DETAILS]: {
+        jobPosting: IJobPostingDB;
+      };
+    },
+    'JOB_POSTING_DETAILS'
+  > = useRoute();
+  const navigator =
+    useNavigation<NativeStackNavigationProp<RecruiterProfileStackRootParams>>();
   return (
     <View
       style={{

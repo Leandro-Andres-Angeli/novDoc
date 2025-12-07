@@ -40,6 +40,7 @@ import LocationPicker from '@components/shared/LocationPicker';
 import GeoLocationPicker from '@components/shared/GeoLocationPicker';
 import AppMap from '@components/shared/AppMap';
 import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
+
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
   userId: string
@@ -136,14 +137,18 @@ interface JobPostingFormProps<T> {
   userId: string;
   handleSubmit: (values: T, helpers: FormikHelpers<any>) => Promise<void>;
   loading: boolean;
+  submitTextBtn?: string;
+  valuesToEdit?: IJobOffer;
 }
 const JobPostingForm = <T,>({
   userId,
   handleSubmit,
   loading,
+  submitTextBtn = 'Crear oferta',
+  valuesToEdit,
 }: JobPostingFormProps<T>) => {
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
-    generateJobOfferForm(JobLocation.REMOTE, userId)
+    valuesToEdit ?? generateJobOfferForm(JobLocation.REMOTE, userId)
   );
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
@@ -472,7 +477,7 @@ const JobPostingForm = <T,>({
                       onPress={() => handleSubmit()}
                       disabled={(dirty && !isValid) || !dirty}
                     >
-                      Crear oferta
+                      {submitTextBtn}
                     </Button>
                   )}
                   {loadingPostIndicator && (
