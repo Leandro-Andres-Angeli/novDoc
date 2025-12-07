@@ -15,23 +15,25 @@ import AppPictureSelector from './AppPictureSelector';
 import utilityStyles from 'src/styles/utilityStyles';
 import { CustomTheme } from 'App';
 import AppCardWrapper from '@ui/AppCardWrapper';
+import RBSheetType from 'RBSheetType';
+
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
   avatarPic: string;
   style?: StyleProp<ViewStyle>;
 }
-type RBSheetType = {
-  /**
-   * The method to open bottom sheet.
-   */
-  open: () => void;
+// type RBSheetType = {
+//   /**
+//    * The method to open bottom sheet.
+//    */
+//   open: () => void;
 
-  /**
-   * The method to close bottom sheet.
-   */
-  close: () => void;
-};
+//   /**
+//    * The method to close bottom sheet.
+//    */
+//   close: () => void;
+// };
 
 const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   const theme = useTheme<CustomTheme>();

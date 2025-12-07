@@ -56,6 +56,7 @@ import LocationPicker from '@components/shared/LocationPicker';
 import GeoLocationPicker from '@components/shared/GeoLocationPicker';
 import AppMap from '@components/shared/AppMap';
 import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
+import jobOfferHasLocation from '@utils/jobOfferHasLocation';
 
 const NewJobOffer = () => {
   const { isVisible } = useKeyboardState();
@@ -161,15 +162,6 @@ const NewJobOffer = () => {
       }),
     });
     return baseValidationSchema as unknown as Yup.ObjectSchema<IJobOffer>;
-  };
-
-  const jobOfferHasLocation = (
-    jobOfferForm: IJobOfferOnSite | IJobOfferHybrid | IJobOfferRemote
-  ): jobOfferForm is IJobOfferHybrid | IJobOfferOnSite => {
-    return (
-      jobOfferForm.jobLocation === JobLocation.ON_SITE ||
-      jobOfferForm.jobLocation === JobLocation.HYBRID
-    );
   };
 
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(

@@ -1,9 +1,13 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
-import { Chip, Text, Button } from 'react-native-paper';
+import { Chip, Text, Button, useTheme } from 'react-native-paper';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import { getLocales } from 'expo-localization';
 import { Seniority } from '../../types/dbTypes/IJobOffer';
+import currencyFormatter from '@utils/currencyFormatter';
+import dateFormatter from '@utils/dateFormatter ';
+import { CustomTheme } from 'App';
+import jobOfferHasLocation from '@utils/jobOfferHasLocation';
 
 const requirements = [
   'Swift',
@@ -19,16 +23,17 @@ interface JobDetailProp {
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
   console.log('jb', jobPosting);
   const [locale] = getLocales();
-  const currencyFormatter = new Intl.NumberFormat(locale.languageTag, {
-    style: 'currency',
-    currencySign: 'standard',
-    currency: locale.currencyCode ?? 'ARS',
-  });
-  const dateFormatter = new Intl.DateTimeFormat(locale.languageTag, {
-    day: 'numeric',
-    month: 'numeric',
-    year: '2-digit',
-  });
+  // const currencyFormatter = new Intl.NumberFormat(locale.languageTag, {
+  //   style: 'currency',
+  //   currencySign: 'standard',
+  //   currency: locale.currencyCode ?? 'ARS',
+  // });
+  // const dateFormatter = new Intl.DateTimeFormat(locale.languageTag, {
+  //   day: 'numeric',
+  //   month: 'numeric',
+  //   year: '2-digit',
+  // });
+  const theme = useTheme<CustomTheme>();
 
   return (
     <View style={styles.container}>
@@ -50,7 +55,7 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               Salario
             </Text>
             <Text variant='titleMedium' style={styles.infoValue}>
-              {currencyFormatter.format(jobPosting.salary)}
+              {currencyFormatter(locale).format(jobPosting.salary)}
             </Text>
           </View>
 
@@ -72,7 +77,16 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
             {jobPosting.jobLocation}
           </Text>
         </View>
-
+        {jobOfferHasLocation(jobPosting) && (
+          <View style={[styles.infoCard, styles.fullWidthCard]}>
+            <Text variant='titleMedium' style={styles.infoValue}>
+              {jobPosting.province}
+            </Text>
+            <Text variant='bodySmall' style={styles.infoLabel}>
+              {jobPosting.city}
+            </Text>
+          </View>
+        )}
         <View style={[styles.infoCard, styles.fullWidthCard]}>
           <Text variant='bodySmall' style={styles.infoLabel}>
             Seniority
@@ -87,7 +101,7 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
             Fecha de publicacion
           </Text>
           <Text variant='titleMedium' style={styles.infoValue}>
-            {dateFormatter.format(jobPosting.createdAt.toDate())}
+            {dateFormatter(locale).format(jobPosting.createdAt.toDate())}
           </Text>
         </View>
 
@@ -131,8 +145,10 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               <Chip
                 key={index}
                 mode='flat'
-                style={styles.chip}
-                textStyle={styles.chipText}
+                style={{
+                  backgroundColor: theme.colors.primaryDynamicOpacity(0.08),
+                }}
+                textStyle={{ ...styles.chipText, color: theme.colors.primary }}
               >
                 {req.name}
               </Chip>
@@ -240,7 +256,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#E3F2FD',
   },
   chipText: {
-    color: '#1565C0',
     fontSize: 13,
   },
   candidatesHeader: {

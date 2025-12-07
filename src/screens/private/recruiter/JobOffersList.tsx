@@ -11,18 +11,16 @@ import { isEmptyArray } from 'formik';
 import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
-import { AuthContext } from 'src/appContext/AuthContext';
-
-import {
-  RecruiterProfileStackRootParams,
-  RecruiterProfileStackRoutes,
-} from './RecruiterProfileStack';
-
 const JobOffersList = () => {
   const { jobOffers } = useContext(RecruiterContext);
 
-  const navigation =
-    useNavigation<NavigationProp<RecruiterProfileStackRootParams>>();
+  const navigation = useNavigation<
+    NavigationProp<{
+      ['JOB_POSTING_DETAILS']: {
+        jobPosting: IJobPostingDB;
+      };
+    }>
+  >();
 
   if (isEmptyArray(jobOffers)) {
     return (
@@ -38,12 +36,9 @@ const JobOffersList = () => {
               onPress={() => {
                 console.log('pressed');
                 // navigate to detail
-                navigation.navigate(
-                  RecruiterProfileStackRoutes.JOB_POSTING_DETAILS,
-                  {
-                    jobPosting: item,
-                  }
-                );
+                navigation.navigate('JOB_POSTING_DETAILS', {
+                  jobPosting: item,
+                });
               }}
               key={item.id}
             >
