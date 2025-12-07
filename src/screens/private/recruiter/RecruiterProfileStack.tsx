@@ -10,14 +10,14 @@ import { useTheme } from 'react-native-paper';
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',
   JOB_POSTING_DETAILS: 'JOB_POSTING_DETAILS',
-};
+} as const;
 export type RecruiterProfileStackRootParams = {
   [RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS]: {};
   [RecruiterProfileStackRoutes.JOB_POSTING_DETAILS]: {
     jobPosting: IJobPostingDB;
   };
 };
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RecruiterProfileStackRootParams>();
 const RecruiterProfileStack = () => {
   const theme = useTheme();
   return (

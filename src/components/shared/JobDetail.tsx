@@ -2,6 +2,8 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { Chip, Text, Button } from 'react-native-paper';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { getLocales } from 'expo-localization';
+import { Seniority } from '../../types/dbTypes/IJobOffer';
 
 const requirements = [
   'Swift',
@@ -15,6 +17,19 @@ interface JobDetailProp {
   jobPosting: IJobPostingDB;
 }
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
+  console.log('jb', jobPosting);
+  const [locale] = getLocales();
+  const currencyFormatter = new Intl.NumberFormat(locale.languageTag, {
+    style: 'currency',
+    currencySign: 'standard',
+    currency: locale.currencyCode ?? 'ARS',
+  });
+  const dateFormatter = new Intl.DateTimeFormat(locale.languageTag, {
+    day: 'numeric',
+    month: 'numeric',
+    year: '2-digit',
+  });
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
@@ -32,10 +47,10 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
         <View style={styles.infoContainer}>
           <View style={styles.infoCard}>
             <Text variant='bodySmall' style={styles.infoLabel}>
-              Rango Salarial
+              Salario
             </Text>
             <Text variant='titleMedium' style={styles.infoValue}>
-              €55k - €70k
+              {currencyFormatter.format(jobPosting.salary)}
             </Text>
           </View>
 
@@ -44,17 +59,35 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               Tipo de Empleo
             </Text>
             <Text variant='titleMedium' style={styles.infoValue}>
-              Jornada Completa
+              {jobPosting.shiftTime}
             </Text>
           </View>
         </View>
 
         <View style={[styles.infoCard, styles.fullWidthCard]}>
           <Text variant='bodySmall' style={styles.infoLabel}>
-            Fecha Límite
+            Modalidad
           </Text>
           <Text variant='titleMedium' style={styles.infoValue}>
-            31 de Diciembre, 2024
+            {jobPosting.jobLocation}
+          </Text>
+        </View>
+
+        <View style={[styles.infoCard, styles.fullWidthCard]}>
+          <Text variant='bodySmall' style={styles.infoLabel}>
+            Seniority
+          </Text>
+          <Text variant='titleMedium' style={styles.infoValue}>
+            {jobPosting.seniority}
+          </Text>
+        </View>
+
+        <View style={[styles.infoCard, styles.fullWidthCard]}>
+          <Text variant='bodySmall' style={styles.infoLabel}>
+            Fecha de publicacion
+          </Text>
+          <Text variant='titleMedium' style={styles.infoValue}>
+            {dateFormatter.format(jobPosting.createdAt.toDate())}
           </Text>
         </View>
 
@@ -64,15 +97,12 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
             Descripción del Puesto
           </Text>
           <Text variant='bodyMedium' style={styles.description}>
-            Estamos buscando un Desarrollador Senior iOS experimentado para
-            unirse a nuestro equipo. El candidato ideal tiene una gran pasión
-            por la tecnología móvil y un historial comprobado de creación de
-            aplicaciones iOS de alta calidad.
+            {jobPosting.description}
           </Text>
         </View>
 
-        {/* Responsibilities Section */}
-        <View style={styles.section}>
+        {/* Responsibilities Section  */}
+        {/*   <View style={styles.section}>
           <Text variant='titleMedium' style={styles.sectionTitle}>
             Responsabilidades
           </Text>
@@ -89,7 +119,7 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               </Text>
             </View>
           ))}
-        </View>
+        </View> */}
 
         {/* Requirements Section */}
         <View style={styles.section}>
@@ -97,14 +127,14 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
             Requisitos
           </Text>
           <View style={styles.chipsContainer}>
-            {requirements.map((req, index) => (
+            {jobPosting.skills.map((req, index) => (
               <Chip
                 key={index}
                 mode='flat'
                 style={styles.chip}
                 textStyle={styles.chipText}
               >
-                {req}
+                {req.name}
               </Chip>
             ))}
           </View>
