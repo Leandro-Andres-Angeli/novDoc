@@ -10,7 +10,7 @@ import React, { useRef } from 'react';
 import { Button, Card, IconButton, Text, useTheme } from 'react-native-paper';
 
 import RBSheet from 'react-native-raw-bottom-sheet';
-import useOpenElement from 'src/hooks/useModal';
+
 import AppPictureSelector from './AppPictureSelector';
 import utilityStyles from 'src/styles/utilityStyles';
 import { CustomTheme } from 'App';
@@ -23,17 +23,6 @@ interface AppAvatarCardProps {
   avatarPic: string;
   style?: StyleProp<ViewStyle>;
 }
-// type RBSheetType = {
-//   /**
-//    * The method to open bottom sheet.
-//    */
-//   open: () => void;
-
-//   /**
-//    * The method to close bottom sheet.
-//    */
-//   close: () => void;
-// };
 
 const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   const theme = useTheme<CustomTheme>();

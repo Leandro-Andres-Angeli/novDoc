@@ -8,6 +8,7 @@ import currencyFormatter from '@utils/currencyFormatter';
 import dateFormatter from '@utils/dateFormatter ';
 import { CustomTheme } from 'App';
 import jobOfferHasLocation from '@utils/jobOfferHasLocation';
+import utilityStyles from 'src/styles/utilityStyles';
 
 const requirements = [
   'Swift',
@@ -23,20 +24,17 @@ interface JobDetailProp {
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
   console.log('jb', jobPosting);
   const [locale] = getLocales();
-  // const currencyFormatter = new Intl.NumberFormat(locale.languageTag, {
-  //   style: 'currency',
-  //   currencySign: 'standard',
-  //   currency: locale.currencyCode ?? 'ARS',
-  // });
-  // const dateFormatter = new Intl.DateTimeFormat(locale.languageTag, {
-  //   day: 'numeric',
-  //   month: 'numeric',
-  //   year: '2-digit',
-  // });
+
   const theme = useTheme<CustomTheme>();
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...styles.container,
+        ...utilityStyles.contentContainer,
+        marginVertical: 16,
+      }}
+    >
       <ScrollView style={styles.content}>
         {/* Job Title Section */}
         <View style={styles.section}>
@@ -203,7 +201,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
     gap: 8,
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     marginBottom: 8,
   },
   infoCard: {
@@ -213,7 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   fullWidthCard: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     marginBottom: 8,
   },
   infoLabel: {
@@ -266,7 +264,7 @@ const styles = StyleSheet.create({
   },
   candidateCard: {
     flexDirection: 'row',
-    paddingVertical: 12,
+    // paddingVertical: 12,
   },
   candidateInfo: {
     flex: 1,

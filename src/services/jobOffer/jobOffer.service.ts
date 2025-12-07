@@ -1,7 +1,7 @@
 import { genericConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
-import { addDoc, collection } from 'firebase/firestore';
-import { IJobOffer } from 'src/types/dbTypes/IJobOffer';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import { IJobOffer, IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import {
   FirebaseErrorResponse,
   FirebaseResponse,
@@ -23,5 +23,21 @@ export const createJobOffer = async (
     console.log('error saving job offer');
     console.log(error);
     return { success: false, message: 'Error creando oferta' };
+  }
+};
+export const updateJobOffer = async (
+  idToUpdate: string,
+  jobOfferUpdate: IJobOffer
+): Promise<FirebaseResponse | FirebaseErrorResponse> => {
+  try {
+    const docRef = await doc(db, 'jobOffers', idToUpdate);
+
+    const updatedOffer = await updateDoc(docRef, { ...jobOfferUpdate });
+    console.log('update res', updatedOffer);
+    return { message: 'Oferta actualizada', success: true };
+  } catch (error) {
+    console.log('error saving job offer');
+    console.log(error);
+    return { success: false, message: 'Error actualizando oferta' };
   }
 };

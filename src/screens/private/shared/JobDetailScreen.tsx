@@ -26,7 +26,7 @@ const JobDetailsScreen = ({ route }: JobDetailsScreenProps) => {
   return (
     <>
       <JobDetail jobPosting={route.params.jobPosting}></JobDetail>
-      <Candidates></Candidates>
+      {/* <Candidates></Candidates> */}
     </>
   );
 };
