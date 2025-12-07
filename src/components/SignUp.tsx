@@ -23,7 +23,7 @@ import { publicNavigatorRootStack } from '../navigators/publicNavigator/PublicNa
 import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
 
 import utilityStyles from 'src/styles/utilityStyles';
-import AppForm from './form/AppForm';
+import AppForm from './forms/AppForm';
 
 export interface SignUpForm {
   email: string;

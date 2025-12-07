@@ -11,7 +11,7 @@ import styled from 'styled-components/native';
 import AppButton from '@ui/AppButton';
 import AppButtonText from '@ui/AppButtonText';
 
-import AppForm from './form/AppForm';
+import AppForm from './forms/AppForm';
 import * as Yup from 'yup';
 
 import utilityStyles from 'src/styles/utilityStyles';
