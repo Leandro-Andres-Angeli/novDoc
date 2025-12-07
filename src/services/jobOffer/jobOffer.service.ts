@@ -27,7 +27,7 @@ export const createJobOffer = async (
 };
 export const updateJobOffer = async (
   idToUpdate: string,
-  jobOfferUpdate: IJobOffer
+  jobOfferUpdate: Partial<IJobOffer>
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
     const docRef = await doc(db, 'jobOffers', idToUpdate);

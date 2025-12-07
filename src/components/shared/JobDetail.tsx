@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React, { PropsWithChildren } from 'react';
 import { Chip, Text, Button, useTheme, Modal } from 'react-native-paper';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { IJobPostingDB, JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
 import { getLocales } from 'expo-localization';
 import { Seniority } from '../../types/dbTypes/IJobOffer';
 import currencyFormatter from '@utils/currencyFormatter';
@@ -13,6 +13,7 @@ import useOpenElement from 'src/hooks/useOpenElement';
 import { boolean } from 'yup';
 import AppModal from '@ui/AppModal';
 import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
+import { updateJobOffer } from 'src/services/jobOffer/jobOffer.service';
 
 const requirements = [
   'Swift',
@@ -25,33 +26,21 @@ const requirements = [
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
 }
-interface CloseJobPostModalProps extends PropsWithChildren {
-  elementVisible: boolean;
-}
-const CloseJobPostModal = ({
-  elementVisible,
-  children,
-}: CloseJobPostModalProps) => {
-  return (
-    <Modal visible={elementVisible}>
-      {children}
-      <Text>
-        {' '}
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui neque
-        quaerat vitae a reiciendis corporis beatae maxime voluptas rerum ipsam.
-        Nostrum impedit dolorum quaerat saepe. Doloremque suscipit facilis sunt
-        quaerat! Commodi fugiat labore doloribus, iusto voluptatibus similique
-        omnis esse ratione?
-      </Text>
-    </Modal>
-  );
-};
+
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
-  console.log('jb', jobPosting);
   const [locale] = getLocales();
   const { elementVisible, handleElementVisibility } = useOpenElement();
   const theme = useTheme<CustomTheme>();
-
+  const confirmCloseJobPosting = async () => {
+    try {
+      const updateResult = await updateJobOffer(jobPosting.id, {
+        status: JobOfferStatus.CLOSED,
+      });
+      console.log('update result', updateResult);
+    } catch (error) {
+      console.log('err', error);
+    }
+  };
   return (
     <>
       <View
@@ -205,7 +194,10 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
         visible={elementVisible}
         {...{ elementVisible }}
       >
-        <ConfirmCloseJobPosting></ConfirmCloseJobPosting>
+        <ConfirmCloseJobPosting
+          handleConfirm={confirmCloseJobPosting}
+          handleCancel={() => handleElementVisibility(false)}
+        ></ConfirmCloseJobPosting>
       </AppModal>
     </>
   );

@@ -58,6 +58,7 @@ const JobPostingCard = (props: JobPostingCardProps) => {
             0
           </Text>
         </View>
+        <Text> status {jobPosting.status}</Text>
       </Card.Content>
     </AppCardWrapper>
   );

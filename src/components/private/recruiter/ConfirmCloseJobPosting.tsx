@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Portal, Modal, Text, Button, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
-
-const ConfirmCloseJobPosting = () => {
+interface ConfirmCloseJobPostingProps {
+  handleConfirm: () => void;
+  handleCancel: () => void;
+}
+const ConfirmCloseJobPosting = ({
+  handleCancel,
+  handleConfirm,
+}: ConfirmCloseJobPostingProps) => {
   return (
     <View
       style={{
@@ -25,11 +31,17 @@ const ConfirmCloseJobPosting = () => {
           style={styles.confirmButton}
           buttonColor='#D32F2F'
           textColor='#FFFFFF'
+          onPress={handleConfirm}
         >
           Confirmar
         </Button>
 
-        <Button mode='text' style={styles.cancelButton} textColor='#666666'>
+        <Button
+          onPress={handleCancel}
+          mode='text'
+          style={styles.cancelButton}
+          textColor='#666666'
+        >
           Cancelar
         </Button>
       </View>
