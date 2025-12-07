@@ -18,6 +18,8 @@ interface LocationPickerProps {
   handleSelectProvince: (val: string) => void;
   handleSelectCity: (val: string) => void;
   dynamicParams?: string | number[];
+  city: string;
+  province: string;
 }
 const LocationPicker = ({
   handleSelectProvince,
