@@ -7,7 +7,7 @@ import { RecruiterProfileStackRootParams } from '../recruiter/RecruiterProfileSt
 
 import JobDetail from '@components/shared/JobDetail';
 
-interface JobDetailsScreenProps
+export interface JobDetailsScreenProps
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,
     'JOB_POSTING_DETAILS'

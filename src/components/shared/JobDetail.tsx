@@ -192,8 +192,6 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               style={utilityStyles.btn}
               buttonColor={theme.colors.primary}
               icon={'pen'}
-
-              // contentStyle={styles.closeButtonContent}
             >
               Editar Oferta
             </Button>

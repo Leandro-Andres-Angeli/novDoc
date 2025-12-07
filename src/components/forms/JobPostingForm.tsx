@@ -323,6 +323,8 @@ const JobPostingForm = <T,>({
                                       }}
                                     >
                                       <LocationPicker
+                                        province={values.province}
+                                        city={values.city}
                                         handleSelectProvince={(val) => {
                                           setFieldValue('province', val);
                                         }}
