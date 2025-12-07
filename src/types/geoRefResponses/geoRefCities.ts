@@ -20,11 +20,7 @@ export interface Centroide {
 
 export interface Provincia {
   id: string;
-  nombre: Nombre;
-}
-
-export enum Nombre {
-  Tucumán = 'Tucumán',
+  nombre: string;
 }
 
 export interface Parametros {
