@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'react-native-paper';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import useGetLocations from 'src/hooks/useGetLocations';
+import { MapLocation } from 'src/types/dbTypes/IJobOffer';
 import {
   Ciudad,
   GeoRefCitiesResponse,
@@ -15,11 +16,11 @@ import {
 } from 'src/types/geoRefResponses/geoRefProvinces';
 
 interface LocationPickerProps {
-  handleSelectProvince: (val: string) => void;
-  handleSelectCity: (val: string) => void;
+  handleSelectProvince: (val: MapLocation) => void;
+  handleSelectCity: (val: MapLocation) => void;
   dynamicParams?: string | number[];
-  city: string;
-  province: string;
+  city: MapLocation;
+  province: MapLocation;
 }
 const LocationPicker = ({
   handleSelectProvince,
@@ -28,13 +29,18 @@ const LocationPicker = ({
   province,
 }: LocationPickerProps) => {
   const theme = useTheme();
-
+  console.log('CITYYY', city);
+  console.log('PROVINCE', province);
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
-    province ? { _id: province, value: province } : ({} as ListItem)
+    {} as ListItem
+  );
+  const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
+  /*   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
+    province ? { _id: province.id, value: province.nombre } : ({} as ListItem)
   );
   const [selectedCity, setSelectedCity] = useState<ListItem>(
-    city ? { _id: city, value: city } : ({} as ListItem)
-  );
+    city ? { _id: city.id, value: city.nombre } : ({} as ListItem)
+  ); */
 
   const handleSelectProvinceInner = (province: Provincia) => {
     setSelectedProvince({
@@ -69,12 +75,15 @@ const LocationPicker = ({
 
     if (selectedProvince._id) {
       console.log('setting province');
-      handleSelectProvince(selectedProvince.value);
+      handleSelectProvince({
+        id: selectedProvince._id,
+        nombre: selectedProvince.value,
+      });
     }
   }, [selectedProvince._id]);
   useEffect(() => {
     if (selectedProvince._id) {
-      handleSelectCity(selectedCity.value);
+      handleSelectCity({ id: selectedCity._id, nombre: selectedCity.value });
     }
   }, [selectedCity._id, selectedProvince._id]);
 

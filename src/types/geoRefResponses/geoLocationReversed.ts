@@ -17,6 +17,6 @@ export interface Ubicacion {
 }
 
 export interface Departamento {
-  id: null | string;
-  nombre: null | string;
+  id: string;
+  nombre: string;
 }

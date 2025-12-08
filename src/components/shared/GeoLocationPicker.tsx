@@ -8,9 +8,11 @@ import geoRefAxiosInstance, {
   geoRefAxiosInstanceEndpoints,
 } from 'axios/geoRef';
 import { GeoLocationReversed } from 'src/types/geoRefResponses/geoLocationReversed';
+import { MapLocation } from 'src/types/dbTypes/IJobOffer';
+import useGetLocationFromCoords from 'src/hooks/useGetLocationFromCoords';
 interface GeoLocationPickerProps {
-  handleSelectProvince: (val: string) => void;
-  handleSelectCity: (val: string) => void;
+  handleSelectProvince: (val: MapLocation) => void;
+  handleSelectCity: (val: MapLocation) => void;
   handleLoading: (val: boolean) => void;
 }
 const GeoLocationPicker = ({
@@ -19,7 +21,7 @@ const GeoLocationPicker = ({
   handleLoading,
 }: GeoLocationPickerProps) => {
   const theme = useTheme();
-
+  const { getLocationFromCoords } = useGetLocationFromCoords();
   const navigateToSettings = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:');
@@ -61,25 +63,33 @@ const GeoLocationPicker = ({
         const [reversedGeo] = await Location.reverseGeocodeAsync(
           position.coords
         );
-        console.log('location ', position);
-        console.log('reversedGeo ', reversedGeo);
+        // console.log('location ', position);
+        // console.log('reversedGeo ', reversedGeo);
         const { country } = reversedGeo;
         if (country !== 'Argentina') {
           return Toast.error('Solo se pueden cargar locaciones de Argentina');
         }
-        const { data }: { data: GeoLocationReversed } =
-          await geoRefAxiosInstance.get(
-            geoRefAxiosInstanceEndpoints.COORDS(
-              position.coords.latitude.toString(),
-              position.coords.longitude.toString()
-            )
-          );
-        if (data.ubicacion.departamento.nombre) {
-          handleSelectCity(data.ubicacion.departamento.nombre);
+        // const { data }: { data: GeoLocationReversed } =
+        //   await geoRefAxiosInstance.get(
+        //     geoRefAxiosInstanceEndpoints.COORDS(
+        //       position.coords.latitude.toString(),
+        //       position.coords.longitude.toString()
+        //     )
+        //   );
+
+        const locationFromCoords = await getLocationFromCoords(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        if (!locationFromCoords) {
+          throw Error('Error getting reversed geo');
         }
-        if (data.ubicacion.provincia.nombre) {
-          handleSelectProvince(data.ubicacion.provincia.nombre);
-        }
+        const { city, province } = locationFromCoords;
+
+        handleSelectCity(city);
+
+        handleSelectProvince(province);
+
         // console.log('found data', JSON.stringify(data, null, 3));
       }
     } catch (error) {

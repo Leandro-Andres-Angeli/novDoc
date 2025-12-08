@@ -91,10 +91,10 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
           {jobOfferHasLocation(jobPosting) && (
             <View style={[styles.infoCard, styles.fullWidthCard]}>
               <Text variant='titleMedium' style={styles.infoValue}>
-                {jobPosting.province}
+                {jobPosting.province.nombre}
               </Text>
               <Text variant='bodySmall' style={styles.infoLabel}>
-                {jobPosting.city}
+                {jobPosting.city.nombre}
               </Text>
             </View>
           )}

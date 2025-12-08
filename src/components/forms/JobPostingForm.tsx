@@ -10,6 +10,7 @@ import {
   IJobOfferRemote,
   JobLocation,
   JobOfferStatus,
+  MapLocation,
   Seniority,
   ShiftTime,
 } from 'src/types/dbTypes/IJobOffer';
@@ -63,20 +64,20 @@ export const generateJobOfferForm = (
     case JobLocation.ON_SITE:
       const JobOfferOnSite: IJobOfferOnSite = {
         ...base,
-        city: '',
+        city: { id: '', nombre: '' },
         jobLocation: JobLocation.ON_SITE,
 
-        province: '',
+        province: { id: '', nombre: '' },
       };
       return JobOfferOnSite;
 
     case JobLocation.HYBRID:
       const JobOfferHybrid: IJobOfferHybrid = {
         ...base,
-        city: '',
+        city: { id: '', nombre: '' },
         jobLocation: JobLocation.HYBRID,
 
-        province: '',
+        province: { id: '', nombre: '' },
       };
       return JobOfferHybrid;
 
@@ -110,7 +111,7 @@ export const generateJobOfferValidationSchema = () => {
       .default([])
       .min(1, 'elegir al menos una skill')
       .required(),
-    city: Yup.string().when('jobLocation', {
+    city: Yup.object<Location>().when('jobLocation', {
       is: (val: string) =>
         val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
       then(schema) {
@@ -120,7 +121,7 @@ export const generateJobOfferValidationSchema = () => {
         return schema.notRequired();
       },
     }),
-    province: Yup.string().when('jobLocation', {
+    province: Yup.object<Location>().when('jobLocation', {
       is: (val: string) =>
         val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
       then(schema) {
@@ -193,6 +194,7 @@ const JobPostingForm = <T,>({
         }) => {
           return (
             <>
+              <Text>{JSON.stringify(errors)}</Text>
               <View
                 style={[
                   {
@@ -296,6 +298,12 @@ const JobPostingForm = <T,>({
                           }}
                         ></AppSegmentedButtons>
                         {jobOfferHasLocation(values) && (
+                          <>
+                            <Text>{JSON.stringify(values?.city)}</Text>
+                            <Text>{JSON.stringify(values?.province)}</Text>
+                          </>
+                        )}
+                        {jobOfferHasLocation(values) && (
                           <AppLocationSelected
                             loadingCondition={loadingFormLocation}
                           >
@@ -303,9 +311,11 @@ const JobPostingForm = <T,>({
                               <Text variant='labelMedium'>
                                 Locación seleccionada
                               </Text>
+
                               <View style={utilityStyles.flex}>
                                 <Chip>
-                                  {values.province} {values.city}
+                                  {values?.province?.nombre}{' '}
+                                  {values?.city?.nombre}
                                 </Chip>
                               </View>
                             </>
@@ -325,10 +335,14 @@ const JobPostingForm = <T,>({
                                       <LocationPicker
                                         province={values.province}
                                         city={values.city}
-                                        handleSelectProvince={(val) => {
+                                        handleSelectProvince={(
+                                          val: MapLocation
+                                        ) => {
                                           setFieldValue('province', val);
                                         }}
-                                        handleSelectCity={(val) => {
+                                        handleSelectCity={(
+                                          val: MapLocation
+                                        ) => {
                                           setFieldValue('city', val);
                                         }}
                                       ></LocationPicker>

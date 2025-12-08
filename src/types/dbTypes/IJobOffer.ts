@@ -1,6 +1,9 @@
 import { Timestamp } from 'firebase/firestore';
 import { ISkill } from './ISkills';
-
+export type MapLocation = {
+  id: string;
+  nombre: string;
+};
 export enum Seniority {
   JUNIOR = 'junior',
   MID_LEVEL = 'mid-level',
@@ -24,13 +27,13 @@ export enum JobOfferStatus {
 }
 export interface IJobOfferOnSite extends IJobOfferGeneral {
   jobLocation: JobLocation.ON_SITE;
-  province: string;
-  city: string;
+  province: MapLocation;
+  city: MapLocation;
 }
 export interface IJobOfferHybrid extends IJobOfferGeneral {
   jobLocation: JobLocation.HYBRID;
-  province: string;
-  city: string;
+  province: MapLocation;
+  city: MapLocation;
 }
 export type IJobPostingDB = IJobOffer & { id: string };
 export interface IJobOfferGeneral {

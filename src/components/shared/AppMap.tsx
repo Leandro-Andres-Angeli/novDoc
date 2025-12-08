@@ -11,9 +11,11 @@ import MapView, {
 
 import * as Location from 'expo-location';
 import { Toast } from 'toastify-react-native';
+import useGetLocationFromCoords from 'src/hooks/useGetLocationFromCoords';
+import { MapLocation } from 'src/types/dbTypes/IJobOffer';
 
 interface AppMapProps {
-  handleSelectMarker?: (...args: Array<string>) => void;
+  handleSelectMarker?: (...args: Array<MapLocation>) => void;
   //   handleDoublePress?: () => void;
   mapStyles?: StyleProp<ViewStyle>;
   mapProps?: MapViewProps;
@@ -22,13 +24,23 @@ const AppMap = (props: AppMapProps) => {
   const [markerVisible, setMarkerVisible] = useState(false);
   const [markerCoords, setMarkerCoords] = useState<LatLng>({} as LatLng);
   const mapRef = useRef<MapView>(null);
-
+  const { getLocationFromCoords } = useGetLocationFromCoords();
   const localHandlePress = async (e: MapPressEvent) => {
-    setMarkerVisible(true);
     try {
+      e.persist();
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Toast.info(
+          'Debe autorizar uso de geolocalización para usar esta funcionalidad'
+        );
+        return;
+      }
+
+      console.log(e.nativeEvent);
       const {
         nativeEvent: { coordinate },
       } = e;
+      setMarkerVisible(true);
       setMarkerCoords(coordinate);
       setTimeout(() => {
         if (mapRef.current) {
@@ -42,16 +54,17 @@ const AppMap = (props: AppMapProps) => {
           );
         }
       }, 0);
-
-      const [coordinatesData] = await Location.reverseGeocodeAsync(coordinate);
-      console.log('coords data', coordinatesData);
-      const city = coordinatesData.district ?? coordinatesData.city ?? null;
-      if (!city || !coordinatesData.region) {
+      const locationFromCoords = await getLocationFromCoords(
+        coordinate.latitude,
+        coordinate.longitude
+      );
+      if (!locationFromCoords) {
         throw Error('Error getting reversed geo');
       }
+      const { city, province } = locationFromCoords;
 
       if (props.handleSelectMarker) {
-        props.handleSelectMarker(city, coordinatesData.region);
+        props.handleSelectMarker(city, province);
       }
     } catch (error) {
       console.log('err', error);
