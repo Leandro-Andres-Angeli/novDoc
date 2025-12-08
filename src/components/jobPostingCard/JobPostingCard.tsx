@@ -4,6 +4,7 @@ import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import AppCardWrapper from '@ui/AppCardWrapper';
 import { Card, IconButton, Text, useTheme } from 'react-native-paper';
 import { CustomTheme } from 'App';
+import jobOfferHasLocation from '@utils/jobOfferHasLocation';
 interface JobPostingCardProps {
   jobPosting: IJobPostingDB;
 }
@@ -41,8 +42,16 @@ const JobPostingCard = (props: JobPostingCardProps) => {
               <Text variant='titleMedium' style={styles.title}>
                 {jobPosting.title}
               </Text>
-              <Text variant='bodySmall' style={styles.subtitle}>
-                {jobPosting.shiftTime} | {jobPosting.jobLocation}
+              <Text
+                variant='bodySmall'
+                style={{ ...styles.subtitle, textTransform: 'capitalize' }}
+              >
+                {jobPosting.shiftTime} |{' '}
+                {(jobOfferHasLocation(jobPosting) &&
+                  jobPosting.province.nombre +
+                    ' , ' +
+                    jobPosting.city.nombre) ||
+                  jobPosting.jobLocation}
               </Text>
             </View>
           </View>
