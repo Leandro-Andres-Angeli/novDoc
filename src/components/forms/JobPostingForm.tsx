@@ -113,7 +113,10 @@ export const generateJobOfferValidationSchema = () => {
       .default([])
       .min(1, 'elegir al menos una skill')
       .required(),
-    city: Yup.object<Location>().when('jobLocation', {
+    city: Yup.object<Location>({
+      id: Yup.string().required(),
+      nombre: Yup.string().required(),
+    }).when('jobLocation', {
       is: (val: string) =>
         val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
       then(schema) {
@@ -123,7 +126,10 @@ export const generateJobOfferValidationSchema = () => {
         return schema.notRequired();
       },
     }),
-    province: Yup.object<Location>().when('jobLocation', {
+    province: Yup.object<Location>({
+      id: Yup.string().required(),
+      nombre: Yup.string().required(),
+    }).when('jobLocation', {
       is: (val: string) =>
         val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
       then(schema) {
@@ -196,7 +202,6 @@ const JobPostingForm = <T,>({
         }) => {
           return (
             <>
-              <Text>{JSON.stringify(errors)}</Text>
               <View
                 style={[
                   {
@@ -299,12 +304,7 @@ const JobPostingForm = <T,>({
                             setJobOfferForm(generateJobOfferForm(val, userId));
                           }}
                         ></AppSegmentedButtons>
-                        {/* {jobOfferHasLocation(values) && (
-                          <>
-                            <Text>{JSON.stringify(values?.city)}</Text>
-                            <Text>{JSON.stringify(values?.province)}</Text>
-                          </>
-                        )} */}
+
                         {jobOfferHasLocation(values) && (
                           <AppLocationSelected
                             loadingCondition={loadingFormLocation}

@@ -4,10 +4,7 @@ import utilityStyles from 'src/styles/utilityStyles';
 import { IconButton, useTheme } from 'react-native-paper';
 import * as Location from 'expo-location';
 import { Toast } from 'toastify-react-native';
-import geoRefAxiosInstance, {
-  geoRefAxiosInstanceEndpoints,
-} from 'axios/geoRef';
-import { GeoLocationReversed } from 'src/types/geoRefResponses/geoLocationReversed';
+
 import { MapLocation } from 'src/types/dbTypes/IJobOffer';
 import useGetLocationFromCoords from 'src/hooks/useGetLocationFromCoords';
 interface GeoLocationPickerProps {
@@ -63,19 +60,11 @@ const GeoLocationPicker = ({
         const [reversedGeo] = await Location.reverseGeocodeAsync(
           position.coords
         );
-        // console.log('location ', position);
-        // console.log('reversedGeo ', reversedGeo);
+
         const { country } = reversedGeo;
         if (country !== 'Argentina') {
           return Toast.error('Solo se pueden cargar locaciones de Argentina');
         }
-        // const { data }: { data: GeoLocationReversed } =
-        //   await geoRefAxiosInstance.get(
-        //     geoRefAxiosInstanceEndpoints.COORDS(
-        //       position.coords.latitude.toString(),
-        //       position.coords.longitude.toString()
-        //     )
-        //   );
 
         const locationFromCoords = await getLocationFromCoords(
           position.coords.latitude,
@@ -89,8 +78,6 @@ const GeoLocationPicker = ({
         handleSelectCity(city);
 
         handleSelectProvince(province);
-
-        // console.log('found data', JSON.stringify(data, null, 3));
       }
     } catch (error) {
       console.log('err', error);

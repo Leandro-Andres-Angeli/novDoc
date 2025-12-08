@@ -2,7 +2,7 @@ import AppLoading from '@ui/AppLoading';
 import AppReactNativePaperSelect from '@ui/AppReactNativePaperSelect';
 import { geoRefAxiosInstanceEndpoints } from 'axios/geoRef';
 import { useEffect, useRef, useState } from 'react';
-import { Text, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import useGetLocations from 'src/hooks/useGetLocations';
 import { MapLocation } from 'src/types/dbTypes/IJobOffer';
@@ -31,11 +31,7 @@ const LocationPicker = ({
   const theme = useTheme();
   console.log('CITYYY', city);
   console.log('PROVINCE', province);
-  // const [selectedProvince, setSelectedProvince] = useState<ListItem>(
-  //   {} as ListItem
-  // );
-  // const isFirstRender = useRef(true);
-  // const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
+  const firstRender = useRef(true);
 
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
     province ? { _id: province.id, value: province.nombre } : ({} as ListItem)
@@ -53,8 +49,6 @@ const LocationPicker = ({
   };
 
   const handleSelectCityInner = (city: MapLocation) => {
-    console.log('trigger on init');
-    console.log('CITYY INNER', city);
     setSelectedCity({
       _id: city.id,
       value: city.nombre,
@@ -73,20 +67,15 @@ const LocationPicker = ({
         selectedProvince?._id ?? '02'
       ),
       key: 'municipios',
-
-      ...(!city ? { setInitialLocation: handleSelectCityInner } : {}),
+      ...(firstRender.current && !city && !firstRender.current
+        ? { setInitialLocation: handleSelectCity }
+        : {}),
+      setInitialLocation: handleSelectCityInner,
       dynamicParams: [selectedProvince?._id],
     });
   useEffect(() => {
-    // if (isFirstRender.current === true && city && province) {
-    //   handleSelectCityInner(city);
-    //   handleSelectProvinceInner(province);
-    //   isFirstRender.current = false;
-    //   return;
-    // }
-    // console.log('trigger on init');
+    firstRender.current = false;
     if (selectedProvince?._id) {
-      console.log('setting province');
       handleSelectProvince({
         id: selectedProvince._id,
         nombre: selectedProvince.value,
