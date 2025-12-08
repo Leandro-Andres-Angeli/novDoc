@@ -44,7 +44,9 @@ import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
-  userId: string
+  userId: string,
+  province?: MapLocation,
+  city?: MapLocation
 ) => {
   const creationDate = Timestamp.fromDate(new Date());
   const base: IJobOfferGeneral = {
@@ -64,20 +66,20 @@ export const generateJobOfferForm = (
     case JobLocation.ON_SITE:
       const JobOfferOnSite: IJobOfferOnSite = {
         ...base,
-        city: { id: '', nombre: '' },
+        city: city ?? { id: '', nombre: '' },
         jobLocation: JobLocation.ON_SITE,
 
-        province: { id: '', nombre: '' },
+        province: province ?? { id: '', nombre: '' },
       };
       return JobOfferOnSite;
 
     case JobLocation.HYBRID:
       const JobOfferHybrid: IJobOfferHybrid = {
         ...base,
-        city: { id: '', nombre: '' },
+        city: city ?? { id: '', nombre: '' },
         jobLocation: JobLocation.HYBRID,
 
-        province: { id: '', nombre: '' },
+        province: province ?? { id: '', nombre: '' },
       };
       return JobOfferHybrid;
 
@@ -297,12 +299,12 @@ const JobPostingForm = <T,>({
                             setJobOfferForm(generateJobOfferForm(val, userId));
                           }}
                         ></AppSegmentedButtons>
-                        {jobOfferHasLocation(values) && (
+                        {/* {jobOfferHasLocation(values) && (
                           <>
                             <Text>{JSON.stringify(values?.city)}</Text>
                             <Text>{JSON.stringify(values?.province)}</Text>
                           </>
-                        )}
+                        )} */}
                         {jobOfferHasLocation(values) && (
                           <AppLocationSelected
                             loadingCondition={loadingFormLocation}
@@ -333,8 +335,8 @@ const JobPostingForm = <T,>({
                                       }}
                                     >
                                       <LocationPicker
-                                        province={values.province}
-                                        city={values.city}
+                                        province={values?.province}
+                                        city={values?.city}
                                         handleSelectProvince={(
                                           val: MapLocation
                                         ) => {
@@ -382,7 +384,6 @@ const JobPostingForm = <T,>({
                                           zoomTapEnabled: true,
                                         }}
                                         handleSelectMarker={(...args) => {
-                                          console.log('args', args);
                                           const [city, region] = args;
 
                                           setFieldValue('province', region);

@@ -14,22 +14,22 @@ const useGetLocationFromCoords = () => {
         geoRefAxiosInstanceEndpoints.COORDS(lat.toString(), lon.toString())
       );
       console.log('dataaa', data);
-      const { provincia, departamento, municipio } = data.ubicacion;
+      const { provincia, municipio } = data.ubicacion;
       if (!provincia) {
         throw Error('error getting provincia');
       }
       setProvince({ id: provincia.id, nombre: provincia.nombre });
-      if (!departamento && !municipio) {
+      if (!municipio) {
         throw Error('error getting city');
       }
       setCity({
-        id: municipio.id ?? departamento.id,
-        nombre: municipio.nombre ?? departamento.nombre,
+        id: municipio.id,
+        nombre: municipio.nombre,
       });
       return {
         city: {
-          id: municipio.id ?? departamento.id,
-          nombre: municipio.nombre ?? departamento.nombre,
+          id: municipio.id,
+          nombre: municipio.nombre,
         },
         province: { id: provincia.id, nombre: provincia.nombre },
       };

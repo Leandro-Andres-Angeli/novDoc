@@ -6,7 +6,8 @@ const geoRefAxiosInstance = axios.create({
 
 export const geoRefAxiosInstanceEndpoints = {
   PROVINCES: '/provincias.json',
-  MUNICIPIOS: (provinceId: string) => `/municipios?provincia=${provinceId}`,
+  MUNICIPIOS: (provinceId: string) =>
+    `/municipios?provincia=${provinceId}&max=500`,
   COORDS: (lat: string, lon: string) => `/ubicacion?lat=${lat}&lon=${lon}`,
 };
 

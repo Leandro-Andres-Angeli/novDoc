@@ -6,6 +6,8 @@ import { FormikHelpers } from 'formik';
 import { AuthContext } from 'src/appContext/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from './RecruiterProfileStack';
+import { updateJobOffer } from '../../../services/jobOffer/jobOffer.service';
+import { Toast } from 'toastify-react-native';
 interface EditJobPostingScreen
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,
@@ -15,6 +17,7 @@ const EditJobPostingScreen = ({
   route: {
     params: { jobPosting },
   },
+  navigation,
 }: EditJobPostingScreen) => {
   const [loading, setLoading] = useState(false);
   const {
@@ -26,14 +29,13 @@ const EditJobPostingScreen = ({
     setLoading(true);
     console.log(values);
 
-    return;
     try {
-      const newJobOfferResponse = await createJobOffer(values);
+      const newJobOfferResponse = await updateJobOffer(id, values);
       console.log(newJobOfferResponse);
       if (newJobOfferResponse.success) {
         Toast.show({
           onHide: () => {
-            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});
+            navigation.navigate('RECRUITER_PROFILE_TABS', {});
           },
           text1: newJobOfferResponse.message,
           visibilityTime: 700,
@@ -55,7 +57,7 @@ const EditJobPostingScreen = ({
       </View>
     );
   }
-  console.log('values', rest);
+
   return (
     <JobPostingForm<IJobOffer>
       loading={loading}
@@ -65,12 +67,6 @@ const EditJobPostingScreen = ({
       submitTextBtn='Actualizar Oferta'
     ></JobPostingForm>
   );
-  //return (
-
-  // <View>
-  //   <Text>EditJobPostingScreen</Text>
-  // </View>
-  //  );
 };
 
 export default EditJobPostingScreen;

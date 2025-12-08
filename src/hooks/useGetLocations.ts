@@ -1,5 +1,6 @@
 import geoRefAxiosInstance from 'axios/geoRef';
 import { useEffect, useRef, useState } from 'react';
+import { MapLocation } from 'src/types/dbTypes/IJobOffer';
 const SANTA_CRUZ_DATA = {
   cantidad: 10,
   inicio: 0,
@@ -75,7 +76,7 @@ type KeysOfArray<T, K> = {
 }[keyof T];
 interface UseGetLocationProps<T, Q> {
   url: string;
-  setInitialLocation: (val: T) => void;
+  setInitialLocation?: (val: T) => void;
   dynamicParams?: Array<string | number>;
   apiResponse?: Q;
   key: KeysOfArray<Q, T>;
@@ -96,14 +97,14 @@ const useGetLocations = <T, Q extends Record<string, any>>({
     try {
       if (url.includes('municipios?provincia=78')) {
         setLocations(SANTA_CRUZ_DATA.municipios as unknown as T[]);
-        setInitialLocation(SANTA_CRUZ_DATA.municipios.at(0) as unknown as T);
+        // setInitialLocation(SANTA_CRUZ_DATA.municipios.at(0) as unknown as T);
         return;
       }
 
       const { data } = await geoRefAxiosInstance.get<Q>(url);
       const locations = data[key];
       setLocations(locations);
-      setInitialLocation(locations.at(0));
+      setInitialLocation && setInitialLocation(locations.at(0));
     } catch (error) {
       console.log('error obteniendo locaciones');
     } finally {
@@ -117,6 +118,7 @@ const useGetLocations = <T, Q extends Record<string, any>>({
 
     () => {
       isFetching.current = false;
+
       return;
     };
   }, dynamicParams);
