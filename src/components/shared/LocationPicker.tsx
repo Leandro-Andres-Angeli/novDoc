@@ -24,13 +24,18 @@ interface LocationPickerProps {
 const LocationPicker = ({
   handleSelectProvince,
   handleSelectCity,
+  city,
+  province,
 }: LocationPickerProps) => {
   const theme = useTheme();
 
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(
-    {} as ListItem
+    province ? { _id: province, value: province } : ({} as ListItem)
   );
-  const [selectedCity, setSelectedCity] = useState<ListItem>({} as ListItem);
+  const [selectedCity, setSelectedCity] = useState<ListItem>(
+    city ? { _id: city, value: city } : ({} as ListItem)
+  );
+
   const handleSelectProvinceInner = (province: Provincia) => {
     setSelectedProvince({
       _id: province.id ?? '',
@@ -38,6 +43,7 @@ const LocationPicker = ({
     });
   };
   const handleSelectCityInner = (city: Ciudad) => {
+    console.log('trigger on init');
     setSelectedCity({
       _id: city.id ?? '',
       value: city.nombre ?? '',
@@ -59,6 +65,8 @@ const LocationPicker = ({
       dynamicParams: [selectedProvince._id],
     });
   useEffect(() => {
+    console.log('trigger on init');
+
     if (selectedProvince._id) {
       console.log('setting province');
       handleSelectProvince(selectedProvince.value);

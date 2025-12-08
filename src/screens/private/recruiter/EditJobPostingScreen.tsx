@@ -55,6 +55,7 @@ const EditJobPostingScreen = ({
       </View>
     );
   }
+  console.log('values', rest);
   return (
     <JobPostingForm<IJobOffer>
       loading={loading}
