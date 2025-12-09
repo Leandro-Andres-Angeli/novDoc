@@ -8,6 +8,7 @@ import JobDetailsScreen from 'src/screens/private/shared/JobDetailScreen';
 import { useTheme } from 'react-native-paper';
 import { CustomTheme } from 'App';
 import EditJobPostingScreen from './EditJobPostingScreen';
+import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',

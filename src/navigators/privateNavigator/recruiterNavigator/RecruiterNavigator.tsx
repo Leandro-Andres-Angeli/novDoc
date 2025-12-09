@@ -22,6 +22,7 @@ import { getLocales } from 'expo-localization';
 import { CustomTheme } from 'App';
 
 import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
+import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -98,41 +99,9 @@ const RecruiterNavigator = () => {
           });
           return {
             ...iconOptions,
-
-            header: () => {
-              return (
-                <View
-                  style={{
-                    ...utilityStyles.row,
-                    position: 'absolute',
-                    width: '100%',
-                  }}
-                >
-                  <AppHeader
-                    logo={false}
-                    styles={{
-                      justifyContent: 'center',
-                      marginLeft: '34%',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <Text variant='titleMedium'>Postulaciones</Text>
-                  </AppHeader>
-                  <View
-                    style={{
-                      ...utilityStyles.row,
-                      position: 'relative',
-                      right: 0,
-                      marginTop: 'auto',
-                      marginBottom: 'auto',
-                    }}
-                  >
-                    <IconButton icon={'cog-outline'}></IconButton>
-                    <IconButton icon={'bell-outline'}></IconButton>
-                  </View>
-                </View>
-              );
-            },
+            header: () => (
+              <AppHeaderWithSettingsLink title='Postulaciones'></AppHeaderWithSettingsLink>
+            ),
 
             headerShown: true,
           };
@@ -163,7 +132,13 @@ const RecruiterNavigator = () => {
             tabBarLabel: 'Mi perfil',
             theme: theme,
           });
-          return { ...iconOptions, headerShown: false };
+          return {
+            ...iconOptions,
+            headerShown: true,
+            header: () => (
+              <AppHeaderWithSettingsLink title='Perfil'></AppHeaderWithSettingsLink>
+            ),
+          };
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
         component={RecruiterProfileStack}
