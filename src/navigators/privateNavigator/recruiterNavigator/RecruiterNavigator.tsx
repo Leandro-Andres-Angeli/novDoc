@@ -23,6 +23,7 @@ import { CustomTheme } from 'App';
 
 import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
+import RecruiterProfileDrawer from 'src/screens/private/recruiter/RecruiterProfileDrawer';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -134,14 +135,11 @@ const RecruiterNavigator = () => {
           });
           return {
             ...iconOptions,
-            headerShown: true,
-            header: () => (
-              <AppHeaderWithSettingsLink title='Perfil'></AppHeaderWithSettingsLink>
-            ),
+            headerShown: false,
           };
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
-        component={RecruiterProfileStack}
+        component={RecruiterProfileDrawer}
       ></Tab.Screen>
       <Tab.Screen
         options={(props) => {

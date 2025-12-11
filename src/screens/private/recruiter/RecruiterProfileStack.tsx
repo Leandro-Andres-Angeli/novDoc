@@ -37,6 +37,9 @@ const RecruiterProfileStack = () => {
       <Stack.Screen
         name={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
         component={RecruiterProfileScreen}
+        // options={{
+
+        // }}
       ></Stack.Screen>
       <Stack.Screen
         name={RecruiterProfileStackRoutes.JOB_POSTING_DETAILS}
