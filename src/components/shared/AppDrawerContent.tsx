@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native';
-import React, { useContext } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -7,14 +7,22 @@ import {
 } from '@react-navigation/drawer';
 import { Button, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
-import useOpenElement from 'src/hooks/useOpenElement';
-import AppModal from '@ui/AppModal';
-import ConfirmSignOut from '../private/recruiter/ConfirmSignOut';
-import { signOut } from 'firebase/auth';
-import { AuthContext } from 'src/appContext/AuthContext';
+import AppAvatar from '../../ui/AppAvatar';
+const AppDrawerUserProfile = () => {
+  const theme = useTheme();
+  const localStyles = StyleSheet.create({
+    container: { backgroundColor: theme.colors.primary },
+  });
+  return (
+    <View style={{ ...localStyles.container }}>
+      <AppAvatar></AppAvatar>
+    </View>
+  );
+};
 interface AppDrawerContentProps extends DrawerContentComponentProps {
   handleElementVisibility: (val?: boolean) => void;
 }
+
 const AppDrawerContent = (props: AppDrawerContentProps) => {
   const theme = useTheme();
 
@@ -22,16 +30,21 @@ const AppDrawerContent = (props: AppDrawerContentProps) => {
     <>
       <DrawerContentScrollView
         style={{
-          display: 'flex',
+          padding: 0,
+          backgroundColor: 'green',
         }}
         contentContainerStyle={{
           justifyContent: 'space-between',
-
+          backgroundColor: 'yellow',
           height: '100%',
+          width: '100%',
+          position: 'absolute',
+          padding: 0,
+          margin: 0,
         }}
       >
-        <View>
-          <Text>Here goes profile card</Text>
+        <AppDrawerUserProfile></AppDrawerUserProfile>
+        <View style={{ backgroundColor: 'red' }}>
           <DrawerItemList {...props}></DrawerItemList>
         </View>
         <View
@@ -40,6 +53,7 @@ const AppDrawerContent = (props: AppDrawerContentProps) => {
             justifyContent: 'flex-end',
             marginTop: 'auto',
             marginBottom: 1,
+            backgroundColor: 'red',
           }}
         >
           <Button

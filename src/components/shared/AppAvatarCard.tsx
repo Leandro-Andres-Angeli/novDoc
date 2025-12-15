@@ -16,6 +16,7 @@ import utilityStyles from 'src/styles/utilityStyles';
 import { CustomTheme } from 'App';
 import AppCardWrapper from '@ui/AppCardWrapper';
 import RBSheetType from 'RBSheetType';
+import AppAvatar from '../../ui/AppAvatar';
 
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
@@ -42,12 +43,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
             },
           ]}
         >
-          <View style={[localStyles.avatarContainer]}>
-            <Image
-              source={require('../../../assets/profileAvatar.png')}
-              style={localStyles.avatar}
-            ></Image>
-
+          <AppAvatar>
             <IconButton
               onPress={() => {
                 if (refRBSheet.current) {
@@ -62,7 +58,15 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
               }}
               iconColor={theme.colors.primary}
             />
-          </View>
+          </AppAvatar>
+          {/* <View style={[localStyles.avatarContainer]}>
+            <Image
+              source={require('../../../assets/profileAvatar.png')}
+              style={localStyles.avatar}
+            ></Image>
+
+         
+          </View> */}
           <View style={localStyles.headerTextContainer}>
             <Text variant='titleMedium'>¡Hola, {fullName}!</Text>
             <Text variant='bodyMedium' style={{ fontWeight: 'light' }}>

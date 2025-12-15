@@ -10,6 +10,7 @@ import { AuthContext } from 'src/appContext/AuthContext';
 import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
+import utilityStyles from 'src/styles/utilityStyles';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   RECRUITER_PROFILE_STACK: 'RECRUITER_PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
@@ -38,10 +39,18 @@ const RecruiterProfileDrawer = () => {
           // header: () => (
           //   <AppHeaderWithSettingsLink title='Perfil'></AppHeaderWithSettingsLink>
           // ),
+          // drawerItemStyle: {
+          //   ...utilityStyles.btnBorderRadius,
+          //   ...utilityStyles.btn,
+          // },
+
+          drawerStyle: { padding: 0, backgroundColor: theme.colors.background },
           headerStyle: { backgroundColor: theme.colors.background },
           headerTitleAlign: 'center',
-          drawerContentStyle: { backgroundColor: theme.colors.background },
-          drawerStyle: { backgroundColor: theme.colors.background },
+          drawerContentStyle: {
+            backgroundColor: theme.colors.background,
+          },
+
           drawerPosition: 'right',
         }}
         drawerContent={(props) => (
