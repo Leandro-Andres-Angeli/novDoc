@@ -1,10 +1,13 @@
+import { FirebaseAppError } from 'firebase-admin/app';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-paper';
+import useOpenElement from 'src/hooks/useOpenElement';
 import utilityStyles from 'src/styles/utilityStyles';
+import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
 
 interface ConfirmSignOutProps {
-  handleConfirm: () => void;
+  handleConfirm: () => Promise<void | FirebaseErrorResponse>;
   handleCancel: () => void;
 }
 const ConfirmSignOut = ({
@@ -12,41 +15,43 @@ const ConfirmSignOut = ({
   handleConfirm,
 }: ConfirmSignOutProps) => {
   return (
-    <View
-      style={{
-        ...styles.content,
-        borderRadius: utilityStyles.btnBorderRadius.borderRadius,
-      }}
-    >
-      <Text variant='titleMedium' style={styles.title}>
-        Confirmar Cierre de Sesión
-      </Text>
+    <>
+      <View
+        style={{
+          ...styles.content,
+          borderRadius: utilityStyles.btnBorderRadius.borderRadius,
+        }}
+      >
+        <Text variant='titleMedium' style={styles.title}>
+          Confirmar Cierre de Sesión
+        </Text>
 
-      <Text variant='bodyMedium' style={styles.subtitle}>
-        ¿Estás seguro de que quieres cerrar sesión?
-      </Text>
+        <Text variant='bodyMedium' style={styles.subtitle}>
+          ¿Estás seguro de que quieres cerrar sesión?
+        </Text>
 
-      <View style={styles.buttonContainer}>
-        <Button
-          mode='contained'
-          style={styles.confirmButton}
-          buttonColor='#D32F2F'
-          textColor='#FFFFFF'
-          onPress={handleConfirm}
-        >
-          Confirmar
-        </Button>
+        <View style={styles.buttonContainer}>
+          <Button
+            mode='contained'
+            style={styles.confirmButton}
+            buttonColor='#D32F2F'
+            textColor='#FFFFFF'
+            onPress={handleConfirm}
+          >
+            Confirmar
+          </Button>
 
-        <Button
-          onPress={handleCancel}
-          mode='text'
-          style={styles.cancelButton}
-          textColor='#666666'
-        >
-          Cancelar
-        </Button>
+          <Button
+            onPress={handleCancel}
+            mode='text'
+            style={styles.cancelButton}
+            textColor='#666666'
+          >
+            Cancelar
+          </Button>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

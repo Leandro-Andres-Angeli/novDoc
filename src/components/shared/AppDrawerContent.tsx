@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -10,10 +10,14 @@ import utilityStyles from 'src/styles/utilityStyles';
 import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '../private/recruiter/ConfirmSignOut';
-
-const AppDrawerContent = (props: DrawerContentComponentProps) => {
+import { signOut } from 'firebase/auth';
+import { AuthContext } from 'src/appContext/AuthContext';
+interface AppDrawerContentProps extends DrawerContentComponentProps {
+  handleElementVisibility: (val?: boolean) => void;
+}
+const AppDrawerContent = (props: AppDrawerContentProps) => {
   const theme = useTheme();
-  const { elementVisible, handleElementVisibility } = useOpenElement();
+
   return (
     <>
       <DrawerContentScrollView
@@ -49,7 +53,7 @@ const AppDrawerContent = (props: DrawerContentComponentProps) => {
             textColor={theme.colors.onSecondary}
             rippleColor={'transparent'}
             onPress={() => {
-              handleElementVisibility(true);
+              props.handleElementVisibility(true);
             }}
             icon={'logout'}
           >

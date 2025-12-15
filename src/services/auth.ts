@@ -6,6 +6,7 @@ import { FirebaseError } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from 'firebase/auth';
 import {
   FirebaseErrorResponse,
@@ -62,6 +63,22 @@ export const signInUser = async (
   } catch (error) {
     return {
       message: 'error al intentar hacer login',
+      success: false,
+    };
+  }
+};
+export const signOutUser = async (): Promise<
+  FirebaseResponse | FirebaseErrorResponse
+> => {
+  try {
+    await signOut(auth);
+    return {
+      message: 'signout success',
+      success: true,
+    };
+  } catch (error) {
+    return {
+      message: 'signout error',
       success: false,
     };
   }

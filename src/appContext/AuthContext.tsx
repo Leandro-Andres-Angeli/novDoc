@@ -4,11 +4,12 @@ import {
   UserTypes,
 } from '../types/authContextTypes/authContextTypes';
 import useAuthStateReducer from '../hooks/useAuthStateReducer';
+import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
 
 export interface AuthContextInterface {
   authState: IAuthState;
   login: (user: UserTypes) => void;
-  logout: () => void;
+  logout: () => Promise<FirebaseErrorResponse | void>;
   loading: boolean;
 }
 export const AuthContext = createContext<AuthContextInterface>(

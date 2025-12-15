@@ -1,16 +1,15 @@
-import { View, Text } from 'react-native';
-import React from 'react';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-} from '@react-navigation/drawer';
-import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
+import React, { useContext } from 'react';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import RecruiterProfileStack from './RecruiterProfileStack';
-import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
-import { Button, useTheme } from 'react-native-paper';
-import utilityStyles from 'src/styles/utilityStyles';
+
+import { useTheme } from 'react-native-paper';
+
 import AppDrawerContent from '@components/shared/AppDrawerContent';
+import { AuthContext } from 'src/appContext/AuthContext';
+import useOpenElement from 'src/hooks/useOpenElement';
+import AppModal from '@ui/AppModal';
+import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   RECRUITER_PROFILE_STACK: 'RECRUITER_PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
@@ -30,6 +29,8 @@ const Drawer = createDrawerNavigator<typeof recruiterProfileDrawerRootStack>();
 
 const RecruiterProfileDrawer = () => {
   const theme = useTheme();
+  const { elementVisible, handleElementVisibility } = useOpenElement();
+  const { logout } = useContext(AuthContext);
   return (
     <>
       <Drawer.Navigator
@@ -44,7 +45,10 @@ const RecruiterProfileDrawer = () => {
           drawerPosition: 'right',
         }}
         drawerContent={(props) => (
-          <AppDrawerContent {...props}></AppDrawerContent>
+          <AppDrawerContent
+            handleElementVisibility={handleElementVisibility}
+            {...props}
+          ></AppDrawerContent>
         )}
         initialRouteName={'RECRUITER_PROFILE_STACK'}
       >
@@ -59,6 +63,12 @@ const RecruiterProfileDrawer = () => {
           component={RecruiterProfileStack}
         ></Drawer.Screen>
       </Drawer.Navigator>
+      <AppModal visible={elementVisible} elementVisible={elementVisible}>
+        <ConfirmSignOut
+          handleConfirm={logout}
+          handleCancel={() => handleElementVisibility(false)}
+        ></ConfirmSignOut>
+      </AppModal>
     </>
   );
 };

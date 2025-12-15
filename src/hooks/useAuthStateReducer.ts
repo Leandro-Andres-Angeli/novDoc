@@ -7,6 +7,7 @@ import {
   initialAuthState,
   IUser,
 } from '../types/authContextTypes/authContextTypes';
+import { signOutUser } from 'src/services/auth';
 
 const useAuthStateReducer = () => {
   const [authState, authDispatch] = useReducer(
@@ -22,8 +23,12 @@ const useAuthStateReducer = () => {
     });
     setLoading(false);
   };
-  const logout = () => {
-    authDispatch({
+  const logout = async () => {
+    const signOut = await signOutUser();
+    if (!signOut.success) {
+      return signOut;
+    }
+    return authDispatch({
       type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_LOGOUT,
       payload: { user: null, logged: false },
     });
