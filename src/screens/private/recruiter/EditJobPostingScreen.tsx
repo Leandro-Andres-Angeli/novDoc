@@ -8,6 +8,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from './RecruiterProfileStack';
 import { updateJobOffer } from '../../../services/jobOffer/jobOffer.service';
 import { Toast } from 'toastify-react-native';
+import { formModes } from 'src/types/formMode';
 interface EditJobPostingScreen
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,
@@ -65,6 +66,7 @@ const EditJobPostingScreen = ({
       userId={user.id}
       valuesToEdit={rest}
       submitTextBtn='Actualizar Oferta'
+      mode={formModes.EDIT}
     ></JobPostingForm>
   );
 };

@@ -40,7 +40,10 @@ import AppTypeOfLocationSelection, {
 import LocationPicker from '@components/shared/LocationPicker';
 import GeoLocationPicker from '@components/shared/GeoLocationPicker';
 import AppMap from '@components/shared/AppMap';
-import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
+import AppReactNativePaperSelect, {
+  AppReactNativePaperSelectMultiple,
+} from '@ui/AppReactNativePaperSelect';
+import { FormMode, formModes } from 'src/types/formMode';
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
@@ -148,6 +151,7 @@ interface JobPostingFormProps<T> {
   loading: boolean;
   submitTextBtn?: string;
   valuesToEdit?: IJobOffer;
+  mode?: FormMode;
 }
 const JobPostingForm = <T,>({
   userId,
@@ -155,6 +159,7 @@ const JobPostingForm = <T,>({
   loading,
   submitTextBtn = 'Crear oferta',
   valuesToEdit,
+  mode = formModes.CREATE,
 }: JobPostingFormProps<T>) => {
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
     valuesToEdit ?? generateJobOfferForm(JobLocation.REMOTE, userId)
@@ -223,6 +228,40 @@ const JobPostingForm = <T,>({
                     }}
                   >
                     <View style={utilityStyles.contentContainer}>
+                      {mode === formModes.EDIT && (
+                        <View style={utilityStyles.inputsContainer}>
+                          <AppReactNativePaperSelect
+                            multiEnable={false}
+                            value={values.status}
+                            selectedArrayList={[
+                              { _id: values.status, value: values.status },
+                            ]}
+                            theme={theme}
+                            dialogStyle={{
+                              backgroundColor: theme.colors.background,
+                            }}
+                            hideSearchBox={true}
+                            onSelection={(val) => {
+                              setFieldValue('status', val.text);
+                            }}
+                            arrayList={Object.values(JobOfferStatus).map(
+                              (el) => ({
+                                _id: el,
+
+                                label: el,
+                                value: el,
+                              })
+                            )}
+                            label='Status'
+                          >
+                            {/* <InputHelper
+                              errorCondition={errors.status !== undefined}
+                              errorMessage={errors?.status?.toString() ?? ''}
+                            ></InputHelper> */}
+                          </AppReactNativePaperSelect>
+                        </View>
+                      )}
+
                       <View style={utilityStyles.inputsContainer}>
                         <AppFormInputWithHelper<IJobOffer>
                           formKey='title'

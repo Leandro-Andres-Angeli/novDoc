@@ -59,14 +59,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
               iconColor={theme.colors.primary}
             />
           </AppAvatar>
-          {/* <View style={[localStyles.avatarContainer]}>
-            <Image
-              source={require('../../../assets/profileAvatar.png')}
-              style={localStyles.avatar}
-            ></Image>
 
-         
-          </View> */}
           <View style={localStyles.headerTextContainer}>
             <Text variant='titleMedium'>¡Hola, {fullName}!</Text>
             <Text variant='bodyMedium' style={{ fontWeight: 'light' }}>
@@ -155,6 +148,7 @@ const localStyles = StyleSheet.create({
   },
   headerTextContainer: {
     flex: 1,
+    marginLeft: 10,
   },
   greeting: {
     fontSize: 28,

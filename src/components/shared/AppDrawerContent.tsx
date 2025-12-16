@@ -1,21 +1,44 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
 import {
   DrawerContentComponentProps,
-  DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { Button, useTheme } from 'react-native-paper';
+import { Button, Text, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppAvatar from '../../ui/AppAvatar';
+import { AuthContext } from 'src/appContext/AuthContext';
+
 const AppDrawerUserProfile = () => {
   const theme = useTheme();
+  const {
+    authState: { user },
+  } = useContext(AuthContext);
   const localStyles = StyleSheet.create({
     container: { backgroundColor: theme.colors.primary },
   });
   return (
-    <View style={{ ...localStyles.container }}>
+    <View
+      style={{
+        ...localStyles.container,
+        ...utilityStyles.alignCenter,
+        paddingHorizontal: 30,
+        paddingVertical: 40,
+        marginBottom: 10,
+      }}
+    >
       <AppAvatar></AppAvatar>
+      <View style={{ marginTop: 5 }}>
+        <Text
+          variant='titleMedium'
+          style={{ color: theme.colors.onPrimary, textTransform: 'capitalize' }}
+        >
+          {user?.name}
+        </Text>
+        <Text variant='titleSmall' style={{ color: theme.colors.onPrimary }}>
+          {user?.role}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -28,23 +51,16 @@ const AppDrawerContent = (props: AppDrawerContentProps) => {
 
   return (
     <>
-      <DrawerContentScrollView
+      <View
         style={{
           padding: 0,
-          backgroundColor: 'green',
-        }}
-        contentContainerStyle={{
-          justifyContent: 'space-between',
-          backgroundColor: 'yellow',
+
           height: '100%',
           width: '100%',
-          position: 'absolute',
-          padding: 0,
-          margin: 0,
         }}
       >
         <AppDrawerUserProfile></AppDrawerUserProfile>
-        <View style={{ backgroundColor: 'red' }}>
+        <View>
           <DrawerItemList {...props}></DrawerItemList>
         </View>
         <View
@@ -53,7 +69,8 @@ const AppDrawerContent = (props: AppDrawerContentProps) => {
             justifyContent: 'flex-end',
             marginTop: 'auto',
             marginBottom: 1,
-            backgroundColor: 'red',
+            paddingBottom: 20,
+            paddingHorizontal: 5,
           }}
         >
           <Button
@@ -74,7 +91,7 @@ const AppDrawerContent = (props: AppDrawerContentProps) => {
             Cerrar sesión
           </Button>
         </View>
-      </DrawerContentScrollView>
+      </View>
     </>
   );
 };

@@ -1,34 +1,28 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View } from 'react-native';
 import React, { PropsWithChildren } from 'react';
-import { IconButton, useTheme } from 'react-native-paper';
+import { Avatar, useTheme } from 'react-native-paper';
 import { CustomTheme } from 'App';
 interface AppAvatarProps extends PropsWithChildren {}
 const AppAvatar = (props: AppAvatarProps) => {
-  const theme = useTheme<CustomTheme>();
   return (
-    <View style={[localStyles.avatarContainer]}>
-      <Image
+    <View>
+      <Avatar.Image
         source={require('../../assets/profileAvatar.png')}
-        style={localStyles.avatar}
-      ></Image>
+        style={{
+          shadowColor: '#9191914f',
+
+          shadowOffset: {
+            width: 2,
+            height: 4,
+          },
+          shadowOpacity: 0.6,
+          shadowRadius: 5.46,
+        }}
+      ></Avatar.Image>
 
       {props.children}
     </View>
   );
 };
-const localStyles = StyleSheet.create({
-  avatarContainer: {
-    position: 'relative',
-    marginRight: 16,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default AppAvatar;
