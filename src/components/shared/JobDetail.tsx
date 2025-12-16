@@ -17,6 +17,7 @@ import { updateJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from 'src/screens/private/recruiter/RecruiterProfileStack';
+import { Toast } from 'toastify-react-native';
 
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
@@ -31,11 +32,28 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
   const theme = useTheme<CustomTheme>();
   const confirmCloseJobPosting = async () => {
     try {
-      const updateResult = await updateJobOffer(jobPosting.id, {
+      const updateJobOfferResult = await updateJobOffer(jobPosting.id, {
         status: JobOfferStatus.CLOSED,
       });
-      console.log('update result', updateResult);
+      handleElementVisibility(false);
+      if (!updateJobOfferResult.success) {
+        throw Error(updateJobOfferResult.message);
+      }
+
+      Toast.show({
+        autoHide: true,
+
+        text1: updateJobOfferResult.message,
+        type: 'success',
+        onHide: () => navigator.navigate('RECRUITER_PROFILE_TABS', {}),
+      });
     } catch (error) {
+      const parsedError = error as Error;
+      Toast.show({
+        autoHide: true,
+        text1: parsedError.message ?? 'error',
+        type: 'error',
+      });
       console.log('err', error);
     }
   };

@@ -32,8 +32,8 @@ export const updateJobOffer = async (
   try {
     const docRef = await doc(db, 'jobOffers', idToUpdate);
 
-    const updatedOffer = await updateDoc(docRef, { ...jobOfferUpdate });
-    console.log('update res', updatedOffer);
+    await updateDoc(docRef, { ...jobOfferUpdate });
+
     return { message: 'Oferta actualizada', success: true };
   } catch (error) {
     console.log('error saving job offer');
