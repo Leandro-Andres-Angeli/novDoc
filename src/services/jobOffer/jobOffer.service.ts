@@ -1,7 +1,22 @@
 import { genericConverter } from '@utils/converters/firebaseConverters';
+import { FirebaseError } from 'firebase/app';
 import { db } from 'firebase/config';
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { IJobOffer, IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import {
+  IJobOffer,
+  IJobPostingDB,
+  JobOfferStatus,
+} from 'src/types/dbTypes/IJobOffer';
 import {
   FirebaseErrorResponse,
   FirebaseResponse,
@@ -39,5 +54,32 @@ export const updateJobOffer = async (
     console.log('error saving job offer');
     console.log(error);
     return { success: false, message: 'Error actualizando oferta' };
+  }
+};
+
+export const getJobPostings = async (
+  jobPostingStatus: JobOfferStatus = JobOfferStatus.ACTIVE
+) => {
+  try {
+    const q = query(
+      jobsOfferCollection,
+      where('status', '==', jobPostingStatus),
+      orderBy('createdAt', 'desc'),
+      limit(5)
+    );
+    const querySnapshot = await getDocs(q);
+    const collectionRes = querySnapshot.docs.map<IJobPostingDB>((el) => ({
+      id: el.id,
+      ...el.data(),
+    }));
+
+    return { success: true, data: collectionRes };
+  } catch (err) {
+    const parsedError = err as unknown as Error;
+    const errorRes: FirebaseErrorResponse = {
+      message: parsedError.message,
+      success: false,
+    };
+    return errorRes;
   }
 };

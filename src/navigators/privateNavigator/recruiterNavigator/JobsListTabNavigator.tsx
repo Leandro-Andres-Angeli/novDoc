@@ -7,10 +7,13 @@ import { useTheme } from 'react-native-paper';
 
 import { CustomTheme } from 'App';
 import JobsListNavigator from './jobsListNavigator/JobsListNavigator';
-type JobsListTabNavigatorRootParams = {
-  [JOBS_LIST_TABS_ROUTES.activa]: {};
-  [JOBS_LIST_TABS_ROUTES.pausada]: {};
-  [JOBS_LIST_TABS_ROUTES.cerrada]: {};
+import { JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
+export type JobsListTabNavigatorRootParams = {
+  [JOBS_LIST_TABS_ROUTES.activa]: {
+    jobStatus: JobOfferStatus.ACTIVE;
+  };
+  [JOBS_LIST_TABS_ROUTES.pausada]: { jobStatus: JobOfferStatus.PAUSED };
+  [JOBS_LIST_TABS_ROUTES.cerrada]: { jobStatus: JobOfferStatus.CLOSED };
 };
 const Tab = createMaterialTopTabNavigator<JobsListTabNavigatorRootParams>();
 const JobsListTabNavigator = () => {
@@ -38,21 +41,25 @@ const JobsListTabNavigator = () => {
           backgroundColor: theme.colors.primaryDynamicOpacity(0.01),
         },
       }}
+      initialRouteName={JOBS_LIST_TABS_ROUTES.activa}
     >
       <Tab.Screen
         name={JOBS_LIST_TABS_ROUTES.activa}
         options={{ title: `${JOBS_LIST_TABS_ROUTES.activa}s` }}
         component={JobsListNavigator}
+        initialParams={{ jobStatus: JobOfferStatus.ACTIVE }}
       ></Tab.Screen>
       <Tab.Screen
         name={JOBS_LIST_TABS_ROUTES.pausada}
         options={{ title: `${JOBS_LIST_TABS_ROUTES.pausada}s` }}
         component={JobsListNavigator}
+        initialParams={{ jobStatus: JobOfferStatus.PAUSED }}
       ></Tab.Screen>
       <Tab.Screen
         name={JOBS_LIST_TABS_ROUTES.cerrada}
         component={JobsListNavigator}
         options={{ title: `${JOBS_LIST_TABS_ROUTES.cerrada}s` }}
+        initialParams={{ jobStatus: JobOfferStatus.CLOSED }}
       ></Tab.Screen>
     </Tab.Navigator>
   );

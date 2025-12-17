@@ -1,16 +1,16 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { Chip, Text, Button, useTheme, Modal } from 'react-native-paper';
 import { IJobPostingDB, JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
 import { getLocales } from 'expo-localization';
-import { Seniority } from '../../types/dbTypes/IJobOffer';
+
 import currencyFormatter from '@utils/currencyFormatter';
 import dateFormatter from '@utils/dateFormatter ';
 import { CustomTheme } from 'App';
 import jobOfferHasLocation from '@utils/jobOfferHasLocation';
 import utilityStyles from 'src/styles/utilityStyles';
 import useOpenElement from 'src/hooks/useOpenElement';
-import { boolean } from 'yup';
+
 import AppModal from '@ui/AppModal';
 import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
 import { updateJobOffer } from 'src/services/jobOffer/jobOffer.service';
