@@ -6,8 +6,13 @@ import { CustomTheme } from 'App';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import RECRUITER_NAVIGATOR_ROUTES from '../../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
+import { JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
 
-export default function ProfileProfileJobPostingEmptyState() {
+export default function ProfileProfileJobPostingEmptyState({
+  jobPostingStatus,
+}: {
+  jobPostingStatus: JobOfferStatus;
+}) {
   const theme = useTheme<CustomTheme>();
   const navigator =
     useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
@@ -26,11 +31,16 @@ export default function ProfileProfileJobPostingEmptyState() {
       </View>
 
       <Text variant='titleLarge' style={styles.title}>
-        No publicaste ofertas de trabajo todavía
+        No hay ofertas de trabajo con status{' '}
+        <Text variant='titleLarge' style={{ fontWeight: 'bold' }}>
+          {jobPostingStatus}
+        </Text>{' '}
+        todavía
       </Text>
 
       <Text variant='bodyMedium' style={styles.description}>
-        Aún no creaste ninguna oferta de empleo. Empeza por publicar la primera.
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse nam
+        temporibus repellendus vitae atque assumenda.
       </Text>
 
       <Button
@@ -42,7 +52,7 @@ export default function ProfileProfileJobPostingEmptyState() {
         contentStyle={styles.buttonContent}
         icon='plus'
       >
-        Crea tu primera oferta de trabajo
+        Crear oferta de trabajo
       </Button>
     </View>
   );

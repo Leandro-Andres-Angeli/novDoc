@@ -65,7 +65,7 @@ export const getJobPostings = async (
       jobsOfferCollection,
       where('status', '==', jobPostingStatus),
       orderBy('createdAt', 'desc'),
-      limit(5)
+      limit(10)
     );
     const querySnapshot = await getDocs(q);
     const collectionRes = querySnapshot.docs.map<IJobPostingDB>((el) => ({

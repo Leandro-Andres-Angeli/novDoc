@@ -29,8 +29,7 @@ const LocationPicker = ({
   province,
 }: LocationPickerProps) => {
   const theme = useTheme();
-  console.log('CITYYY', city);
-  console.log('PROVINCE', province);
+
   const firstRender = useRef(true);
 
   const [selectedProvince, setSelectedProvince] = useState<ListItem>(

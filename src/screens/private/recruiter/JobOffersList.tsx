@@ -49,7 +49,9 @@ const JobOffersList = ({ route }: JobOffersListProps) => {
 
   if (isEmptyArray(jobPostings)) {
     return (
-      <ProfileProfileJobPostingEmptyState></ProfileProfileJobPostingEmptyState>
+      <ProfileProfileJobPostingEmptyState
+        {...{ jobPostingStatus }}
+      ></ProfileProfileJobPostingEmptyState>
     );
   }
 

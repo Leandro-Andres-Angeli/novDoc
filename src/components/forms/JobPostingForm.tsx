@@ -87,10 +87,12 @@ export const generateJobOfferForm = (
       return JobOfferHybrid;
 
     case JobLocation.REMOTE:
+      console.log('here it is remote');
+      console.log('here it is remote jb id ', jobLocation);
       const JobOfferRemote: IJobOfferRemote = {
         ...base,
 
-        jobLocation: JobLocation.REMOTE,
+        jobLocation,
       };
       return JobOfferRemote;
     default:
@@ -98,7 +100,7 @@ export const generateJobOfferForm = (
   }
 };
 
-export const generateJobOfferValidationSchema = () => {
+export const generateJobOfferValidationSchema = (jobLocation: JobLocation) => {
   const baseValidationSchema = Yup.object<IJobOffer>({
     title: Yup.string().required('campo obligatorio'),
     description: Yup.string().required('campo obligatorio'),
@@ -120,9 +122,12 @@ export const generateJobOfferValidationSchema = () => {
       id: Yup.string().required(),
       nombre: Yup.string().required(),
     }).when('jobLocation', {
-      is: (val: string) =>
-        val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
+      is: (val: JobLocation) => {
+        console.log('CURRENT VAL', val);
+        return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
+      },
       then(schema) {
+        console.log('here requiring field');
         return schema.required('campo obligatorio');
       },
       otherwise(schema) {
@@ -133,8 +138,10 @@ export const generateJobOfferValidationSchema = () => {
       id: Yup.string().required(),
       nombre: Yup.string().required(),
     }).when('jobLocation', {
-      is: (val: string) =>
-        val === JobLocation.HYBRID || val === JobLocation.ON_SITE,
+      is: (val: JobLocation) => {
+        console.log('current val', val);
+        return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
+      },
       then(schema) {
         return schema.required('campo obligatorio');
       },
@@ -168,9 +175,10 @@ const JobPostingForm = <T,>({
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
   const theme = useTheme();
   const jobOfferValidationSchema = useMemo(() => {
-    return generateJobOfferValidationSchema();
+    return generateJobOfferValidationSchema(jobOfferForm.jobLocation);
   }, [jobOfferForm.jobLocation]);
   useEffect(() => {
+    console.log('here trigger');
     setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation, userId));
   }, [jobOfferForm.jobLocation]);
   return (
@@ -187,6 +195,7 @@ const JobPostingForm = <T,>({
         loadingPostIndicator={loading}
         validationSchema={jobOfferValidationSchema}
         formFields={jobOfferForm}
+        enableReinitialize={true}
       >
         {({
           handleInputValue,
@@ -207,6 +216,8 @@ const JobPostingForm = <T,>({
         }) => {
           return (
             <>
+              <Text>{JSON.stringify(errors)}</Text>
+              <Text>{JSON.stringify(values.jobLocation)}</Text>
               <View
                 style={[
                   {

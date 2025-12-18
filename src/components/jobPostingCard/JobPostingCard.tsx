@@ -53,6 +53,12 @@ const JobPostingCard = (props: JobPostingCardProps) => {
                     jobPosting.city.nombre) ||
                   jobPosting.jobLocation}
               </Text>
+              <Text
+                variant='bodySmall'
+                style={{ ...styles.subtitle, fontStyle: 'italic' }}
+              >
+                {jobPosting.createdAt.toDate().toLocaleDateString()}
+              </Text>
             </View>
           </View>
           {/* <IconButton

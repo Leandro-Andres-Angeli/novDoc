@@ -13,9 +13,9 @@ const useGetJobPostings = (jobPostingStatus: JobOfferStatus) => {
     try {
       setError({ error: false, message: null });
       setLoading(true);
-      console.log('trigger');
+
       const jobPostingPromise = await getJobPostings(jobPostingStatus);
-      console.log('PPPP', jobPostingPromise.success);
+
       if (jobPostingPromise.success) {
         setJobPostings(jobPostingPromise.data);
       }
@@ -26,7 +26,6 @@ const useGetJobPostings = (jobPostingStatus: JobOfferStatus) => {
     }
   };
   useEffect(() => {
-    console.log('PPP', jobPostingStatus);
     handleGetJobPostings(jobPostingStatus);
   }, [jobPostingStatus]);
   return { jobPostings, loading, error };
