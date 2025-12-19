@@ -65,6 +65,7 @@ export const generateJobOfferForm = (
     status: JobOfferStatus.ACTIVE,
     createdAt: creationDate,
   };
+
   switch (jobLocation) {
     case JobLocation.ON_SITE:
       const JobOfferOnSite: IJobOfferOnSite = {
@@ -87,20 +88,18 @@ export const generateJobOfferForm = (
       return JobOfferHybrid;
 
     case JobLocation.REMOTE:
-      console.log('here it is remote');
-      console.log('here it is remote jb id ', jobLocation);
       const JobOfferRemote: IJobOfferRemote = {
         ...base,
 
         jobLocation,
       };
-      return JobOfferRemote;
+      return JobOfferRemote as IJobOfferRemote;
     default:
       return base as IJobOfferRemote;
   }
 };
 
-export const generateJobOfferValidationSchema = (jobLocation: JobLocation) => {
+export const generateJobOfferValidationSchema = () => {
   const baseValidationSchema = Yup.object<IJobOffer>({
     title: Yup.string().required('campo obligatorio'),
     description: Yup.string().required('campo obligatorio'),
@@ -119,39 +118,65 @@ export const generateJobOfferValidationSchema = (jobLocation: JobLocation) => {
       .min(1, 'elegir al menos una skill')
       .required(),
     city: Yup.object<Location>({
-      id: Yup.string().required(),
-      nombre: Yup.string().required(),
-    }).when('jobLocation', {
-      is: (val: JobLocation) => {
-        console.log('CURRENT VAL', val);
-        return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
-      },
-      then(schema) {
-        console.log('here requiring field');
-        return schema.required('campo obligatorio');
-      },
-      otherwise(schema) {
-        return schema.notRequired();
-      },
+      id: Yup.string()
+        .required()
+        .when('jobLocation', {
+          is: (val: JobLocation) => {
+            return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
+          },
+          then(schema) {
+            return schema.required('campo obligatorio');
+          },
+          otherwise(schema) {
+            return schema.notRequired();
+          },
+        }),
+      nombre: Yup.string()
+        .required()
+        .when('jobLocation', {
+          is: (val: JobLocation) => {
+            return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
+          },
+          then(schema) {
+            return schema.required('campo obligatorio');
+          },
+          otherwise(schema) {
+            return schema.notRequired();
+          },
+        }),
     }),
     province: Yup.object<Location>({
-      id: Yup.string().required(),
-      nombre: Yup.string().required(),
-    }).when('jobLocation', {
-      is: (val: JobLocation) => {
-        console.log('current val', val);
-        return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
-      },
-      then(schema) {
-        return schema.required('campo obligatorio');
-      },
-      otherwise(schema) {
-        return schema.notRequired();
-      },
+      id: Yup.string()
+        .required()
+        .when('jobLocation', {
+          is: (val: JobLocation) => {
+            return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
+          },
+          then(schema) {
+            return schema.required('campo obligatorio');
+          },
+          otherwise(schema) {
+            return schema.notRequired();
+          },
+        }),
+      nombre: Yup.string()
+        .required()
+        .when('jobLocation', {
+          is: (val: JobLocation) => {
+            return val === JobLocation.HYBRID || val === JobLocation.ON_SITE;
+          },
+          then(schema) {
+            return schema.required('campo obligatorio');
+          },
+          otherwise(schema) {
+            return schema.notRequired();
+          },
+        }),
     }),
   });
   return baseValidationSchema as unknown as Yup.ObjectSchema<IJobOffer>;
 };
+
 interface JobPostingFormProps<T> {
   userId: string;
   handleSubmit: (values: T, helpers: FormikHelpers<any>) => Promise<void>;
@@ -168,17 +193,21 @@ const JobPostingForm = <T,>({
   valuesToEdit,
   mode = formModes.CREATE,
 }: JobPostingFormProps<T>) => {
+  console.log('values to edit', valuesToEdit);
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
     valuesToEdit ?? generateJobOfferForm(JobLocation.REMOTE, userId)
   );
+
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
   const theme = useTheme();
   const jobOfferValidationSchema = useMemo(() => {
-    return generateJobOfferValidationSchema(jobOfferForm.jobLocation);
+    return generateJobOfferValidationSchema();
   }, [jobOfferForm.jobLocation]);
+
   useEffect(() => {
     console.log('here trigger');
+
     setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation, userId));
   }, [jobOfferForm.jobLocation]);
   return (
@@ -211,13 +240,13 @@ const JobPostingForm = <T,>({
           handleSubmit,
           loadingPostIndicator,
           setFieldValue,
-
+          validateOnChange,
           setValues,
         }) => {
           return (
             <>
-              <Text>{JSON.stringify(errors)}</Text>
-              <Text>{JSON.stringify(values.jobLocation)}</Text>
+              {/* <Text>{JSON.stringify(errors)}</Text> */}
+              <Text>{JSON.stringify(values)}</Text>
               <View
                 style={[
                   {
@@ -264,12 +293,7 @@ const JobPostingForm = <T,>({
                               })
                             )}
                             label='Status'
-                          >
-                            {/* <InputHelper
-                              errorCondition={errors.status !== undefined}
-                              errorMessage={errors?.status?.toString() ?? ''}
-                            ></InputHelper> */}
-                          </AppReactNativePaperSelect>
+                          ></AppReactNativePaperSelect>
                         </View>
                       )}
 

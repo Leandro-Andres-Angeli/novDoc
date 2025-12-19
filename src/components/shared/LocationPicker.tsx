@@ -39,7 +39,7 @@ const LocationPicker = ({
   const [selectedCity, setSelectedCity] = useState<ListItem>(
     city ? { _id: city.id, value: city.nombre } : ({} as ListItem)
   );
-
+  console.log('selected cityyyy', selectedCity);
   const handleSelectProvinceInner = (province: MapLocation) => {
     setSelectedProvince({
       _id: province.id,
@@ -47,10 +47,14 @@ const LocationPicker = ({
     });
   };
 
-  const handleSelectCityInner = (city: MapLocation) => {
+  const handleSelectCityInner = (cityLocation: MapLocation) => {
+    if (city && firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
     setSelectedCity({
-      _id: city.id,
-      value: city.nombre,
+      _id: cityLocation.id,
+      value: cityLocation.nombre,
     });
   };
   const { loadingLocations: loadingProvinces, locations: provinces } =
@@ -66,14 +70,11 @@ const LocationPicker = ({
         selectedProvince?._id ?? '02'
       ),
       key: 'municipios',
-      ...(firstRender.current && !city && !firstRender.current
-        ? { setInitialLocation: handleSelectCity }
-        : {}),
+      ...(!city ? { setInitialLocation: handleSelectCity } : {}),
       setInitialLocation: handleSelectCityInner,
       dynamicParams: [selectedProvince?._id],
     });
   useEffect(() => {
-    firstRender.current = false;
     if (selectedProvince?._id) {
       handleSelectProvince({
         id: selectedProvince._id,
