@@ -62,7 +62,6 @@ const JobOffersList = ({ route }: JobOffersListProps) => {
           renderItem={({ item }) => (
             <Pressable
               onPress={() => {
-                console.log('pressed');
                 // navigate to detail
                 navigation.navigate('JOB_POSTING_DETAILS', {
                   jobPosting: item,

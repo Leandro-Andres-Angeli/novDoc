@@ -36,7 +36,6 @@ const AppMap = (props: AppMapProps) => {
         return;
       }
 
-      console.log(e.nativeEvent);
       const {
         nativeEvent: { coordinate },
       } = e;

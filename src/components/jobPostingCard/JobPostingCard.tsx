@@ -61,11 +61,6 @@ const JobPostingCard = (props: JobPostingCardProps) => {
               </Text>
             </View>
           </View>
-          {/* <IconButton
-            icon='dots-vertical'
-            size={20}
-            onPress={() => console.log('Menu pressed')}
-          /> */}
         </View>
         <View style={styles.candidateInfo}>
           <View style={styles.dot} />

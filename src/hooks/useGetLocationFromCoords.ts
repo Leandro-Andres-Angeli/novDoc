@@ -4,6 +4,7 @@ import geoRefAxiosInstance, {
 import React, { useState } from 'react';
 import { MapLocation } from 'src/types/dbTypes/IJobOffer';
 import { GeoLocationReversed } from 'src/types/geoRefResponses/geoLocationReversed';
+import { Toast } from 'toastify-react-native';
 
 const useGetLocationFromCoords = () => {
   const [city, setCity] = useState<MapLocation>();
@@ -35,9 +36,8 @@ const useGetLocationFromCoords = () => {
       };
     } catch (error) {
       console.log('error get locations ', error);
+      Toast.error('Error obteniendo punto geo');
     }
-    console.log('fff', city);
-    console.log('fff', province);
   };
   return { city, province, getLocationFromCoords };
 };

@@ -39,7 +39,7 @@ const LocationPicker = ({
   const [selectedCity, setSelectedCity] = useState<ListItem>(
     city ? { _id: city.id, value: city.nombre } : ({} as ListItem)
   );
-  console.log('selected cityyyy', selectedCity);
+
   const handleSelectProvinceInner = (province: MapLocation) => {
     setSelectedProvince({
       _id: province.id,

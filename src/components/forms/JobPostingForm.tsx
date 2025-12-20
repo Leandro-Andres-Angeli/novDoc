@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppForm from './AppForm';
@@ -193,10 +193,14 @@ const JobPostingForm = <T,>({
   valuesToEdit,
   mode = formModes.CREATE,
 }: JobPostingFormProps<T>) => {
-  console.log('values to edit', valuesToEdit);
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
-    valuesToEdit ?? generateJobOfferForm(JobLocation.REMOTE, userId)
+    mode === formModes.EDIT && valuesToEdit
+      ? valuesToEdit
+      : generateJobOfferForm(JobLocation.REMOTE, userId)
   );
+  /*   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
+  mode === formModes.CREATE ?  generateJobOfferForm(JobLocation.REMOTE, userId) :   valuesToEdit 
+  ); */
 
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
@@ -206,8 +210,6 @@ const JobPostingForm = <T,>({
   }, [jobOfferForm.jobLocation]);
 
   useEffect(() => {
-    console.log('here trigger');
-
     setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation, userId));
   }, [jobOfferForm.jobLocation]);
   return (
@@ -245,8 +247,6 @@ const JobPostingForm = <T,>({
         }) => {
           return (
             <>
-              {/* <Text>{JSON.stringify(errors)}</Text> */}
-              <Text>{JSON.stringify(values)}</Text>
               <View
                 style={[
                   {
@@ -376,6 +376,10 @@ const JobPostingForm = <T,>({
                             handleInputValue('jobLocation', val);
 
                             setJobOfferForm(generateJobOfferForm(val, userId));
+                            if (val === JobLocation.REMOTE) {
+                              setFieldValue('province', undefined);
+                              setFieldValue('city', undefined);
+                            }
                           }}
                         ></AppSegmentedButtons>
 

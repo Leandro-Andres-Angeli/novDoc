@@ -70,7 +70,6 @@ const NewJobOffer = () => {
     useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
   async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
     setLoading(true);
-    console.log(values);
 
     try {
       const newJobOfferResponse = await createJobOffer(values);
