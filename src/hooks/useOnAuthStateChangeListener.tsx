@@ -7,34 +7,41 @@ import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { userConverter } from '@utils/converters/firebaseConverters';
 
 const useOnAuthStateChangeListener = () => {
-  const { login, logout } = useContext(AuthContext);
+  const { login, logout, handleLoading } = useContext(AuthContext);
   const usersCollection = collection(db, 'users').withConverter(userConverter);
   useEffect(() => {
     const onAuthStateSubscription = onAuthStateChanged(
       auth,
       async function (user) {
-        if (user) {
-          const q = query(
-            usersCollection,
-            where('id', '==', user.uid),
-            limit(1)
-          );
+        handleLoading(true);
+        try {
+          if (user) {
+            const q = query(
+              usersCollection,
+              where('id', '==', user.uid),
+              limit(1)
+            );
 
-          const querySnapshot = await getDocs(q);
-          if (querySnapshot.empty) {
-            console.error('No user document found for this auth user!');
-            logout();
-            return;
-          }
-          querySnapshot.forEach((doc) => {
-            console.log(doc.data());
-            if (doc.exists()) {
-              const userData = doc.data();
-              login(userData);
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+              console.error('No user document found for this auth user!');
+              logout();
+              return;
             }
-          });
-        } else {
-          logout();
+            querySnapshot.forEach((doc) => {
+              console.log(doc.data());
+              if (doc.exists()) {
+                const userData = doc.data();
+                login(userData);
+              }
+            });
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.log('login error');
+        } finally {
+          handleLoading(false);
         }
       }
     );

@@ -15,26 +15,28 @@ const useAuthStateReducer = () => {
     initialAuthState
   );
   const [loading, setLoading] = useState(false);
+  const handleLoading = (val: boolean = !loading) => {
+    setLoading(val);
+  };
   const login = (user: IUser) => {
-    setLoading(true);
     authDispatch({
       type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_LOGIN,
       payload: { logged: true, user },
     });
-    setLoading(false);
   };
   const logout = async () => {
     const signOut = await signOutUser();
     if (!signOut.success) {
       return signOut;
     }
+
     return authDispatch({
       type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_LOGOUT,
       payload: { user: null, logged: false },
     });
   };
 
-  return { authState, login, logout, loading };
+  return { authState, login, logout, loading, handleLoading };
 };
 
 export default useAuthStateReducer;

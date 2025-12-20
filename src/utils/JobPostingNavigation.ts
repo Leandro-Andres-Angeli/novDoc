@@ -1,4 +1,3 @@
-import { ParamListBase } from '@react-navigation/native';
 import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 

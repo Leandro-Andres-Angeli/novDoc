@@ -4,15 +4,11 @@ import { Card } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import PUBLIC_NAVIGATOR_ROUTES from 'src/navigators/publicNavigator/PUBLIC_NAVIGATOR_ROUTES';
 import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
 
 import styled from 'styled-components/native';
 
-import AppButton from '@ui/AppButton';
-
 import AppFooter from '@ui/AppFooter';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import SignIn from 'src/components/SignIn';
 
