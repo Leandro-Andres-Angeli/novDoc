@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import RecruiterProfileStack from './RecruiterProfileStack';
 
-import { useTheme } from 'react-native-paper';
+import { Button, IconButton, Text, useTheme } from 'react-native-paper';
 
 import AppDrawerContent from '@components/shared/AppDrawerContent';
 import { AuthContext } from 'src/appContext/AuthContext';
@@ -64,7 +64,25 @@ const RecruiterProfileDrawer = () => {
       >
         <Drawer.Screen
           name='EDIT_PROFILE'
-          options={{ title: 'Editar Perfil' }}
+          // options={{
+          //   title: 'Editar Perfil',
+
+          // }}
+          options={({ navigation }) => {
+            return {
+              title: 'Editar Perfil',
+              headerLeft(props) {
+                return (
+                  <IconButton
+                    onPress={() =>
+                      navigation.navigate('RECRUITER_PROFILE_STACK')
+                    }
+                    icon={'chevron-left'}
+                  ></IconButton>
+                );
+              },
+            };
+          }}
           component={EditProfileScreen}
         ></Drawer.Screen>
         <Drawer.Screen

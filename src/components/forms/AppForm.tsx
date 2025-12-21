@@ -29,7 +29,9 @@ function AppForm<T extends FormikValues>({
     onSubmit: (values: T, helpers: FormikHelpers<any>) =>
       handleSubmit(values, helpers),
   });
-
+  const handleReset = () => {
+    formikProps.resetForm();
+  };
   const handleInputValue = <K extends keyof T>(key: K, value: T[K]) => {
     formikProps.setFieldValue(key.toString(), value);
   };
@@ -43,6 +45,7 @@ function AppForm<T extends FormikValues>({
     loadingPostIndicator,
     handleInputValue,
     handleTextInputBlur,
+    handleReset,
   } as FormChildrenProps<T>;
   return <>{children(allProps)}</>;
 }
