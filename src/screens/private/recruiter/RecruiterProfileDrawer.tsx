@@ -11,6 +11,7 @@ import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
 import utilityStyles from 'src/styles/utilityStyles';
+import EditProfileScreen from '../shared/EditProfileScreen';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   RECRUITER_PROFILE_STACK: 'RECRUITER_PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
@@ -64,7 +65,7 @@ const RecruiterProfileDrawer = () => {
         <Drawer.Screen
           name='EDIT_PROFILE'
           options={{ title: 'Editar Perfil' }}
-          component={RecruiterProfileStack}
+          component={EditProfileScreen}
         ></Drawer.Screen>
         <Drawer.Screen
           name='RECRUITER_PROFILE_STACK'

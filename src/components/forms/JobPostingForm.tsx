@@ -198,9 +198,6 @@ const JobPostingForm = <T,>({
       ? valuesToEdit
       : generateJobOfferForm(JobLocation.REMOTE, userId)
   );
-  /*   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
-  mode === formModes.CREATE ?  generateJobOfferForm(JobLocation.REMOTE, userId) :   valuesToEdit 
-  ); */
 
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import { publicNavigatorRootStack } from 'src/navigators/publicNavigator/PublicNavigator';
-
 import styled from 'styled-components/native';
 
 import AppButton from '@ui/AppButton';
@@ -20,6 +15,7 @@ import { AppFormInput, AppFormInputSecureTextEntry } from '../ui/AppFormInputs';
 import { signInUser } from 'src/services/auth';
 import { Toast } from 'toastify-react-native';
 import { useTheme } from 'react-native-paper';
+import { ISignInForm } from 'src/types/SignInForm';
 
 const ButtonContainer = styled.View<{ isLandscape: boolean }>`
   width: ${(props) => (props.isLandscape ? 'auto' : '100%')};
@@ -29,10 +25,6 @@ const ButtonContainer = styled.View<{ isLandscape: boolean }>`
 `;
 
 const SignIn = () => {
-  interface ISignInForm {
-    email: string;
-    password: string;
-  }
   const signInForm: ISignInForm = {
     email: '',
     password: '',
@@ -68,10 +60,12 @@ const SignIn = () => {
         } = props;
         return (
           <View
-            style={[
-              { backgroundColor: theme.colors.background },
-              utilityStyles.contentContainer,
-            ]}
+            style={{
+              ...utilityStyles.contentContainer,
+              ...utilityStyles.flex,
+              marginTop: 20,
+              marginBottom: 40,
+            }}
           >
             <View style={utilityStyles.contentContainer}>
               <AppFormInput

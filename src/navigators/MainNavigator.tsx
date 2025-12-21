@@ -34,11 +34,6 @@ function MainNavigator() {
   if (!user && !loading) {
     content = <PublicNavigator></PublicNavigator>;
   }
-  return (
-    <>
-      <Text> {JSON.stringify(loading)}</Text>
-      {content}
-    </>
-  );
+  return <>{content}</>;
 }
 export default MainNavigator;
