@@ -2,20 +2,21 @@ import { View, Text } from 'react-native';
 import React from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
-interface AppGenericSubmitBtnProps {
+import { FormikHelpers } from 'formik';
+interface AppGenericSubmitBtnProps<T> {
   loadingPostIndicator: boolean | undefined;
-  handleSubmit: () => Promise<void>;
+  handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
   dirty: boolean;
   isValid: boolean;
   submitTextBtn: string;
 }
-const AppGenericSubmitBtn = ({
+const AppGenericSubmitBtn = <T,>({
   loadingPostIndicator,
   handleSubmit,
   dirty,
   isValid,
   submitTextBtn,
-}: AppGenericSubmitBtnProps) => {
+}: AppGenericSubmitBtnProps<T>) => {
   const theme = useTheme();
   return (
     <View

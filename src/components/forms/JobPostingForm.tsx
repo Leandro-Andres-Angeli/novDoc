@@ -45,6 +45,7 @@ import AppReactNativePaperSelect, {
 } from '@ui/AppReactNativePaperSelect';
 import { formModes } from 'src/types/formMode';
 import { JobPostingFormProps } from 'src/types/FormProps';
+import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
@@ -545,7 +546,16 @@ const JobPostingForm = <T,>({
                     </View>
                   </View>
                 </KeyboardAwareScrollView>
-                <View
+                <AppGenericSubmitBtn
+                  {...{
+                    loadingPostIndicator,
+                    dirty,
+                    isValid,
+                    handleSubmit,
+                    submitTextBtn,
+                  }}
+                ></AppGenericSubmitBtn>
+                {/* <View
                   style={[
                     utilityStyles.fabContainer,
                     {
@@ -571,7 +581,7 @@ const JobPostingForm = <T,>({
                       size={'small'}
                     ></ActivityIndicator>
                   )}
-                </View>
+                </View> */}
               </View>
             </>
           );
