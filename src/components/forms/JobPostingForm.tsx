@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppForm from './AppForm';
@@ -24,7 +24,7 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import { FormikHelpers } from 'formik';
+
 import {
   KeyboardAwareScrollView,
   useKeyboardState,
@@ -43,7 +43,8 @@ import AppMap from '@components/shared/AppMap';
 import AppReactNativePaperSelect, {
   AppReactNativePaperSelectMultiple,
 } from '@ui/AppReactNativePaperSelect';
-import { FormMode, formModes } from 'src/types/formMode';
+import { formModes } from 'src/types/formMode';
+import { JobPostingFormProps } from 'src/types/FormProps';
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
@@ -177,14 +178,6 @@ export const generateJobOfferValidationSchema = () => {
   return baseValidationSchema as unknown as Yup.ObjectSchema<IJobOffer>;
 };
 
-interface JobPostingFormProps<T> {
-  userId: string;
-  handleSubmit: (values: T, helpers: FormikHelpers<any>) => Promise<void>;
-  loading: boolean;
-  submitTextBtn?: string;
-  valuesToEdit?: IJobOffer;
-  mode?: FormMode;
-}
 const JobPostingForm = <T,>({
   userId,
   handleSubmit,

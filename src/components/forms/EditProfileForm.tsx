@@ -13,13 +13,12 @@ import {
   KeyboardAwareScrollView,
   useKeyboardState,
 } from 'react-native-keyboard-controller';
-import {
-  NativeStackNavigatorProps,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 
-type UpdateRecruiterProfileFormShape = IUser & Omit<IRecruiter, 'jobs'>;
+import { useNavigation } from '@react-navigation/native';
+import {
+  EditProfileFormProps,
+  UpdateRecruiterProfileFormShape,
+} from 'src/types/FormProps';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -37,35 +36,22 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormSh
       .oneOf([Role.RECRUITER]) as Yup.Schema<Role.RECRUITER>,
     avatarUrl: Yup.string(),
   });
-interface EditProfileProps
-  extends NativeStackScreenProps<{ EDIT_PROFILE: {} }> {}
-const EditProfile = () => {
+
+const EditProfileForm = ({
+  user,
+}: EditProfileFormProps<
+  UpdateRecruiterProfileFormShape,
+  UpdateRecruiterProfileFormShape
+>) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const handleSubmit = async () => {};
 
   const { isVisible } = useKeyboardState();
-  const {
-    authState: { user },
-  } = useContext(AuthContext);
-  if (!user) {
-    return <></>;
-  }
-  const [formDefaultValues, setFormDefaultValues] =
-    useState<UpdateRecruiterProfileFormShape>({
-      ...user,
-      role: Role.RECRUITER,
-    });
-  // const isMounted = useRef<boolean>(true);
-  // let formDefaultValues: UpdateRecruiterProfileFormShape = {
-  //   ...user,
-  //   role: Role.RECRUITER,
-  // };
 
   if (isRecruiter(user)) {
     return (
       <View
-        // style={utilityStyles.contentContainer}
         style={{
           ...utilityStyles.contentContainer,
           ...utilityStyles.flex,
@@ -76,8 +62,7 @@ const EditProfile = () => {
         <Text>{JSON.stringify(user)}</Text>
         <AppForm<UpdateRecruiterProfileFormShape>
           handleSubmit={handleSubmit}
-          // formFields={user}
-          formFields={formDefaultValues}
+          formFields={user}
           enableReinitialize={true}
           validationSchema={editProfileValidationSchema}
         >
@@ -194,4 +179,4 @@ const EditProfile = () => {
   }
 };
 
-export default EditProfile;
+export default EditProfileForm;
