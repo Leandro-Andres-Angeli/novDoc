@@ -1,8 +1,8 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
-import { FormikHelpers } from 'formik';
+
 interface AppGenericSubmitBtnProps<T> {
   loadingPostIndicator: boolean | undefined;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;

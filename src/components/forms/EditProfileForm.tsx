@@ -19,6 +19,7 @@ import {
   EditProfileFormProps,
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
+import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -39,13 +40,23 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormSh
 
 const EditProfileForm = ({
   user,
+  handleSubmit,
 }: EditProfileFormProps<
   UpdateRecruiterProfileFormShape,
   UpdateRecruiterProfileFormShape
 >) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const handleSubmit = async () => {};
+  /*   const [loading, setLoading] = useState(false);
+  const handleSubmit = async (values: UpdateRecruiterProfileFormShape) => {
+    // console.log('submittt');
+    try {
+      setLoading(true);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  }; */
 
   const { isVisible } = useKeyboardState();
 
@@ -99,6 +110,8 @@ const EditProfileForm = ({
                   style={[
                     {
                       backgroundColor: theme.colors.background,
+                      marginBottom: 'auto',
+                      flex: 1,
                       overflow: 'scroll',
                     },
                   ]}
@@ -163,6 +176,23 @@ const EditProfileForm = ({
                       </View>
                     </View>
                   </KeyboardAwareScrollView>
+                  <View
+                    style={{
+                      marginTop: 'auto',
+                      flex: 1,
+                      display: 'flex',
+                    }}
+                  >
+                    <AppGenericSubmitBtn
+                      {...{
+                        loadingPostIndicator,
+                        dirty,
+                        isValid,
+                        handleSubmit,
+                      }}
+                      submitTextBtn={'Actualizar Perfil'}
+                    ></AppGenericSubmitBtn>
+                  </View>
                 </View>
               </>
             );

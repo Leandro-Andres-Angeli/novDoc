@@ -546,6 +546,7 @@ const JobPostingForm = <T,>({
                     </View>
                   </View>
                 </KeyboardAwareScrollView>
+
                 <AppGenericSubmitBtn
                   {...{
                     loadingPostIndicator,
@@ -555,33 +556,6 @@ const JobPostingForm = <T,>({
                     submitTextBtn,
                   }}
                 ></AppGenericSubmitBtn>
-                {/* <View
-                  style={[
-                    utilityStyles.fabContainer,
-                    {
-                      backgroundColor: theme.colors.background,
-                    },
-                  ]}
-                >
-                  {!loadingPostIndicator && (
-                    <Button
-                      mode='contained'
-                      style={utilityStyles.fab}
-                      contentStyle={utilityStyles.fabContent}
-                      labelStyle={utilityStyles.fabLabel}
-                      onPress={() => handleSubmit()}
-                      disabled={(dirty && !isValid) || !dirty}
-                    >
-                      {submitTextBtn}
-                    </Button>
-                  )}
-                  {loadingPostIndicator && (
-                    <ActivityIndicator
-                      color={theme.colors.primary}
-                      size={'small'}
-                    ></ActivityIndicator>
-                  )}
-                </View> */}
               </View>
             </>
           );

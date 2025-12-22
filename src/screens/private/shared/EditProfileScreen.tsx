@@ -3,30 +3,58 @@ import React, { useContext, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import { AuthContext } from 'src/appContext/AuthContext';
 import EditProfileForm from '@components/forms/EditProfileForm';
-
-const EditProfileScreen = () => {
+import { UpdateRecruiterProfileFormShape } from 'src/types/FormProps';
+import { updateCurrentUser } from 'firebase/auth';
+import { updateProfile } from 'src/services/profile/profile.service';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Toast } from 'toastify-react-native';
+import {
+  recruiterProfileDrawerRootStack,
+  recruiterProfileDrawerRoute,
+} from '../recruiter/RecruiterProfileDrawer';
+interface EditProfileScreenProps
+  extends NativeStackScreenProps<typeof recruiterProfileDrawerRootStack> {}
+const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   const {
     authState: { user },
   } = useContext(AuthContext);
   if (!user) {
     return <></>;
   }
+
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: UpdateRecruiterProfileFormShape) => {
+    // console.log('submittt');
     setLoading(true);
-    await new Promise(() => true);
-    setTimeout(() => {
+    try {
+      // await new Promise((res, rej) => res(true));
+      const updatedProfileOp = await updateProfile(user.id, values);
+      if (updatedProfileOp.success) {
+        Toast.show({
+          onHide() {
+            navigation.navigate('RECRUITER_PROFILE_STACK');
+          },
+          text1: updatedProfileOp.message,
+          visibilityTime: 700,
+          autoHide: true,
+        });
+      }
+    } catch (error) {
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
   return (
-    <View style={{ ...utilityStyles.flex }}>
-      <EditProfileForm
-        handleSubmit={handleSubmit}
-        loading={loading}
-        user={user}
-      ></EditProfileForm>
-    </View>
+    <>
+      <Text>{JSON.stringify(loading)}</Text>
+      <View style={{ ...utilityStyles.flex }}>
+        <EditProfileForm
+          handleSubmit={handleSubmit}
+          loading={loading}
+          user={user}
+        ></EditProfileForm>
+      </View>
+    </>
   );
 };
 

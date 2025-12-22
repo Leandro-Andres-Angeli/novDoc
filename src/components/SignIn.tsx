@@ -63,8 +63,6 @@ const SignIn = () => {
             style={{
               ...utilityStyles.contentContainer,
               ...utilityStyles.flex,
-              marginTop: 20,
-              marginBottom: 40,
             }}
           >
             <View style={utilityStyles.contentContainer}>
