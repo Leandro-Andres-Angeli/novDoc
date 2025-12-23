@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import JobPostingForm from '@components/forms/JobPostingForm';
 import { IJobOffer } from 'src/types/dbTypes/IJobOffer';
 import { FormikHelpers } from 'formik';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from './RecruiterProfileStack';
 import { updateJobOffer } from '../../../services/jobOffer/jobOffer.service';

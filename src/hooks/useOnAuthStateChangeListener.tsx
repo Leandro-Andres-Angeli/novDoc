@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from 'firebase/config';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 
 import { userConverter } from '@utils/converters/firebaseConverters';

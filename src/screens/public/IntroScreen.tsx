@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, FlexStyle, AppState } from 'react-native';
 
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { db } from 'firebase/config';
 import WelcomeComponent from 'src/components/Welcome';
 

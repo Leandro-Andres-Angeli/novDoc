@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IconButton, Text, useTheme } from 'react-native-paper';
 import { bottomNavigationsOptions } from '@utils/styling/bottomNavigationOptions';
@@ -14,7 +14,7 @@ import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 
 import NewJobOfferScreen from 'src/screens/private/recruiter/NewJobOfferScreen';
-import { RecruiterContext } from 'src/appContext/RecruiterContext';
+import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 
 import AppLoading from '@ui/AppLoading';
 

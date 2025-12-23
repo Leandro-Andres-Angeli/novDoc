@@ -6,7 +6,7 @@ import RecruiterProfileStack from './RecruiterProfileStack';
 import { Button, IconButton, Text, useTheme } from 'react-native-paper';
 
 import AppDrawerContent from '@components/shared/AppDrawerContent';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';

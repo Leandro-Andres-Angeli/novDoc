@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { AuthContext } from '../appContext/AuthContext';
+import { AuthContext } from '../appContext/authContext/AuthContext';
 import AppLoading from '../ui/AppLoading';
 import PublicNavigator from './publicNavigator/PublicNavigator';
 import useOnAuthStateChangeListener from '../hooks/useOnAuthStateChangeListener';
@@ -14,7 +14,7 @@ import * as SplashScreen from 'expo-splash-screen';
 function MainNavigator() {
   const {
     loading,
-    authState: { logged, user },
+    authState: { user },
   } = useContext(AuthContext);
 
   useOnAuthStateChangeListener();

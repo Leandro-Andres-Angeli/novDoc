@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import React, { useContext } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 import JobsListTabNavigator from '../../../navigators/privateNavigator/recruiterNavigator/JobsListTabNavigator';
 import AppAvatarCard from '@components/shared/AppAvatarCard';

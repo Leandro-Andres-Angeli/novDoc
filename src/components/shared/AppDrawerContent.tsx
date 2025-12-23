@@ -7,7 +7,7 @@ import {
 import { Button, Text, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppAvatar from '../../ui/AppAvatar';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 const AppDrawerUserProfile = () => {
   const theme = useTheme();

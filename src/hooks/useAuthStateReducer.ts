@@ -6,6 +6,7 @@ import authStateReducer, {
 import {
   initialAuthState,
   IUser,
+  UserTypes,
 } from '../types/authContextTypes/authContextTypes';
 import { signOutUser } from 'src/services/auth';
 
@@ -18,7 +19,7 @@ const useAuthStateReducer = () => {
   const handleLoading = (val: boolean = !loading) => {
     setLoading(val);
   };
-  const login = (user: IUser) => {
+  const login = (user: UserTypes) => {
     authDispatch({
       type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_LOGIN,
       payload: { logged: true, user },
@@ -35,6 +36,11 @@ const useAuthStateReducer = () => {
       payload: { user: null, logged: false },
     });
   };
+
+  // const updateUserData = ( user : Partial<UserTypes>)=>{
+  //   type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_UPDATE,
+
+  // }
 
   return { authState, login, logout, loading, handleLoading };
 };

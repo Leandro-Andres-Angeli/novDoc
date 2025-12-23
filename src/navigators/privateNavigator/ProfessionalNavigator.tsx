@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import utilityStyles from 'src/styles/utilityStyles';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 const Stack = createNativeStackNavigator();
 const Onboarding = () => (

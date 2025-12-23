@@ -20,8 +20,8 @@ import {
   IJobOfferGeneral,
   IJobOfferHybrid,
   IJobOfferOnSite,
-} from '../types/dbTypes/IJobOffer';
-import { AuthContext } from './AuthContext';
+} from '../../types/dbTypes/IJobOffer';
+import { AuthContext } from '../authContext/AuthContext';
 import { Unsubscribe } from 'firebase/auth';
 
 export interface RecruiterContextInterface {

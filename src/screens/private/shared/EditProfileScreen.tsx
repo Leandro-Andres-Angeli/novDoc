@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import React, { useContext, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import EditProfileForm from '@components/forms/EditProfileForm';
 import { UpdateRecruiterProfileFormShape } from 'src/types/FormProps';
 import { updateCurrentUser } from 'firebase/auth';

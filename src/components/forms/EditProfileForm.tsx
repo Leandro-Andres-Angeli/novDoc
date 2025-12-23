@@ -5,7 +5,7 @@ import { IRecruiter, IUser } from 'src/types/authContextTypes/authContextTypes';
 import * as Yup from 'yup';
 import { useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { Role } from 'src/types/authContextTypes/userRole';
 import { isProfessional, isRecruiter } from '@utils/checkUserType';
 import { AppFormInput, AppFormInputWithHelper } from '../../ui/AppFormInputs';

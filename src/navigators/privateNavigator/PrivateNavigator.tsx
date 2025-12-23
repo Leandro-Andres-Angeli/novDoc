@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import React, { useContext } from 'react';
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 import AppLoading from '@ui/AppLoading';
 
@@ -8,7 +8,7 @@ import { Role } from 'src/types/authContextTypes/userRole';
 import utilityStyles from 'src/styles/utilityStyles';
 import RecruiterNavigator from './recruiterNavigator/RecruiterNavigator';
 import ProfessionalNavigator from './ProfessionalNavigator';
-import { RecruiterContextProvider } from 'src/appContext/RecruiterContext';
+import { RecruiterContextProvider } from 'src/appContext/recruiterContext/RecruiterContext';
 
 const NavigatorByRole = () => {
   const {

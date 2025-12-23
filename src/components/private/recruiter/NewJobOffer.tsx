@@ -36,7 +36,7 @@ import { AppFormInputWithHelper, InputHelper } from '@ui/AppFormInputs';
 
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 
-import { AuthContext } from 'src/appContext/AuthContext';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';

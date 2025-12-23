@@ -62,7 +62,10 @@ const SignIn = () => {
           <View
             style={{
               ...utilityStyles.contentContainer,
-              ...utilityStyles.flex,
+              backgroundColor: theme.colors.background,
+              marginTop: 20,
+              // marginBottom: 20,
+              // ...utilityStyles.flex,
             }}
           >
             <View style={utilityStyles.contentContainer}>

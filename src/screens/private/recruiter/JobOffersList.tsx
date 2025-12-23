@@ -1,6 +1,6 @@
 import { View, Pressable } from 'react-native';
 import React, { useContext } from 'react';
-import { RecruiterContext } from 'src/appContext/RecruiterContext';
+import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 

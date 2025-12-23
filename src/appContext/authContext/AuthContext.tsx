@@ -2,8 +2,8 @@ import { createContext, PropsWithChildren } from 'react';
 import {
   IAuthState,
   UserTypes,
-} from '../types/authContextTypes/authContextTypes';
-import useAuthStateReducer from '../hooks/useAuthStateReducer';
+} from '../../types/authContextTypes/authContextTypes';
+import useAuthStateReducer from '../../hooks/useAuthStateReducer';
 import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
 
 export interface AuthContextInterface {
