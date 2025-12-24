@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import utilityStyles from 'src/styles/utilityStyles';
@@ -7,6 +7,8 @@ import AppForm from './AppForm';
 import { useTheme } from 'react-native-paper';
 import { AppFormInputWithHelper } from '@ui/AppFormInputs';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 export interface UpdatePasswordForm {
   password: string;
   password2: string;
@@ -22,13 +24,15 @@ const formValidationSchema = Yup.object({
     )
     .required('campo obligatorio'),
 });
-const UpdatePasswordForm = () => {
+
+const UpdatePasswordForm = ({}) => {
   const handleSubmit = async () => {};
   const updatePasswordForm: UpdatePasswordForm = {
     password: '',
     password2: '',
   };
   const theme = useTheme();
+  const navigation = useNavigation();
   return (
     <AppForm<UpdatePasswordForm>
       validationSchema={formValidationSchema}
@@ -48,7 +52,16 @@ const UpdatePasswordForm = () => {
           loadingPostIndicator,
           dirty,
           isValid,
+          handleResetForm,
         } = props;
+
+        useEffect(() => {
+          const unsubscribe = navigation.addListener('focus', function () {
+            handleResetForm({ password: '', password2: '' });
+          });
+
+          return unsubscribe;
+        }, []);
         return (
           <View
             style={{
