@@ -5,8 +5,10 @@ import { addDoc, collection } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
 } from 'firebase/auth';
 import {
   FirebaseErrorResponse,
@@ -80,6 +82,31 @@ export const signOutUser = async (): Promise<
     return {
       message: 'signout error',
       success: false,
+    };
+  }
+};
+export const updateUserPassword = async (
+  newPassword: string
+): Promise<FirebaseResponse | FirebaseErrorResponse> => {
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw Error('Error getting current user');
+    }
+    await updatePassword(currentUser, newPassword);
+    return { success: true, message: 'Contraseña actualizada' };
+  } catch (error) {
+    const parsedError = error as Error;
+    console.log('errr', error);
+    // let message = FirebaseError: Firebase: Error (auth/requires-recent-login)
+    let message =
+      (parsedError.message.includes('requires-recent-login') &&
+        'Debe volver a loguearse para poder modificar su contraseña') ||
+      parsedError?.message ||
+      'Error actualizando contraseña';
+    return {
+      success: false,
+      message: message,
     };
   }
 };

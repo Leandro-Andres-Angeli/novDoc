@@ -12,7 +12,6 @@ const useSubscribeToLoggedUserUpdate = () => {
   } = useContext(AuthContext);
 
   useEffect(() => {
-    console.log('inside effect');
     if (!user?.id) {
       return;
     }

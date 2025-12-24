@@ -47,7 +47,6 @@ export const RecruiterContextProvider = (
   const [error, setError] = useState<string>('');
   const q = query(jobOffersCollection, where('recruiter_id', '==', user?.id));
   const jobOfferUpdateListener = () => {
-    console.log('LISTENING');
     if (!user) {
       return;
     }

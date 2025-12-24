@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import * as Yup from 'yup';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import utilityStyles from 'src/styles/utilityStyles';
@@ -7,8 +7,11 @@ import AppForm from './AppForm';
 import { useTheme } from 'react-native-paper';
 import { AppFormInputWithHelper } from '@ui/AppFormInputs';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { useNavigation } from '@react-navigation/native';
+import { updateUserPassword } from 'src/services/auth';
+import { Toast } from 'toastify-react-native';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 export interface UpdatePasswordForm {
   password: string;
   password2: string;
@@ -25,8 +28,22 @@ const formValidationSchema = Yup.object({
     .required('campo obligatorio'),
 });
 
-const UpdatePasswordForm = ({}) => {
-  const handleSubmit = async () => {};
+const UpdatePasswordForm = () => {
+  const { logout } = useContext(AuthContext);
+  const handleUpdatePassword = async (values: UpdatePasswordForm) => {
+    const updatePasswordOp = await updateUserPassword(values.password);
+    if (!updatePasswordOp.success) {
+      return Toast.error(updatePasswordOp.message);
+    }
+    return Toast.show({
+      text1: updatePasswordOp.message,
+      text2: 'Por seguridad sera dirigido a la pantalla de login nuevamente',
+      type: 'success',
+      onHide() {
+        return logout();
+      },
+    });
+  };
   const updatePasswordForm: UpdatePasswordForm = {
     password: '',
     password2: '',
@@ -36,7 +53,7 @@ const UpdatePasswordForm = ({}) => {
   return (
     <AppForm<UpdatePasswordForm>
       validationSchema={formValidationSchema}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleUpdatePassword}
       formFields={updatePasswordForm}
     >
       {(props) => {
@@ -48,6 +65,7 @@ const UpdatePasswordForm = ({}) => {
           submitForm,
           touched,
           errors,
+          handleSubmit,
           handleBlur,
           loadingPostIndicator,
           dirty,

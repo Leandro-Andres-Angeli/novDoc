@@ -4,14 +4,11 @@ import utilityStyles from 'src/styles/utilityStyles';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import EditProfileForm from '@components/forms/EditProfileForm';
 import { UpdateRecruiterProfileFormShape } from 'src/types/FormProps';
-import { updateCurrentUser } from 'firebase/auth';
+
 import { updateProfile } from 'src/services/profile/profile.service';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Toast } from 'toastify-react-native';
-import {
-  recruiterProfileDrawerRootStack,
-  recruiterProfileDrawerRoute,
-} from '../recruiter/RecruiterProfileDrawer';
+import { recruiterProfileDrawerRootStack } from '../recruiter/RecruiterProfileDrawer';
 import { FormikHelpers } from 'formik';
 interface EditProfileScreenProps
   extends NativeStackScreenProps<typeof recruiterProfileDrawerRootStack> {}
@@ -24,10 +21,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   }
 
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (
-    values: UpdateRecruiterProfileFormShape,
-    helpers: FormikHelpers<any>
-  ) => {
+  const handleSubmit = async (values: UpdateRecruiterProfileFormShape) => {
     // console.log('submittt');
     setLoading(true);
     try {
