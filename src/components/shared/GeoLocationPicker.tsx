@@ -31,9 +31,7 @@ const GeoLocationPicker = ({
     try {
       const { canAskAgain, status, granted } =
         await Location.requestForegroundPermissionsAsync();
-      console.log('permissions');
-      console.log('permissions', status);
-      console.log('granted', granted);
+
       if (!canAskAgain) {
         Alert.alert('Autorizar permisos de ubicación', '', [
           {

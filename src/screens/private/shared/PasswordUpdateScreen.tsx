@@ -1,3 +1,4 @@
+import UpdatePasswordForm from '@components/forms/UpdatePasswordForm';
 import AppButton from '@ui/AppButton';
 import AppButtonText from '@ui/AppButtonText';
 
@@ -35,35 +36,35 @@ export default function PasswordUpdateScreen() {
 
   const handleUpdatePassword = () => {
     console.log('Updating password...');
-    // Add your password update logic here
   };
 
   return (
-    <KeyboardAwareScrollView>
+    <UpdatePasswordForm></UpdatePasswordForm>
+    /*    <KeyboardAwareScrollView>
       <View
         style={{
           ...utilityStyles.contentContainer,
           backgroundColor: theme.colors.background,
           marginTop: 20,
-          // marginBottom: 20,
-          // ...utilityStyles.flex,
+       marginBottom: 20,
+       ...utilityStyles.flex,
         }}
       >
-        {/* <Text variant='headlineSmall' style={styles.title}>
+        <Text variant='headlineSmall' style={styles.title}>
           Actualizar Contraseña
-        </Text> */}
+        </Text> 
 
-        {/* <Text variant='bodyMedium' style={styles.description}>
+        <Text variant='bodyMedium' style={styles.description}>
           Para mantener tu cuenta segura, te recomendamos actualizar tu
           contraseña regularmente. Una nueva contraseña debe contener al menos 8
           caracteres.
-        </Text> */}
-        {/* 
+        </Text> 
+         
         <View style={styles.form}>
           <Text variant='labelLarge' style={styles.label}>
             Contraseña Actual
-          </Text> */}
-        {/* <TextInput
+          </Text> 
+         <TextInput
             mode='outlined'
             value={currentPassword}
             onChangeText={setCurrentPassword}
@@ -76,15 +77,15 @@ export default function PasswordUpdateScreen() {
             }
             style={styles.input}
             outlineStyle={styles.inputOutline}
-          /> */}
-        {/* <HelperText type='info' style={styles.helperText}>
+          />  
+         <HelperText type='info' style={styles.helperText}>
             ¿Olvidaste tu contraseña?
-          </HelperText> */}
+          </HelperText> 
 
-        {/* <Text variant='labelLarge' style={styles.label}>
+         <Text variant='labelLarge' style={styles.label}>
             Nueva Contraseña
-          </Text> */}
-        {/* <TextInput
+          </Text> }
+         <TextInput
             mode='outlined'
             value={newPassword}
             onChangeText={setNewPassword}
@@ -98,15 +99,15 @@ export default function PasswordUpdateScreen() {
             }
             style={styles.input}
             outlineStyle={styles.inputOutline}
-          /> */}
-        {/* <HelperText type='info' style={styles.helperText}>
+          />  
+        <HelperText type='info' style={styles.helperText}>
             Debe tener al menos 8 caracteres, minúscula, mayúscula y números
-          </HelperText> */}
+          </HelperText> 
 
-        {/* <Text variant='labelLarge' style={styles.label}>
+         <Text variant='labelLarge' style={styles.label}>
             Confirmar Nueva Contraseña
-          </Text> */}
-        {/* <TextInput
+          </Text> 
+         <TextInput
             mode='outlined'
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -120,14 +121,14 @@ export default function PasswordUpdateScreen() {
             }
             style={styles.input}
             outlineStyle={styles.inputOutline}
-          /> */}
+          /> 
       </View>
-      <View style={utilityStyles.contentContainer}>
+       <View style={utilityStyles.contentContainer}>
         <AppButton onPress={() => {}}>
           <AppButtonText>Actualizar Contraseña</AppButtonText>
         </AppButton>
-      </View>
-      {/* </View> */}
-    </KeyboardAwareScrollView>
+      </View> 
+       </View> 
+    </KeyboardAwareScrollView> */
   );
 }

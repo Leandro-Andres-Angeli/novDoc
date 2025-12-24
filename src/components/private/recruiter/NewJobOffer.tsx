@@ -73,7 +73,7 @@ const NewJobOffer = () => {
 
     try {
       const newJobOfferResponse = await createJobOffer(values);
-      console.log(newJobOfferResponse);
+
       if (newJobOfferResponse.success) {
         Toast.show({
           onHide: () => {

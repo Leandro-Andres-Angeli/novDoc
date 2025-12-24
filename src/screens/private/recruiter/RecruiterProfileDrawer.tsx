@@ -79,7 +79,7 @@ const RecruiterProfileDrawer = () => {
           options={({ navigation }) => {
             return {
               title: 'Editar Perfil',
-              headerLeft(props) {
+              headerLeft() {
                 return (
                   <IconButton
                     onPress={() =>
@@ -95,7 +95,19 @@ const RecruiterProfileDrawer = () => {
         ></Drawer.Screen>
         <Drawer.Screen
           name='UPDATE_PASSWORD'
-          options={{ title: 'Actualizar contraseña' }}
+          options={({ navigation }) => {
+            return {
+              title: 'Actualizar contraseña',
+              headerLeft() {
+                return (
+                  <IconButton
+                    onPress={() => navigation.navigate('EDIT_PROFILE')}
+                    icon={'chevron-left'}
+                  ></IconButton>
+                );
+              },
+            };
+          }}
           component={PasswordUpdateScreen}
         ></Drawer.Screen>
       </Drawer.Navigator>

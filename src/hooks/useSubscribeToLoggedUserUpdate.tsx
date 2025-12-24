@@ -21,9 +21,6 @@ const useSubscribeToLoggedUserUpdate = () => {
       q,
 
       function ({ docs }) {
-        console.log('UPDATED USER');
-        // console.log('UPDATED USER ARGS', docs.);
-        console.log('UPDATED USER data');
         docs.forEach((doc) => {
           updateUserData(doc.data());
         });
