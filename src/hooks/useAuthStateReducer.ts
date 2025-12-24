@@ -37,12 +37,14 @@ const useAuthStateReducer = () => {
     });
   };
 
-  // const updateUserData = ( user : Partial<UserTypes>)=>{
-  //   type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_UPDATE,
+  const updateUserData = (user: UserTypes) => {
+    authDispatch({
+      type: AUTH_REDUCER_ACTION_TYPES.AUTH_REDUCER_ACTION_TYPE_UPDATE,
+      payload: { user },
+    });
+  };
 
-  // }
-
-  return { authState, login, logout, loading, handleLoading };
+  return { authState, login, logout, loading, handleLoading, updateUserData };
 };
 
 export default useAuthStateReducer;

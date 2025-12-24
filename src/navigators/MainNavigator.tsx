@@ -10,6 +10,7 @@ import { auth } from 'firebase/config';
 import PrivateNavigator from './privateNavigator/PrivateNavigator';
 import { Text } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
+import useSubscribeToLoggedUserUpdate from 'src/hooks/useSubscribeToLoggedUserUpdate';
 
 function MainNavigator() {
   const {
@@ -18,6 +19,7 @@ function MainNavigator() {
   } = useContext(AuthContext);
 
   useOnAuthStateChangeListener();
+
   // useEffect(() => {
   //   if (loading) {
   //     SplashScreen.preventAutoHideAsync();

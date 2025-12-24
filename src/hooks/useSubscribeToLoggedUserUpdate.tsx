@@ -4,21 +4,29 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { userConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
-
+const usersCollection = collection(db, 'users').withConverter(userConverter);
 const useSubscribeToLoggedUserUpdate = () => {
-  const usersCollection = collection(db, 'users').withConverter(userConverter);
   const {
     authState: { user },
+    updateUserData,
   } = useContext(AuthContext);
-  const loggedUser = user!;
+
   useEffect(() => {
-    const q = query(usersCollection, where('id', '==', loggedUser.id));
+    console.log('inside effect');
+    if (!user?.id) {
+      return;
+    }
+    const q = query(usersCollection, where('id', '==', user.id));
     const onUserUpdateDataSubscription = onSnapshot(
       q,
-      { includeMetadataChanges: true },
-      function () {
+
+      function ({ docs }) {
         console.log('UPDATED USER');
-        console.log('UPDATED USER ARGS', arguments);
+        // console.log('UPDATED USER ARGS', docs.);
+        console.log('UPDATED USER data');
+        docs.forEach((doc) => {
+          updateUserData(doc.data());
+        });
       },
       (err) => {
         console.log('error user updates listener');
@@ -26,7 +34,7 @@ const useSubscribeToLoggedUserUpdate = () => {
     );
 
     return onUserUpdateDataSubscription;
-  }, []);
+  }, [user?.id]);
 };
 
 export default useSubscribeToLoggedUserUpdate;

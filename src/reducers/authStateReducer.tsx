@@ -1,7 +1,5 @@
-import React from 'react';
 import {
   IAuthState,
-  IUser,
   UserTypes,
 } from '../types/authContextTypes/authContextTypes';
 export enum AUTH_REDUCER_ACTION_TYPES {

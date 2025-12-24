@@ -12,6 +12,7 @@ export interface AuthContextInterface {
   logout: () => Promise<FirebaseErrorResponse | void>;
   loading: boolean;
   handleLoading: (val?: boolean) => void;
+  updateUserData: (user: UserTypes) => void;
 }
 export const AuthContext = createContext<AuthContextInterface>(
   {} as AuthContextInterface
@@ -19,11 +20,18 @@ export const AuthContext = createContext<AuthContextInterface>(
 
 interface AuthContextProviderProps extends PropsWithChildren {}
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const { authState, login, logout, loading, handleLoading } =
+  const { authState, login, logout, loading, handleLoading, updateUserData } =
     useAuthStateReducer();
   return (
     <AuthContext.Provider
-      value={{ authState, login, logout, loading, handleLoading }}
+      value={{
+        authState,
+        login,
+        logout,
+        loading,
+        handleLoading,
+        updateUserData,
+      }}
     >
       {children}
     </AuthContext.Provider>

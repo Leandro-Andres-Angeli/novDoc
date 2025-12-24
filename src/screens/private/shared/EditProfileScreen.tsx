@@ -12,6 +12,7 @@ import {
   recruiterProfileDrawerRootStack,
   recruiterProfileDrawerRoute,
 } from '../recruiter/RecruiterProfileDrawer';
+import { FormikHelpers } from 'formik';
 interface EditProfileScreenProps
   extends NativeStackScreenProps<typeof recruiterProfileDrawerRootStack> {}
 const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
@@ -23,7 +24,10 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   }
 
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (values: UpdateRecruiterProfileFormShape) => {
+  const handleSubmit = async (
+    values: UpdateRecruiterProfileFormShape,
+    helpers: FormikHelpers<any>
+  ) => {
     // console.log('submittt');
     setLoading(true);
     try {
@@ -46,7 +50,8 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   };
   return (
     <>
-      <Text>{JSON.stringify(loading)}</Text>
+      {/* <Text>{JSON.stringify(loading)}</Text> */}
+      <Text>{JSON.stringify(user)}</Text>
       <View style={{ ...utilityStyles.flex }}>
         <EditProfileForm
           handleSubmit={handleSubmit}

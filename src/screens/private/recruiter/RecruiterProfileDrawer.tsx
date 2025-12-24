@@ -3,14 +3,14 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import RecruiterProfileStack from './RecruiterProfileStack';
 
-import { Button, IconButton, Text, useTheme } from 'react-native-paper';
+import { IconButton, useTheme } from 'react-native-paper';
 
 import AppDrawerContent from '@components/shared/AppDrawerContent';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
-import utilityStyles from 'src/styles/utilityStyles';
+
 import EditProfileScreen from '../shared/EditProfileScreen';
 import PasswordUpdateScreen from '../shared/PasswordUpdateScreen';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
@@ -66,6 +66,11 @@ const RecruiterProfileDrawer = () => {
         initialRouteName={'RECRUITER_PROFILE_STACK'}
       >
         <Drawer.Screen
+          name='RECRUITER_PROFILE_STACK'
+          options={{ title: 'Perfil' }}
+          component={RecruiterProfileStack}
+        ></Drawer.Screen>
+        <Drawer.Screen
           name='EDIT_PROFILE'
           // options={{
           //   title: 'Editar Perfil',
@@ -87,11 +92,6 @@ const RecruiterProfileDrawer = () => {
             };
           }}
           component={EditProfileScreen}
-        ></Drawer.Screen>
-        <Drawer.Screen
-          name='RECRUITER_PROFILE_STACK'
-          options={{ title: 'Perfil' }}
-          component={RecruiterProfileStack}
         ></Drawer.Screen>
         <Drawer.Screen
           name='UPDATE_PASSWORD'

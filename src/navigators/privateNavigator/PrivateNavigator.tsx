@@ -9,6 +9,7 @@ import utilityStyles from 'src/styles/utilityStyles';
 import RecruiterNavigator from './recruiterNavigator/RecruiterNavigator';
 import ProfessionalNavigator from './ProfessionalNavigator';
 import { RecruiterContextProvider } from 'src/appContext/recruiterContext/RecruiterContext';
+import useSubscribeToLoggedUserUpdate from 'src/hooks/useSubscribeToLoggedUserUpdate';
 
 const NavigatorByRole = () => {
   const {
@@ -41,8 +42,9 @@ const PrivateNavigator = () => {
     authState: { user },
     loading,
   } = useContext(AuthContext);
+  useSubscribeToLoggedUserUpdate();
   if (loading) {
-    <AppLoading></AppLoading>;
+    return <AppLoading></AppLoading>;
   }
   if (!user) {
     return <></>;

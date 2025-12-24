@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { FormikHelpers, FormikProps, FormikValues, useFormik } from 'formik';
 import { Keyboard } from 'react-native';
@@ -14,6 +14,7 @@ export interface AppFormProps<T> extends FormikValues {
   validationSchema?: Yup.Schema<T>;
   loadingPostIndicator?: boolean;
   children: (props: FormChildrenProps<T>) => React.ReactNode;
+  dinaymicParams?: Array<any>;
 }
 function AppForm<T extends FormikValues>({
   handleSubmit,
@@ -22,6 +23,7 @@ function AppForm<T extends FormikValues>({
   loadingPostIndicator,
 
   children,
+  dinaymicParams = [],
 }: AppFormProps<T>) {
   const formikProps = useFormik({
     initialValues: formFields,
@@ -29,6 +31,7 @@ function AppForm<T extends FormikValues>({
     onSubmit: (values: T, helpers: FormikHelpers<any>) =>
       handleSubmit(values, helpers),
   });
+
   const handleReset = () => {
     formikProps.resetForm();
   };
@@ -39,6 +42,7 @@ function AppForm<T extends FormikValues>({
     formikProps.handleBlur(key);
     Keyboard.dismiss();
   };
+  useEffect(() => {}, dinaymicParams);
 
   const allProps = {
     ...formikProps,

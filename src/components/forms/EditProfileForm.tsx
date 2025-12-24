@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import AppForm from '@components/forms/AppForm';
 
 import * as Yup from 'yup';
@@ -20,7 +20,7 @@ import {
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
-import AppButton from '@ui/AppButton';
+import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -41,6 +41,7 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormSh
 
 const EditProfileForm = ({
   user,
+  loading,
   handleSubmit,
 }: EditProfileFormProps<
   UpdateRecruiterProfileFormShape,
@@ -50,6 +51,10 @@ const EditProfileForm = ({
   const navigation = useNavigation();
 
   const { isVisible } = useKeyboardState();
+
+  useEffect(() => {
+    console.log('render');
+  }, []);
 
   if (isRecruiter(user)) {
     return (
@@ -61,12 +66,14 @@ const EditProfileForm = ({
           marginBottom: 40,
         }}
       >
-        <Text>{JSON.stringify(user)}</Text>
         <AppForm<UpdateRecruiterProfileFormShape>
           handleSubmit={handleSubmit}
           formFields={user}
-          enableReinitialize={true}
+          loadingPostIndicator={loading}
           validationSchema={editProfileValidationSchema}
+          key={user.id}
+
+          // dinaymicParams={[Object.keys(user)]}
         >
           {(props) => {
             const {
@@ -87,16 +94,34 @@ const EditProfileForm = ({
               setValues,
               handleReset,
             } = props;
-
             useEffect(() => {
-              const unsubscribe = navigation.addListener('focus', function () {
-                handleReset();
-              });
+              setValues(user);
+            }, [user, setValues]);
+            // useEffect(() => {
+            //   const unsubscribe = navigation.addListener('focus', function () {
+            //     setValues(user);
+            //   });
 
-              return unsubscribe;
-            }, []);
+            //   return unsubscribe;
+            // }, []);
+            // useEffect(() => {
+            //   const unsubscribe = navigation.addListener(
+            //     'state',
+            //     function ({ target }) {
+            //       console.log('state');
+            //       console.log('state args', arguments);
+            //       console.log('target', target);
+            //       handleReset();
+            //     }
+            //   );
+
+            //   return unsubscribe;
+            // }, []);
+
             return (
               <>
+                <Text>{JSON.stringify(errors)}</Text>
+                <Text>{JSON.stringify(user)}</Text>
                 <View
                   style={[
                     {

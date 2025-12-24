@@ -6,9 +6,10 @@ import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import RecruiterProfileScreen from './RecruiterProfileScreen';
 import JobDetailsScreen from 'src/screens/private/shared/JobDetailScreen';
 import { useTheme } from 'react-native-paper';
-import { CustomTheme } from 'App';
+
 import EditJobPostingScreen from './EditJobPostingScreen';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
+import { CustomTheme } from 'src/providers/PublicProviders';
 
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',
