@@ -1,13 +1,13 @@
 import { View, Text } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import AppForm from '@components/forms/AppForm';
-import { IRecruiter, IUser } from 'src/types/authContextTypes/authContextTypes';
+
 import * as Yup from 'yup';
 import { useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
-import { AuthContext } from 'src/appContext/authContext/AuthContext';
+
 import { Role } from 'src/types/authContextTypes/userRole';
-import { isProfessional, isRecruiter } from '@utils/checkUserType';
+import { isRecruiter } from '@utils/checkUserType';
 import { AppFormInput, AppFormInputWithHelper } from '../../ui/AppFormInputs';
 import {
   KeyboardAwareScrollView,
@@ -20,6 +20,7 @@ import {
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
+import AppButton from '@ui/AppButton';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -47,16 +48,6 @@ const EditProfileForm = ({
 >) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  /*   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (values: UpdateRecruiterProfileFormShape) => {
-    // console.log('submittt');
-    try {
-      setLoading(true);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  }; */
 
   const { isVisible } = useKeyboardState();
 

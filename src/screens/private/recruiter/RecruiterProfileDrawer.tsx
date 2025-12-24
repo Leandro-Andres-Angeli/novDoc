@@ -12,10 +12,12 @@ import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
 import utilityStyles from 'src/styles/utilityStyles';
 import EditProfileScreen from '../shared/EditProfileScreen';
+import PasswordUpdateScreen from '../shared/PasswordUpdateScreen';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   RECRUITER_PROFILE_STACK: 'RECRUITER_PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
   EDIT_PROFILE: 'EDIT_PROFILE',
+  UPDATE_PASSWORD: 'UPDATE_PASSWORD',
 } as const;
 export type recruiterProfileDrawerRoute =
   keyof typeof RECRUITER_PROFILE_DRAWER_ROUTES;
@@ -26,6 +28,7 @@ export const recruiterProfileDrawerRootStack: Record<
   RECRUITER_PROFILE_STACK: {},
   EDIT_PROFILE: {},
   SIGN_OUT: {},
+  UPDATE_PASSWORD: {},
 };
 const Drawer = createDrawerNavigator<typeof recruiterProfileDrawerRootStack>();
 
@@ -89,6 +92,11 @@ const RecruiterProfileDrawer = () => {
           name='RECRUITER_PROFILE_STACK'
           options={{ title: 'Perfil' }}
           component={RecruiterProfileStack}
+        ></Drawer.Screen>
+        <Drawer.Screen
+          name='UPDATE_PASSWORD'
+          options={{ title: 'Actualizar contraseña' }}
+          component={PasswordUpdateScreen}
         ></Drawer.Screen>
       </Drawer.Navigator>
       <AppModal visible={elementVisible} elementVisible={elementVisible}>
