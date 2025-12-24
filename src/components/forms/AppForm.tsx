@@ -1,12 +1,21 @@
 import React, { useEffect } from 'react';
 
-import { FormikHelpers, FormikProps, FormikValues, useFormik } from 'formik';
+import {
+  FormikErrors,
+  FormikHelpers,
+  FormikProps,
+  FormikValues,
+  useFormik,
+} from 'formik';
 import { Keyboard } from 'react-native';
 import * as Yup from 'yup';
 export interface FormChildrenProps<T> extends FormikProps<T> {
   handleInputValue: <K extends keyof T>(key: K, value: T[K]) => void;
   handleTextInputBlur: (key: keyof T) => void;
   loadingPostIndicator?: boolean;
+  handleResetForm: (
+    values?: T | undefined
+  ) => Promise<void> | Promise<FormikErrors<T>> | undefined;
 }
 export interface AppFormProps<T> extends FormikValues {
   handleSubmit: (values: any, helpers: FormikHelpers<any>) => Promise<void>;
@@ -28,11 +37,16 @@ function AppForm<T extends FormikValues>({
   const formikProps = useFormik({
     initialValues: formFields,
     validationSchema,
+    enableReinitialize: true,
+
     onSubmit: (values: T, helpers: FormikHelpers<any>) =>
       handleSubmit(values, helpers),
   });
 
-  const handleReset = () => {
+  const handleResetForm = (values?: T) => {
+    if (values) {
+      return formikProps.setValues(values);
+    }
     formikProps.resetForm();
   };
   const handleInputValue = <K extends keyof T>(key: K, value: T[K]) => {
@@ -49,7 +63,7 @@ function AppForm<T extends FormikValues>({
     loadingPostIndicator,
     handleInputValue,
     handleTextInputBlur,
-    handleReset,
+    handleResetForm,
   } as FormChildrenProps<T>;
   return <>{children(allProps)}</>;
 }

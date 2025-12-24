@@ -55,7 +55,6 @@ export const RecruiterContextProvider = (
     const subscription = onSnapshot(
       q,
       function (doc) {
-        doc.docs.map((el) => console.log(el.data()));
         setJobOffers(doc.docs.map((el) => ({ id: el.id, ...el.data() })));
         setLoading(false);
       },

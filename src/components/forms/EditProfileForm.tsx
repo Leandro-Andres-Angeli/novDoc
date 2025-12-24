@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import AppForm from '@components/forms/AppForm';
 
 import * as Yup from 'yup';
@@ -20,7 +20,6 @@ import {
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
-import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -52,10 +51,6 @@ const EditProfileForm = ({
 
   const { isVisible } = useKeyboardState();
 
-  useEffect(() => {
-    console.log('render');
-  }, []);
-
   if (isRecruiter(user)) {
     return (
       <View
@@ -72,8 +67,6 @@ const EditProfileForm = ({
           loadingPostIndicator={loading}
           validationSchema={editProfileValidationSchema}
           key={user.id}
-
-          // dinaymicParams={[Object.keys(user)]}
         >
           {(props) => {
             const {
@@ -86,38 +79,20 @@ const EditProfileForm = ({
               errors,
               dirty,
               isValid,
-
+              handleResetForm,
               handleSubmit,
               loadingPostIndicator,
               setFieldValue,
               validateOnChange,
               setValues,
-              handleReset,
             } = props;
             useEffect(() => {
-              setValues(user);
-            }, [user, setValues]);
-            // useEffect(() => {
-            //   const unsubscribe = navigation.addListener('focus', function () {
-            //     setValues(user);
-            //   });
+              const unsubscribe = navigation.addListener('focus', function () {
+                handleResetForm(user);
+              });
 
-            //   return unsubscribe;
-            // }, []);
-            // useEffect(() => {
-            //   const unsubscribe = navigation.addListener(
-            //     'state',
-            //     function ({ target }) {
-            //       console.log('state');
-            //       console.log('state args', arguments);
-            //       console.log('target', target);
-            //       handleReset();
-            //     }
-            //   );
-
-            //   return unsubscribe;
-            // }, []);
-
+              return unsubscribe;
+            }, [user]);
             return (
               <>
                 <Text>{JSON.stringify(errors)}</Text>
