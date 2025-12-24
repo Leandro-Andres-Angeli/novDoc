@@ -9,10 +9,12 @@ import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseRespon
 interface ConfirmSignOutProps {
   handleConfirm: () => Promise<void | FirebaseErrorResponse>;
   handleCancel: () => void;
+  text2?: string;
 }
 const ConfirmSignOut = ({
   handleCancel,
   handleConfirm,
+  text2 = '¿Estás seguro de que quieres cerrar sesión?',
 }: ConfirmSignOutProps) => {
   return (
     <>
@@ -27,7 +29,7 @@ const ConfirmSignOut = ({
         </Text>
 
         <Text variant='bodyMedium' style={styles.subtitle}>
-          ¿Estás seguro de que quieres cerrar sesión?
+          {text2}
         </Text>
 
         <View style={styles.buttonContainer}>

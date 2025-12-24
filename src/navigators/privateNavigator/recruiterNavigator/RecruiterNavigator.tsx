@@ -19,11 +19,11 @@ import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterConte
 import AppLoading from '@ui/AppLoading';
 
 import { getLocales } from 'expo-localization';
-import { CustomTheme } from 'App';
 
 import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 import RecruiterProfileDrawer from 'src/screens/private/recruiter/RecruiterProfileDrawer';
+import { CustomTheme } from 'src/providers/PublicProviders';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;

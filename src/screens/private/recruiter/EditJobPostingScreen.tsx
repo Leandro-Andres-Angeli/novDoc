@@ -25,13 +25,13 @@ const EditJobPostingScreen = ({
     authState: { user },
     loading: loadingUser,
   } = useContext(AuthContext);
-  const { id, ...rest } = jobPosting;
+
   async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
     setLoading(true);
     console.log(values);
 
     try {
-      const newJobOfferResponse = await updateJobOffer(id, values);
+      const newJobOfferResponse = await updateJobOffer(jobPosting.id, values);
       console.log(newJobOfferResponse);
       if (newJobOfferResponse.success) {
         Toast.show({
@@ -64,7 +64,7 @@ const EditJobPostingScreen = ({
       loading={loading}
       handleSubmit={handleSubmit}
       userId={user.id}
-      valuesToEdit={rest}
+      valuesToEdit={jobPosting}
       submitTextBtn='Actualizar Oferta'
       mode={formModes.EDIT}
     ></JobPostingForm>

@@ -46,6 +46,7 @@ import AppReactNativePaperSelect, {
 import { formModes } from 'src/types/formMode';
 import { JobPostingFormProps } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
+import { useNavigation } from '@react-navigation/native';
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
@@ -188,11 +189,14 @@ const JobPostingForm = <T,>({
   mode = formModes.CREATE,
 }: JobPostingFormProps<T>) => {
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
-    mode === formModes.EDIT && valuesToEdit
-      ? valuesToEdit
-      : generateJobOfferForm(JobLocation.REMOTE, userId)
+    generateJobOfferForm(JobLocation.REMOTE, userId)
   );
 
+  // console.log('VALUES TO EDIT 1', valuesToEdit);
+  // console.log('VALUES TO EDIT', mode === formModes.EDIT);
+  // console.log('VALUES TO EDIT', Boolean(valuesToEdit));
+  // console.log('Checking cond ', mode === formModes.EDIT && valuesToEdit);
+  // console.log('VALUES TO EDIT JOF', jobOfferForm);
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
   const theme = useTheme();
@@ -203,6 +207,7 @@ const JobPostingForm = <T,>({
   useEffect(() => {
     setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation, userId));
   }, [jobOfferForm.jobLocation]);
+  // const navigation = useNavigation();
   return (
     <View
       style={{
@@ -212,11 +217,12 @@ const JobPostingForm = <T,>({
         marginBottom: 40,
       }}
     >
+      {/* <Text>{JSON.stringify(jobOfferForm)}</Text> */}
       <AppForm<IJobOffer>
         handleSubmit={handleSubmit}
         loadingPostIndicator={loading}
         validationSchema={jobOfferValidationSchema}
-        formFields={jobOfferForm}
+        formFields={valuesToEdit ?? jobOfferForm}
         enableReinitialize={true}
       >
         {({
@@ -234,8 +240,23 @@ const JobPostingForm = <T,>({
           loadingPostIndicator,
           setFieldValue,
           validateOnChange,
+          handleResetForm,
           setValues,
         }) => {
+          /*    const navigation = useNavigation();
+          useEffect(() => {
+            const unsubscribe = navigation.addListener('blur', function () {
+              console.log('in subscription');
+              // handleResetForm(values);
+              if (valuesToEdit && formModes.EDIT) {
+                console.log('here');
+                const { id, ...rest } = valuesToEdit;
+                setValues(rest);
+              }
+            });
+
+            return unsubscribe;
+          }, [valuesToEdit?.id]); */
           return (
             <>
               <View

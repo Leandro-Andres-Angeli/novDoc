@@ -18,7 +18,7 @@ export type UpdateRecruiterProfileFormShape = IUser & Omit<IRecruiter, 'jobs'>;
 export interface JobPostingFormProps<T, K = IJobOffer>
   extends GenericFormProps<T, K> {
   userId: string;
-  valuesToEdit?: K;
+  valuesToEdit?: K & { id: string };
   mode?: FormMode;
 }
 export interface EditProfileFormProps<T, K> extends GenericFormProps<T, K> {

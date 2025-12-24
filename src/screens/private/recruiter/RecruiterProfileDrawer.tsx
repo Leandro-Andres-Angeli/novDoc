@@ -40,14 +40,6 @@ const RecruiterProfileDrawer = () => {
     <>
       <Drawer.Navigator
         screenOptions={{
-          // header: () => (
-          //   <AppHeaderWithSettingsLink title='Perfil'></AppHeaderWithSettingsLink>
-          // ),
-          // drawerItemStyle: {
-          //   ...utilityStyles.btnBorderRadius,
-          //   ...utilityStyles.btn,
-          // },
-
           drawerStyle: { padding: 0, backgroundColor: theme.colors.background },
           headerStyle: { backgroundColor: theme.colors.background },
           headerTitleAlign: 'center',

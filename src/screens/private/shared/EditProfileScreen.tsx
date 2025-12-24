@@ -44,8 +44,6 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   };
   return (
     <>
-      {/* <Text>{JSON.stringify(loading)}</Text> */}
-      <Text>{JSON.stringify(user)}</Text>
       <View style={{ ...utilityStyles.flex }}>
         <EditProfileForm
           handleSubmit={handleSubmit}
