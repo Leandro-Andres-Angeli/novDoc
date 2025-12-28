@@ -1,6 +1,7 @@
 import { Locale } from 'expo-localization';
 const dateFormatter = (config: Partial<Locale>) =>
-  new Intl.DateTimeFormat(config.languageTag, {
+  // config.languageTag
+  new Intl.DateTimeFormat('es-MX', {
     day: 'numeric',
     month: 'numeric',
     year: '2-digit',

@@ -9,6 +9,8 @@ import { RecruiterProfileStackRootParams } from './RecruiterProfileStack';
 import { updateJobOffer } from '../../../services/jobOffer/jobOffer.service';
 import { Toast } from 'toastify-react-native';
 import { formModes } from 'src/types/formMode';
+import AppLoading from '@ui/AppLoading';
+import { Timestamp } from 'firebase/firestore';
 interface EditJobPostingScreen
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,
@@ -31,7 +33,10 @@ const EditJobPostingScreen = ({
     console.log(values);
 
     try {
-      const newJobOfferResponse = await updateJobOffer(jobPosting.id, values);
+      const newJobOfferResponse = await updateJobOffer(jobPosting.id, {
+        ...values,
+        updatedAt: Timestamp.fromDate(new Date()),
+      });
       console.log(newJobOfferResponse);
       if (newJobOfferResponse.success) {
         Toast.show({
@@ -58,7 +63,9 @@ const EditJobPostingScreen = ({
       </View>
     );
   }
-
+  if (loadingUser) {
+    return <AppLoading></AppLoading>;
+  }
   return (
     <JobPostingForm<IJobOffer>
       loading={loading}

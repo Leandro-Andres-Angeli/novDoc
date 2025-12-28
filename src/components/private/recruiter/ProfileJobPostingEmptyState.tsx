@@ -2,11 +2,12 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 import { Briefcase } from 'lucide-react-native';
-import { CustomTheme } from 'App';
+
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import RECRUITER_NAVIGATOR_ROUTES from '../../../navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 import { JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
+import { CustomTheme } from 'src/providers/PublicProviders';
 
 export default function ProfileProfileJobPostingEmptyState({
   jobPostingStatus,

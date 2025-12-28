@@ -48,6 +48,7 @@ export interface IJobOfferGeneral {
   salary: number;
   status: JobOfferStatus;
   createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface IJobOfferRemote extends Omit<IJobOfferGeneral, 'jobLocation'> {

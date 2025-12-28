@@ -64,7 +64,10 @@ export const getJobPostings = async (
     const q = query(
       jobsOfferCollection,
       where('status', '==', jobPostingStatus),
+      orderBy('updatedAt', 'desc'),
+
       orderBy('createdAt', 'desc'),
+
       limit(10)
     );
     const querySnapshot = await getDocs(q);
@@ -72,10 +75,11 @@ export const getJobPostings = async (
       id: el.id,
       ...el.data(),
     }));
-
+    console.log('data', collectionRes);
     return { success: true, data: collectionRes };
   } catch (err) {
     const parsedError = err as unknown as Error;
+    console.log('errr', err);
     const errorRes: FirebaseErrorResponse = {
       message: parsedError.message,
       success: false,

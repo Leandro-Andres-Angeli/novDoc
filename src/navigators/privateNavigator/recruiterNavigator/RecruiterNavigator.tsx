@@ -68,7 +68,7 @@ const Favorites = () => {
 export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
   [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {
-    // cardNavigator: NavigationProp<RecruiterNavigatorRootParams>;
+    shouldUpdate?: boolean;
   };
   [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};

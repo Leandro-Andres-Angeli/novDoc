@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { IJobPostingDB, JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
 import { getJobPostings } from '../services/jobOffer/jobOffer.service';
+import { useFocusEffect } from '@react-navigation/native';
 
 const useGetJobPostings = (jobPostingStatus: JobOfferStatus) => {
   const [jobPostings, setJobPostings] = useState<IJobPostingDB[]>([]);
@@ -9,25 +10,29 @@ const useGetJobPostings = (jobPostingStatus: JobOfferStatus) => {
     error: boolean;
     message: string | null;
   }>({ error: false, message: null });
-  const handleGetJobPostings = async (jobPostingStatus: JobOfferStatus) => {
+
+  const handleGetJobPostings = useCallback(async () => {
     try {
       setError({ error: false, message: null });
       setLoading(true);
-
       const jobPostingPromise = await getJobPostings(jobPostingStatus);
-
       if (jobPostingPromise.success) {
         setJobPostings(jobPostingPromise.data);
       }
-    } catch (error) {
+    } catch (err) {
+      console.log('errr', err);
       setError({ error: true, message: 'Error fetching job postings' });
     } finally {
       setLoading(false);
     }
-  };
-  useEffect(() => {
-    handleGetJobPostings(jobPostingStatus);
   }, [jobPostingStatus]);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('in callback');
+      handleGetJobPostings();
+    }, [handleGetJobPostings])
+  );
   return { jobPostings, loading, error };
 };
 

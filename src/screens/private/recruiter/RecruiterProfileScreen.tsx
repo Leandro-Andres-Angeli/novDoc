@@ -6,12 +6,14 @@ import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 import JobsListTabNavigator from '../../../navigators/privateNavigator/recruiterNavigator/JobsListTabNavigator';
 import AppAvatarCard from '@components/shared/AppAvatarCard';
+import { useRoute } from '@react-navigation/native';
 
 const RecruiterProfileScreen = () => {
   const {
     authState: { user },
   } = useContext(AuthContext);
-
+  const route = useRoute();
+  console.log('ROUTEEEE', route);
   return (
     <View style={[utilityStyles.container]}>
       <AppAvatarCard

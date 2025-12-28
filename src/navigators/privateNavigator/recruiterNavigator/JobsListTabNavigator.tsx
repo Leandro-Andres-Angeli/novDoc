@@ -5,15 +5,22 @@ import JOBS_LIST_TABS_ROUTES from './JOBS_LIST_TABS_ROUTES';
 import utilityStyles from 'src/styles/utilityStyles';
 import { useTheme } from 'react-native-paper';
 
-import { CustomTheme } from 'App';
 import JobsListNavigator from './jobsListNavigator/JobsListNavigator';
 import { JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
+import { CustomTheme } from 'src/providers/PublicProviders';
 export type JobsListTabNavigatorRootParams = {
   [JOBS_LIST_TABS_ROUTES.activa]: {
     jobStatus: JobOfferStatus.ACTIVE;
+    shouldUpdate: boolean;
   };
-  [JOBS_LIST_TABS_ROUTES.pausada]: { jobStatus: JobOfferStatus.PAUSED };
-  [JOBS_LIST_TABS_ROUTES.cerrada]: { jobStatus: JobOfferStatus.CLOSED };
+  [JOBS_LIST_TABS_ROUTES.pausada]: {
+    jobStatus: JobOfferStatus.PAUSED;
+    shouldUpdate: boolean;
+  };
+  [JOBS_LIST_TABS_ROUTES.cerrada]: {
+    jobStatus: JobOfferStatus.CLOSED;
+    shouldUpdate: boolean;
+  };
 };
 const Tab = createMaterialTopTabNavigator<JobsListTabNavigatorRootParams>();
 const JobsListTabNavigator = () => {

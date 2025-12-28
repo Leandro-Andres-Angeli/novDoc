@@ -17,13 +17,7 @@ import {
 import * as Yup from 'yup';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { Timestamp } from 'firebase/firestore';
-import {
-  ActivityIndicator,
-  Button,
-  Chip,
-  Text,
-  useTheme,
-} from 'react-native-paper';
+import { Chip, Text, useTheme } from 'react-native-paper';
 
 import {
   KeyboardAwareScrollView,
@@ -46,7 +40,6 @@ import AppReactNativePaperSelect, {
 import { formModes } from 'src/types/formMode';
 import { JobPostingFormProps } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
-import { useNavigation } from '@react-navigation/native';
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
@@ -67,6 +60,7 @@ export const generateJobOfferForm = (
     skills: [],
     status: JobOfferStatus.ACTIVE,
     createdAt: creationDate,
+    updatedAt: creationDate,
   };
 
   switch (jobLocation) {
@@ -192,11 +186,6 @@ const JobPostingForm = <T,>({
     generateJobOfferForm(JobLocation.REMOTE, userId)
   );
 
-  // console.log('VALUES TO EDIT 1', valuesToEdit);
-  // console.log('VALUES TO EDIT', mode === formModes.EDIT);
-  // console.log('VALUES TO EDIT', Boolean(valuesToEdit));
-  // console.log('Checking cond ', mode === formModes.EDIT && valuesToEdit);
-  // console.log('VALUES TO EDIT JOF', jobOfferForm);
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
   const theme = useTheme();
@@ -243,20 +232,6 @@ const JobPostingForm = <T,>({
           handleResetForm,
           setValues,
         }) => {
-          /*    const navigation = useNavigation();
-          useEffect(() => {
-            const unsubscribe = navigation.addListener('blur', function () {
-              console.log('in subscription');
-              // handleResetForm(values);
-              if (valuesToEdit && formModes.EDIT) {
-                console.log('here');
-                const { id, ...rest } = valuesToEdit;
-                setValues(rest);
-              }
-            });
-
-            return unsubscribe;
-          }, [valuesToEdit?.id]); */
           return (
             <>
               <View

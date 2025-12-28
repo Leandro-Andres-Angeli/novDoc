@@ -20,6 +20,7 @@ export type JobListNavigatorRootParams = {
   };
   [JOBS_LIST_ROUTES.JOB_POSTING_LIST]: {
     jobPostingStatus: JobOfferStatus;
+    shouldUpdate?: boolean;
   };
 };
 const Stack = createNativeStackNavigator<JobListNavigatorRootParams>();
@@ -36,7 +37,9 @@ const JobsListNavigator = (props: JobsListTabNavigatorProps) => {
       <Stack.Screen
         name={JOBS_LIST_ROUTES.JOB_POSTING_LIST}
         component={JobOffersList}
-        initialParams={{ jobPostingStatus: props.route.params.jobStatus }}
+        initialParams={{
+          jobPostingStatus: props.route.params.jobStatus,
+        }}
       ></Stack.Screen>
     </Stack.Navigator>
   );

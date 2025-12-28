@@ -77,7 +77,9 @@ const NewJobOffer = () => {
       if (newJobOfferResponse.success) {
         Toast.show({
           onHide: () => {
-            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});
+            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {
+              shouldUpdate: true,
+            });
           },
           text1: newJobOfferResponse.message,
           visibilityTime: 700,

@@ -22,10 +22,9 @@ interface JobOffersListProps
     'JOB_POSTING_LIST'
   > {}
 const JobOffersList = ({ route }: JobOffersListProps) => {
-  const {
-    params: { jobPostingStatus },
-  } = route;
-
+  const { params } = route;
+  console.log('paramssss', params);
+  const { jobPostingStatus } = params;
   const { error, jobPostings, loading } = useGetJobPostings(jobPostingStatus);
 
   const navigation = useNavigation<

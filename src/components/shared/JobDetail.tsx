@@ -6,7 +6,7 @@ import { getLocales } from 'expo-localization';
 
 import currencyFormatter from '@utils/currencyFormatter';
 import dateFormatter from '@utils/dateFormatter ';
-import { CustomTheme } from 'App';
+
 import jobOfferHasLocation from '@utils/jobOfferHasLocation';
 import utilityStyles from 'src/styles/utilityStyles';
 import useOpenElement from 'src/hooks/useOpenElement';
@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from 'src/screens/private/recruiter/RecruiterProfileStack';
 import { Toast } from 'toastify-react-native';
+import { CustomTheme } from 'src/providers/PublicProviders';
 
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
@@ -130,7 +131,7 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               Fecha de publicacion
             </Text>
             <Text variant='titleMedium' style={styles.infoValue}>
-              {dateFormatter(locale).format(jobPosting.createdAt.toDate())}
+              {dateFormatter(locale).format(jobPosting.updatedAt.toDate())}
             </Text>
           </View>
 

@@ -3,15 +3,18 @@ import React, { PropsWithChildren } from 'react';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import AppCardWrapper from '@ui/AppCardWrapper';
 import { Card, IconButton, Text, useTheme } from 'react-native-paper';
-import { CustomTheme } from 'App';
+
 import jobOfferHasLocation from '@utils/jobOfferHasLocation';
+import { CustomTheme } from 'src/providers/PublicProviders';
+import dateFormatter from '@utils/dateFormatter ';
+import { getLocales } from 'expo-localization';
 interface JobPostingCardProps {
   jobPosting: IJobPostingDB;
 }
 const JobPostingCard = (props: JobPostingCardProps) => {
   const { jobPosting } = props;
   const theme = useTheme<CustomTheme>();
-
+  const [locale] = getLocales();
   return (
     <AppCardWrapper
       styles={{
@@ -57,7 +60,7 @@ const JobPostingCard = (props: JobPostingCardProps) => {
                 variant='bodySmall'
                 style={{ ...styles.subtitle, fontStyle: 'italic' }}
               >
-                {jobPosting.createdAt.toDate().toLocaleDateString()}
+                {dateFormatter(locale).format(jobPosting.updatedAt.toDate())}
               </Text>
             </View>
           </View>
