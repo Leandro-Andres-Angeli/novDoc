@@ -1,5 +1,8 @@
-import React, { useContext } from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import React, { useContext, useState } from 'react';
+import {
+  createDrawerNavigator,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
 
 import RecruiterProfileStack from './RecruiterProfileStack';
 
@@ -13,6 +16,9 @@ import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
 
 import EditProfileScreen from '../shared/EditProfileScreen';
 import PasswordUpdateScreen from '../shared/PasswordUpdateScreen';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { boolean } from 'yup';
+import { useRoute } from '@react-navigation/native';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   RECRUITER_PROFILE_STACK: 'RECRUITER_PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
@@ -25,7 +31,9 @@ export const recruiterProfileDrawerRootStack: Record<
   recruiterProfileDrawerRoute,
   any
 > = {
-  RECRUITER_PROFILE_STACK: {},
+  RECRUITER_PROFILE_STACK: {
+    shouldUpdate: boolean,
+  },
   EDIT_PROFILE: {},
   SIGN_OUT: {},
   UPDATE_PASSWORD: {},
@@ -34,6 +42,7 @@ const Drawer = createDrawerNavigator<typeof recruiterProfileDrawerRootStack>();
 
 const RecruiterProfileDrawer = () => {
   const theme = useTheme();
+
   const { elementVisible, handleElementVisibility } = useOpenElement();
   const { logout } = useContext(AuthContext);
   return (
@@ -64,10 +73,6 @@ const RecruiterProfileDrawer = () => {
         ></Drawer.Screen>
         <Drawer.Screen
           name='EDIT_PROFILE'
-          // options={{
-          //   title: 'Editar Perfil',
-
-          // }}
           options={({ navigation }) => {
             return {
               title: 'Editar Perfil',

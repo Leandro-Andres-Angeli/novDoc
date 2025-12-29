@@ -26,7 +26,9 @@ const JobOffersList = ({ route }: JobOffersListProps) => {
   console.log('paramssss', params);
   const { jobPostingStatus } = params;
   const { error, jobPostings, loading } = useGetJobPostings(jobPostingStatus);
-
+  // console.log('parent', navigation.getParent());
+  // const parent = navigation.getParent();
+  // console.log('stateeee', parent?.getState());
   const navigation = useNavigation<
     NavigationProp<{
       ['JOB_POSTING_DETAILS']: {

@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 import RecruiterProfileScreen from './RecruiterProfileScreen';
@@ -10,6 +13,8 @@ import { useTheme } from 'react-native-paper';
 import EditJobPostingScreen from './EditJobPostingScreen';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import { recruiterProfileDrawerRootStack } from './RecruiterProfileDrawer';
+import { useRoute } from '@react-navigation/native';
 
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',
@@ -17,7 +22,9 @@ export const RecruiterProfileStackRoutes = {
   EDIT_JOB_POSTING: 'EDIT_JOB_POSTING',
 } as const;
 export type RecruiterProfileStackRootParams = {
-  [RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS]: {};
+  [RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS]: {
+    shouldUpdate: boolean;
+  };
   [RecruiterProfileStackRoutes.JOB_POSTING_DETAILS]: {
     jobPosting: IJobPostingDB;
   };
@@ -26,8 +33,14 @@ export type RecruiterProfileStackRootParams = {
   };
 };
 const Stack = createNativeStackNavigator<RecruiterProfileStackRootParams>();
-const RecruiterProfileStack = () => {
+interface RecruiterProfileScreenProps
+  extends NativeStackScreenProps<
+    typeof recruiterProfileDrawerRootStack.RECRUITER_PROFILE_STACK
+  > {}
+const RecruiterProfileStack = ({ route }: RecruiterProfileScreenProps) => {
   const theme = useTheme<CustomTheme>();
+
+  console.log('PPPPPPP', JSON.stringify(route.params));
   return (
     <Stack.Navigator
       initialRouteName={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
@@ -37,6 +50,7 @@ const RecruiterProfileStack = () => {
     >
       <Stack.Screen
         name={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
+        initialParams={{ shouldUpdate: false }}
         component={RecruiterProfileScreen}
       ></Stack.Screen>
       <Stack.Screen

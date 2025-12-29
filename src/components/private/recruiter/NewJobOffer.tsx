@@ -1,47 +1,21 @@
 import { View } from 'react-native';
-import React, {
-  Suspense,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {
-  IJobOffer,
-  IJobOfferGeneral,
-  IJobOfferHybrid,
-  IJobOfferOnSite,
-  IJobOfferRemote,
-  JobLocation,
-  JobOfferStatus,
-  Seniority,
-  ShiftTime,
-} from 'src/types/dbTypes/IJobOffer';
-import * as Yup from 'yup';
+import React, { useContext, useState } from 'react';
+import { IJobOffer } from 'src/types/dbTypes/IJobOffer';
+
 import { Toast } from 'toastify-react-native';
 
-import {
-  ActivityIndicator,
-  Button,
-  Chip,
-  Text,
-  useTheme,
-} from 'react-native-paper';
-import utilityStyles from 'src/styles/utilityStyles';
-import {
-  KeyboardAwareScrollView,
-  useKeyboardState,
-} from 'react-native-keyboard-controller';
-import { AppFormInputWithHelper, InputHelper } from '@ui/AppFormInputs';
-
-import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
+import { Text } from 'react-native-paper';
 
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
 import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';
 
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/native';
 import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
 import { FormikHelpers } from 'formik';
@@ -67,7 +41,11 @@ const NewJobOffer = () => {
   const [loading, setLoading] = useState(false);
 
   const navigator =
-    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
+    useNavigation<
+      NavigationProp<RecruiterNavigatorRootParams & ParamListBase>
+    >();
+  /* const navigator =
+    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>(); */
   async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
     setLoading(true);
 
@@ -77,6 +55,9 @@ const NewJobOffer = () => {
       if (newJobOfferResponse.success) {
         Toast.show({
           onHide: () => {
+            // navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {
+            //   params: { shouldUpdate: true, screen: 'RECRUITER_PROFILE_STACK' },
+            // });
             navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {
               shouldUpdate: true,
             });

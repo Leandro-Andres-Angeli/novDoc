@@ -14,7 +14,7 @@ const useGetLocationFromCoords = () => {
       const { data } = await geoRefAxiosInstance.get<GeoLocationReversed>(
         geoRefAxiosInstanceEndpoints.COORDS(lat.toString(), lon.toString())
       );
-      console.log('dataaa', data);
+
       const { provincia, municipio } = data.ubicacion;
       if (!provincia) {
         throw Error('error getting provincia');

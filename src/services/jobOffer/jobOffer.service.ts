@@ -75,7 +75,7 @@ export const getJobPostings = async (
       id: el.id,
       ...el.data(),
     }));
-    console.log('data', collectionRes);
+
     return { success: true, data: collectionRes };
   } catch (err) {
     const parsedError = err as unknown as Error;

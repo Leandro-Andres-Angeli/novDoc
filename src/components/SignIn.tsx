@@ -64,8 +64,6 @@ const SignIn = () => {
               ...utilityStyles.contentContainer,
               backgroundColor: theme.colors.background,
               marginTop: 20,
-              // marginBottom: 20,
-              // ...utilityStyles.flex,
             }}
           >
             <View style={utilityStyles.contentContainer}>

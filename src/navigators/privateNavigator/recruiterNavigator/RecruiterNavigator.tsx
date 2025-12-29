@@ -22,8 +22,11 @@ import { getLocales } from 'expo-localization';
 
 import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
-import RecruiterProfileDrawer from 'src/screens/private/recruiter/RecruiterProfileDrawer';
+import RecruiterProfileDrawer, {
+  recruiterProfileDrawerRootStack,
+} from 'src/screens/private/recruiter/RecruiterProfileDrawer';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import { useRoute } from '@react-navigation/native';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -68,7 +71,7 @@ const Favorites = () => {
 export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
   [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {
-    shouldUpdate?: boolean;
+    shouldUpdate: boolean;
   };
   [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
