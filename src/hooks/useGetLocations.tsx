@@ -106,6 +106,7 @@ const useGetLocations = <T, Q extends Record<string, any>>({
       setLocations(locations);
       setInitialLocation && setInitialLocation(locations.at(0));
     } catch (error) {
+      console.log('errrr', error);
       console.log('error obteniendo locaciones');
     } finally {
       setLoading(false);

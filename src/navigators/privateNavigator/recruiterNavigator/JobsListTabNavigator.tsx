@@ -11,15 +11,12 @@ import { CustomTheme } from 'src/providers/PublicProviders';
 export type JobsListTabNavigatorRootParams = {
   [JOBS_LIST_TABS_ROUTES.activa]: {
     jobStatus: JobOfferStatus.ACTIVE;
-    shouldUpdate: boolean;
   };
   [JOBS_LIST_TABS_ROUTES.pausada]: {
     jobStatus: JobOfferStatus.PAUSED;
-    shouldUpdate: boolean;
   };
   [JOBS_LIST_TABS_ROUTES.cerrada]: {
     jobStatus: JobOfferStatus.CLOSED;
-    shouldUpdate: boolean;
   };
 };
 const Tab = createMaterialTopTabNavigator<JobsListTabNavigatorRootParams>();

@@ -44,8 +44,9 @@ import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
   userId: string,
-  province?: MapLocation,
-  city?: MapLocation
+  province: MapLocation,
+  city: MapLocation,
+  values?: Partial<IJobOfferGeneral>
 ) => {
   const creationDate = Timestamp.fromDate(new Date());
   const base: IJobOfferGeneral = {
@@ -53,6 +54,7 @@ export const generateJobOfferForm = (
     company: '',
     recruiter_id: userId,
     description: '',
+
     jobLocation: JobLocation.REMOTE,
     seniority: Seniority.JUNIOR,
     salary: 0,
@@ -61,26 +63,27 @@ export const generateJobOfferForm = (
     status: JobOfferStatus.ACTIVE,
     createdAt: creationDate,
     updatedAt: creationDate,
+    ...(values && { ...values }),
   };
 
   switch (jobLocation) {
     case JobLocation.ON_SITE:
       const JobOfferOnSite: IJobOfferOnSite = {
         ...base,
-        city: city ?? { id: '', nombre: '' },
+        city: city,
         jobLocation: JobLocation.ON_SITE,
 
-        province: province ?? { id: '', nombre: '' },
+        province: province,
       };
       return JobOfferOnSite;
 
     case JobLocation.HYBRID:
       const JobOfferHybrid: IJobOfferHybrid = {
         ...base,
-        city: city ?? { id: '', nombre: '' },
-        jobLocation: JobLocation.HYBRID,
 
-        province: province ?? { id: '', nombre: '' },
+        jobLocation: JobLocation.HYBRID,
+        city: city,
+        province: province,
       };
       return JobOfferHybrid;
 
@@ -183,7 +186,12 @@ const JobPostingForm = <T,>({
   mode = formModes.CREATE,
 }: JobPostingFormProps<T>) => {
   const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
-    generateJobOfferForm(JobLocation.REMOTE, userId)
+    generateJobOfferForm(
+      JobLocation.REMOTE,
+      userId,
+      { id: '', nombre: '' },
+      { id: '', nombre: '' }
+    )
   );
 
   const { isVisible } = useKeyboardState();
@@ -193,10 +201,6 @@ const JobPostingForm = <T,>({
     return generateJobOfferValidationSchema();
   }, [jobOfferForm.jobLocation]);
 
-  useEffect(() => {
-    setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation, userId));
-  }, [jobOfferForm.jobLocation]);
-  // const navigation = useNavigation();
   return (
     <View
       style={{
@@ -232,6 +236,24 @@ const JobPostingForm = <T,>({
           handleResetForm,
           setValues,
         }) => {
+          useEffect(() => {
+            setJobOfferForm(
+              generateJobOfferForm(
+                jobOfferForm.jobLocation,
+                userId,
+
+                (jobOfferHasLocation(values) && values.province) || {
+                  id: '',
+                  nombre: '',
+                },
+                (jobOfferHasLocation(values) && values.city) || {
+                  id: '',
+                  nombre: '',
+                },
+                values
+              )
+            );
+          }, [jobOfferForm.jobLocation]);
           return (
             <>
               <View
@@ -362,7 +384,23 @@ const JobPostingForm = <T,>({
                           handleChange={(val: JobLocation) => {
                             handleInputValue('jobLocation', val);
 
-                            setJobOfferForm(generateJobOfferForm(val, userId));
+                            setJobOfferForm(
+                              generateJobOfferForm(
+                                val,
+                                userId,
+                                (jobOfferHasLocation(values) &&
+                                  values.province) || {
+                                  id: '',
+                                  nombre: '',
+                                },
+                                (jobOfferHasLocation(values) &&
+                                  values.city) || {
+                                  id: '',
+                                  nombre: '',
+                                },
+                                values
+                              )
+                            );
                             if (val === JobLocation.REMOTE) {
                               setFieldValue('province', undefined);
                               setFieldValue('city', undefined);
