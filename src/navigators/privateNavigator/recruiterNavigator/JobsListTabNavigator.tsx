@@ -6,20 +6,18 @@ import utilityStyles from 'src/styles/utilityStyles';
 import { useTheme } from 'react-native-paper';
 
 import JobsListNavigator from './jobsListNavigator/JobsListNavigator';
-import { jobPostingStatus } from 'src/types/dbTypes/IJobPosting';
+
 import { CustomTheme } from 'src/providers/PublicProviders';
+import { jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 export type JobsListTabNavigatorRootParams = {
   [JOBS_LIST_TABS_ROUTES.activa]: {
     jobStatus: jobPostingStatus.ACTIVE;
-    shouldUpdate: boolean;
   };
   [JOBS_LIST_TABS_ROUTES.pausada]: {
     jobStatus: jobPostingStatus.PAUSED;
-    shouldUpdate: boolean;
   };
   [JOBS_LIST_TABS_ROUTES.cerrada]: {
     jobStatus: jobPostingStatus.CLOSED;
-    shouldUpdate: boolean;
   };
 };
 const Tab = createMaterialTopTabNavigator<JobsListTabNavigatorRootParams>();

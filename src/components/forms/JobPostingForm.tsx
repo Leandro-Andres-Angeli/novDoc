@@ -41,7 +41,7 @@ import {
   Seniority,
   ShiftTime,
 } from 'src/types/dbTypes/IJobOffer';
-import jobPostingHasLocation from '@utils/jobOfferHasLocation';
+import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 
 export const generatejobPostingForm = (
   jobLocation: JobLocation,

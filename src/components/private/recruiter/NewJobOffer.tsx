@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import React, { useContext, useState } from 'react';
-import { IJobPosting } from 'src/types/dbTypes/IJobPosting';
 
 import { Toast } from 'toastify-react-native';
 
@@ -8,7 +7,7 @@ import { Text } from 'react-native-paper';
 
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
-import { createjobPosting } from 'src/services/jobPosting/jobPosting.service';
+
 import AppLocationSelected from '@ui/AppLocationSelected';
 
 import {
@@ -21,6 +20,8 @@ import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruite
 import { FormikHelpers } from 'formik';
 
 import JobPostingForm from '@components/forms/JobPostingForm';
+import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
+import { createjobPosting } from 'src/services/jobOffer/jobOffer.service';
 
 const NewjobPosting = () => {
   const {
@@ -61,9 +62,7 @@ const NewjobPosting = () => {
             // navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {
             //   params: { shouldUpdate: true, screen: 'RECRUITER_PROFILE_STACK' },
             // });
-            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {
-              shouldUpdate: true,
-            });
+            navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});
           },
           text1: newjobPostingResponse.message,
           visibilityTime: 700,

@@ -1,16 +1,18 @@
 import { View, Text } from 'react-native';
 import React, { useContext, useState } from 'react';
 import JobPostingForm from '@components/forms/JobPostingForm';
-import { IJobPosting } from 'src/types/dbTypes/IJobPosting';
+
 import { FormikHelpers } from 'formik';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from './RecruiterProfileStack';
-import { updatejobPosting } from '../../../services/jobPosting/jobPosting.service';
+
 import { Toast } from 'toastify-react-native';
 import { formModes } from 'src/types/formMode';
 import AppLoading from '@ui/AppLoading';
 import { Timestamp } from 'firebase/firestore';
+import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
+import { updatejobPosting } from 'src/services/jobOffer/jobOffer.service';
 interface EditJobPostingScreen
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,

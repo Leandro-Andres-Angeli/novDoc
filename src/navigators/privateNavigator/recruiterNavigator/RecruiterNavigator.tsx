@@ -13,7 +13,6 @@ import AppHeader from '@ui/AppHeader';
 import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 
-import NewjobPostingscreen from 'src/screens/private/recruiter/NewjobPostingscreen';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 
 import AppLoading from '@ui/AppLoading';
@@ -27,6 +26,7 @@ import RecruiterProfileDrawer, {
 } from 'src/screens/private/recruiter/RecruiterProfileDrawer';
 import { CustomTheme } from 'src/providers/PublicProviders';
 import { useRoute } from '@react-navigation/native';
+import NewjobPostingscreen from 'src/screens/private/recruiter/NewJobOfferScreen';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -71,9 +71,7 @@ const Favorites = () => {
 
 export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
-  [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {
-    shouldUpdate: boolean;
-  };
+  [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
   [RECRUITER_NAVIGATOR_ROUTES.FAVORITES]: {};

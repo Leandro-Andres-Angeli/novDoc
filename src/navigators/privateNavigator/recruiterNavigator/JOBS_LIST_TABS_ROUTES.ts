@@ -1,4 +1,4 @@
-import { jobPostingStatus } from 'src/types/dbTypes/IjobPosting';
+import { jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 
 export const JOBS_LIST_TABS_ROUTES = {
   [jobPostingStatus.ACTIVE]: jobPostingStatus.ACTIVE,

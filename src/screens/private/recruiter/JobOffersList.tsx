@@ -2,7 +2,6 @@ import { View, Pressable } from 'react-native';
 import React, { useContext } from 'react';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobPosting';
 
 import utilityStyles from 'src/styles/utilityStyles';
 import JobPostingCard from '@components/jobPostingCard/JobPostingCard';
@@ -16,12 +15,13 @@ import { JOBS_LIST_ROUTES } from '../../../navigators/privateNavigator/recruiter
 import useGetJobPostings from 'src/hooks/useGetJobPostings';
 import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 interface jobPostingsListProps
   extends NativeStackScreenProps<
     JobListNavigatorRootParams,
     'JOB_POSTING_LIST'
   > {}
-const jobPostingsList = ({ route }: jobPostingsListProps) => {
+const JobPostingsList = ({ route }: jobPostingsListProps) => {
   const { params } = route;
   console.log('paramssss', params);
   const { jobPostingStatus } = params;
@@ -80,4 +80,4 @@ const jobPostingsList = ({ route }: jobPostingsListProps) => {
   );
 };
 
-export default jobPostingsList;
+export default JobPostingsList;

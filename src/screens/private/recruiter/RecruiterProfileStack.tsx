@@ -4,7 +4,6 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobPosting';
 
 import RecruiterProfileScreen from './RecruiterProfileScreen';
 import JobDetailsScreen from 'src/screens/private/shared/JobDetailScreen';
@@ -15,6 +14,7 @@ import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsL
 import { CustomTheme } from 'src/providers/PublicProviders';
 import { recruiterProfileDrawerRootStack } from './RecruiterProfileDrawer';
 import { useRoute } from '@react-navigation/native';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 export const RecruiterProfileStackRoutes = {
   RECRUITER_PROFILE_TABS: 'RECRUITER_PROFILE_TABS',
@@ -22,9 +22,7 @@ export const RecruiterProfileStackRoutes = {
   EDIT_JOB_POSTING: 'EDIT_JOB_POSTING',
 } as const;
 export type RecruiterProfileStackRootParams = {
-  [RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS]: {
-    shouldUpdate: boolean;
-  };
+  [RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS]: {};
   [RecruiterProfileStackRoutes.JOB_POSTING_DETAILS]: {
     jobPosting: IJobPostingDB;
   };
@@ -50,7 +48,6 @@ const RecruiterProfileStack = ({ route }: RecruiterProfileScreenProps) => {
     >
       <Stack.Screen
         name={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
-        initialParams={{ shouldUpdate: false }}
         component={RecruiterProfileScreen}
       ></Stack.Screen>
       <Stack.Screen

@@ -1,24 +1,26 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { Chip, Text, Button, useTheme, Modal } from 'react-native-paper';
-import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobPosting';
+
 import { getLocales } from 'expo-localization';
 
 import currencyFormatter from '@utils/currencyFormatter';
 import dateFormatter from '@utils/dateFormatter ';
 
-import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 import utilityStyles from 'src/styles/utilityStyles';
 import useOpenElement from 'src/hooks/useOpenElement';
 
 import AppModal from '@ui/AppModal';
 import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
-import { updatejobPosting } from 'src/services/jobPosting/jobPosting.service';
+
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from 'src/screens/private/recruiter/RecruiterProfileStack';
 import { Toast } from 'toastify-react-native';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
+import jobPostingHasLocation from '@utils/jobPostingHasLocation';
+import { updatejobPosting } from 'src/services/jobOffer/jobOffer.service';
 
 interface JobDetailProp {
   jobPosting: IJobPostingDB;

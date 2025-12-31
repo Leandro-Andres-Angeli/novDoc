@@ -31,9 +31,7 @@ export const recruiterProfileDrawerRootStack: Record<
   recruiterProfileDrawerRoute,
   any
 > = {
-  RECRUITER_PROFILE_STACK: {
-    shouldUpdate: boolean,
-  },
+  RECRUITER_PROFILE_STACK: {},
   EDIT_PROFILE: {},
   SIGN_OUT: {},
   UPDATE_PASSWORD: {},
