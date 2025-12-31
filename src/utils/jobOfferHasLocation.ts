@@ -1,17 +1,17 @@
 import {
-  IJobOfferOnSite,
-  IJobOfferRemote,
+  IJobPostingHybrid,
+  IJobPostingOnSite,
+  IJobPostingRemote,
   JobLocation,
 } from 'src/types/dbTypes/IJobOffer';
-import { IJobOfferHybrid } from '../types/dbTypes/IJobOffer';
 
-const jobOfferHasLocation = (
-  jobOfferForm: IJobOfferOnSite | IJobOfferHybrid | IJobOfferRemote
-): jobOfferForm is IJobOfferHybrid | IJobOfferOnSite => {
+const jobPostingHasLocation = (
+  jobPostingForm: IJobPostingOnSite | IJobPostingHybrid | IJobPostingRemote
+): jobPostingForm is IJobPostingHybrid | IJobPostingOnSite => {
   return (
-    jobOfferForm.jobLocation === JobLocation.ON_SITE ||
-    jobOfferForm.jobLocation === JobLocation.HYBRID
+    jobPostingForm.jobLocation === JobLocation.ON_SITE ||
+    jobPostingForm.jobLocation === JobLocation.HYBRID
   );
 };
 
-export default jobOfferHasLocation;
+export default jobPostingHasLocation;

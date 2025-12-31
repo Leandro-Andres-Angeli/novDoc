@@ -2,18 +2,7 @@ import { View } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppForm from './AppForm';
-import {
-  IJobOffer,
-  IJobOfferGeneral,
-  IJobOfferHybrid,
-  IJobOfferOnSite,
-  IJobOfferRemote,
-  JobLocation,
-  JobOfferStatus,
-  MapLocation,
-  Seniority,
-  ShiftTime,
-} from 'src/types/dbTypes/IJobOffer';
+
 import * as Yup from 'yup';
 import { ISkill, skillsLists } from 'src/types/dbTypes/ISkills';
 import { Timestamp } from 'firebase/firestore';
@@ -26,7 +15,7 @@ import {
 import { AppFormInputWithHelper, InputHelper } from '@ui/AppFormInputs';
 import AppSubtitle from '@ui/AppSubtitle';
 import AppSegmentedButtons from '@components/AppSegmentedButtons';
-import jobOfferHasLocation from '@utils/jobOfferHasLocation';
+
 import AppLocationSelected from '@ui/AppLocationSelected';
 import AppTypeOfLocationSelection, {
   LocationSelectionType,
@@ -40,15 +29,28 @@ import AppReactNativePaperSelect, {
 import { formModes } from 'src/types/formMode';
 import { JobPostingFormProps } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
+import {
+  IJobPosting,
+  IJobPostingGeneral,
+  IJobPostingHybrid,
+  IJobPostingOnSite,
+  IJobPostingRemote,
+  JobLocation,
+  jobPostingStatus,
+  MapLocation,
+  Seniority,
+  ShiftTime,
+} from 'src/types/dbTypes/IJobOffer';
+import jobPostingHasLocation from '@utils/jobOfferHasLocation';
 
-export const generateJobOfferForm = (
+export const generatejobPostingForm = (
   jobLocation: JobLocation,
   userId: string,
   province?: MapLocation,
   city?: MapLocation
 ) => {
   const creationDate = Timestamp.fromDate(new Date());
-  const base: IJobOfferGeneral = {
+  const base: IJobPostingGeneral = {
     title: '',
     company: '',
     recruiter_id: userId,
@@ -58,46 +60,46 @@ export const generateJobOfferForm = (
     salary: 0,
     shiftTime: ShiftTime.FULL_TIME,
     skills: [],
-    status: JobOfferStatus.ACTIVE,
+    status: jobPostingStatus.ACTIVE,
     createdAt: creationDate,
     updatedAt: creationDate,
   };
 
   switch (jobLocation) {
     case JobLocation.ON_SITE:
-      const JobOfferOnSite: IJobOfferOnSite = {
+      const jobPostingOnSite: IJobPostingOnSite = {
         ...base,
         city: city ?? { id: '', nombre: '' },
         jobLocation: JobLocation.ON_SITE,
 
         province: province ?? { id: '', nombre: '' },
       };
-      return JobOfferOnSite;
+      return jobPostingOnSite;
 
     case JobLocation.HYBRID:
-      const JobOfferHybrid: IJobOfferHybrid = {
+      const jobPostingHybrid: IJobPostingHybrid = {
         ...base,
         city: city ?? { id: '', nombre: '' },
         jobLocation: JobLocation.HYBRID,
 
         province: province ?? { id: '', nombre: '' },
       };
-      return JobOfferHybrid;
+      return jobPostingHybrid;
 
     case JobLocation.REMOTE:
-      const JobOfferRemote: IJobOfferRemote = {
+      const jobPostingRemote: IJobPostingRemote = {
         ...base,
 
         jobLocation,
       };
-      return JobOfferRemote as IJobOfferRemote;
+      return jobPostingRemote as IJobPostingRemote;
     default:
-      return base as IJobOfferRemote;
+      return base as IJobPostingRemote;
   }
 };
 
-export const generateJobOfferValidationSchema = () => {
-  const baseValidationSchema = Yup.object<IJobOffer>({
+export const generatejobPostingValidationSchema = () => {
+  const baseValidationSchema = Yup.object<IJobPosting>({
     title: Yup.string().required('campo obligatorio'),
     description: Yup.string().required('campo obligatorio'),
     company: Yup.string().required('campo obligatorio'),
@@ -171,7 +173,7 @@ export const generateJobOfferValidationSchema = () => {
         }),
     }),
   });
-  return baseValidationSchema as unknown as Yup.ObjectSchema<IJobOffer>;
+  return baseValidationSchema as unknown as Yup.ObjectSchema<IJobPosting>;
 };
 
 const JobPostingForm = <T,>({
@@ -182,20 +184,22 @@ const JobPostingForm = <T,>({
   valuesToEdit,
   mode = formModes.CREATE,
 }: JobPostingFormProps<T>) => {
-  const [jobOfferForm, setJobOfferForm] = useState<IJobOffer>(
-    generateJobOfferForm(JobLocation.REMOTE, userId)
+  const [jobPostingForm, setjobPostingForm] = useState<IJobPosting>(
+    generatejobPostingForm(JobLocation.REMOTE, userId)
   );
 
   const { isVisible } = useKeyboardState();
   const [loadingFormLocation, setLoadingFormLocation] = useState(false);
   const theme = useTheme();
-  const jobOfferValidationSchema = useMemo(() => {
-    return generateJobOfferValidationSchema();
-  }, [jobOfferForm.jobLocation]);
+  const jobPostingValidationSchema = useMemo(() => {
+    return generatejobPostingValidationSchema();
+  }, [jobPostingForm.jobLocation]);
 
   useEffect(() => {
-    setJobOfferForm(generateJobOfferForm(jobOfferForm.jobLocation, userId));
-  }, [jobOfferForm.jobLocation]);
+    setjobPostingForm(
+      generatejobPostingForm(jobPostingForm.jobLocation, userId)
+    );
+  }, [jobPostingForm.jobLocation]);
   // const navigation = useNavigation();
   return (
     <View
@@ -206,12 +210,12 @@ const JobPostingForm = <T,>({
         marginBottom: 40,
       }}
     >
-      {/* <Text>{JSON.stringify(jobOfferForm)}</Text> */}
-      <AppForm<IJobOffer>
+      {/* <Text>{JSON.stringify(jobPostingForm)}</Text> */}
+      <AppForm<IJobPosting>
         handleSubmit={handleSubmit}
         loadingPostIndicator={loading}
-        validationSchema={jobOfferValidationSchema}
-        formFields={valuesToEdit ?? jobOfferForm}
+        validationSchema={jobPostingValidationSchema}
+        formFields={valuesToEdit ?? jobPostingForm}
         enableReinitialize={true}
       >
         {({
@@ -271,7 +275,7 @@ const JobPostingForm = <T,>({
                             onSelection={(val) => {
                               setFieldValue('status', val.text);
                             }}
-                            arrayList={Object.values(JobOfferStatus).map(
+                            arrayList={Object.values(jobPostingStatus).map(
                               (el) => ({
                                 _id: el,
 
@@ -285,7 +289,7 @@ const JobPostingForm = <T,>({
                       )}
 
                       <View style={utilityStyles.inputsContainer}>
-                        <AppFormInputWithHelper<IJobOffer>
+                        <AppFormInputWithHelper<IJobPosting>
                           formKey='title'
                           value={values.title}
                           placeholder='Título de la oferta '
@@ -302,7 +306,7 @@ const JobPostingForm = <T,>({
                         ></AppFormInputWithHelper>
                       </View>
                       <View style={utilityStyles.inputsContainer}>
-                        <AppFormInputWithHelper<IJobOffer>
+                        <AppFormInputWithHelper<IJobPosting>
                           formKey='company'
                           value={values.company}
                           placeholder='Empresa'
@@ -319,7 +323,7 @@ const JobPostingForm = <T,>({
                         ></AppFormInputWithHelper>
                       </View>
                       <View style={utilityStyles.inputsContainer}>
-                        <AppFormInputWithHelper<IJobOffer>
+                        <AppFormInputWithHelper<IJobPosting>
                           formKey='description'
                           value={values.description}
                           placeholder='Descripción de la oferta '
@@ -362,7 +366,9 @@ const JobPostingForm = <T,>({
                           handleChange={(val: JobLocation) => {
                             handleInputValue('jobLocation', val);
 
-                            setJobOfferForm(generateJobOfferForm(val, userId));
+                            setjobPostingForm(
+                              generatejobPostingForm(val, userId)
+                            );
                             if (val === JobLocation.REMOTE) {
                               setFieldValue('province', undefined);
                               setFieldValue('city', undefined);
@@ -370,7 +376,7 @@ const JobPostingForm = <T,>({
                           }}
                         ></AppSegmentedButtons>
 
-                        {jobOfferHasLocation(values) && (
+                        {jobPostingHasLocation(values) && (
                           <AppLocationSelected
                             loadingCondition={loadingFormLocation}
                           >
@@ -388,7 +394,7 @@ const JobPostingForm = <T,>({
                             </>
                           </AppLocationSelected>
                         )}
-                        {jobOfferHasLocation(values) && (
+                        {jobPostingHasLocation(values) && (
                           <AppTypeOfLocationSelection>
                             {({ locationSelectionType }) => {
                               switch (locationSelectionType) {
@@ -517,7 +523,7 @@ const JobPostingForm = <T,>({
                       </View>
 
                       <View style={{ ...utilityStyles.inputsContainer }}>
-                        <AppFormInputWithHelper<IJobOffer>
+                        <AppFormInputWithHelper<IJobPosting>
                           formKey='salary'
                           value={values.salary.toString()}
                           key={'salary'}

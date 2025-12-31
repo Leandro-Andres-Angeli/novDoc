@@ -13,7 +13,7 @@ import AppHeader from '@ui/AppHeader';
 import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 
-import NewJobOfferScreen from 'src/screens/private/recruiter/NewJobOfferScreen';
+import NewjobPostingscreen from 'src/screens/private/recruiter/NewjobPostingscreen';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 
 import AppLoading from '@ui/AppLoading';
@@ -47,8 +47,9 @@ const SwipeRecruiter = () => {
 };
 
 const Favorites = () => {
-  const { loading: loadingJobOffers, jobOffers } = useContext(RecruiterContext);
-  if (loadingJobOffers) {
+  const { loading: loadingjobPostings, jobPostings } =
+    useContext(RecruiterContext);
+  if (loadingjobPostings) {
     return <AppLoading></AppLoading>;
   }
   const [{ languageTag }] = getLocales();
@@ -58,7 +59,7 @@ const Favorites = () => {
       <Text>Test</Text>
       <Text>
         {JSON.stringify(
-          jobOffers.map((el) => ({
+          jobPostings.map((el) => ({
             ...el,
             createdAt: el.createdAt.toDate().toLocaleDateString(languageTag),
           }))
@@ -171,7 +172,7 @@ const RecruiterNavigator = () => {
           };
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
-        component={NewJobOfferScreen}
+        component={NewjobPostingscreen}
       ></Tab.Screen>
     </Tab.Navigator>
   );

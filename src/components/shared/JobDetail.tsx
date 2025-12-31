@@ -1,19 +1,19 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { Chip, Text, Button, useTheme, Modal } from 'react-native-paper';
-import { IJobPostingDB, JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
+import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobPosting';
 import { getLocales } from 'expo-localization';
 
 import currencyFormatter from '@utils/currencyFormatter';
 import dateFormatter from '@utils/dateFormatter ';
 
-import jobOfferHasLocation from '@utils/jobOfferHasLocation';
+import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 import utilityStyles from 'src/styles/utilityStyles';
 import useOpenElement from 'src/hooks/useOpenElement';
 
 import AppModal from '@ui/AppModal';
 import ConfirmCloseJobPosting from '../private/recruiter/ConfirmCloseJobPosting';
-import { updateJobOffer } from 'src/services/jobOffer/jobOffer.service';
+import { updatejobPosting } from 'src/services/jobPosting/jobPosting.service';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from 'src/screens/private/recruiter/RecruiterProfileStack';
@@ -33,18 +33,18 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
   const theme = useTheme<CustomTheme>();
   const confirmCloseJobPosting = async () => {
     try {
-      const updateJobOfferResult = await updateJobOffer(jobPosting.id, {
-        status: JobOfferStatus.CLOSED,
+      const updatejobPostingResult = await updatejobPosting(jobPosting.id, {
+        status: jobPostingStatus.CLOSED,
       });
       handleElementVisibility(false);
-      if (!updateJobOfferResult.success) {
-        throw Error(updateJobOfferResult.message);
+      if (!updatejobPostingResult.success) {
+        throw Error(updatejobPostingResult.message);
       }
 
       Toast.show({
         autoHide: true,
 
-        text1: updateJobOfferResult.message,
+        text1: updatejobPostingResult.message,
         type: 'success',
         onHide: () => navigator.navigate('RECRUITER_PROFILE_TABS', {}),
       });
@@ -107,7 +107,7 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
               {jobPosting.jobLocation}
             </Text>
           </View>
-          {jobOfferHasLocation(jobPosting) && (
+          {jobPostingHasLocation(jobPosting) && (
             <View style={[styles.infoCard, styles.fullWidthCard]}>
               <Text variant='titleMedium' style={styles.infoValue}>
                 {jobPosting.province.nombre}

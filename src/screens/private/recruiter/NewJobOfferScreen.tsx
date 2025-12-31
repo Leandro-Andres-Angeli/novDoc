@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 import React from 'react';
-import NewJobOffer from '@components/private/recruiter/NewJobOffer';
+import NewjobPosting from '@components/private/recruiter/NewjobPosting';
 
-const NewJobOfferScreen = () => {
-  return <NewJobOffer></NewJobOffer>;
+const NewjobPostingscreen = () => {
+  return <NewjobPosting></NewjobPosting>;
 };
 
-export default NewJobOfferScreen;
+export default NewjobPostingscreen;

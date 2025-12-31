@@ -14,18 +14,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-import {
-  IJobOffer,
-  IJobPostingDB,
-  IJobOfferGeneral,
-  IJobOfferHybrid,
-  IJobOfferOnSite,
-} from '../../types/dbTypes/IJobOffer';
-import { AuthContext } from '../authContext/AuthContext';
-import { Unsubscribe } from 'firebase/auth';
 
+import { AuthContext } from '../authContext/AuthContext';
+import { IJobPosting, IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+
+export const useJobPosting = () => {};
 export interface RecruiterContextInterface {
-  jobOffers: IJobPostingDB[];
+  jobPostings: IJobPostingDB[];
   loading: boolean;
   error: string;
 }
@@ -39,14 +34,14 @@ export const RecruiterContextProvider = (
   const {
     authState: { user },
   } = useContext(AuthContext);
-  const jobOffersCollection = collection(db, 'jobOffers').withConverter(
-    genericConverter<IJobOffer>()
+  const jobPostingsCollection = collection(db, 'jobPostings').withConverter(
+    genericConverter<IJobPosting>()
   );
-  const [jobOffers, setJobOffers] = useState<IJobPostingDB[]>([]);
+  const [jobPostings, setjobPostings] = useState<IJobPostingDB[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const q = query(jobOffersCollection, where('recruiter_id', '==', user?.id));
-  const jobOfferUpdateListener = () => {
+  const q = query(jobPostingsCollection, where('recruiter_id', '==', user?.id));
+  const jobPostingUpdateListener = () => {
     if (!user) {
       return;
     }
@@ -54,12 +49,12 @@ export const RecruiterContextProvider = (
     const subscription = onSnapshot(
       q,
       function (doc) {
-        setJobOffers(doc.docs.map((el) => ({ id: el.id, ...el.data() })));
+        setjobPostings(doc.docs.map((el) => ({ id: el.id, ...el.data() })));
         setLoading(false);
       },
       (err) => {
         console.log('error in job offers subscription');
-        setJobOffers([]);
+        setjobPostings([]);
         setLoading(false);
         setError('error obteniendo ofertas de trabajo');
       }
@@ -68,7 +63,7 @@ export const RecruiterContextProvider = (
     return subscription;
   };
   useEffect(() => {
-    const unsubscribe = jobOfferUpdateListener();
+    const unsubscribe = jobPostingUpdateListener();
     return () => {
       if (unsubscribe) {
         return unsubscribe();
@@ -77,7 +72,7 @@ export const RecruiterContextProvider = (
   }, [user]);
 
   return (
-    <RecruiterContext.Provider value={{ error, loading, jobOffers }}>
+    <RecruiterContext.Provider value={{ error, loading, jobPostings }}>
       {props.children}
     </RecruiterContext.Provider>
   );

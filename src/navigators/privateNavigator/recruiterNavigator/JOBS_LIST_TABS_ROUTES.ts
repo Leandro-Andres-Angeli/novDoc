@@ -1,9 +1,9 @@
-import { JobOfferStatus } from '../../../types/dbTypes/IJobOffer';
+import { jobPostingStatus } from '../../../types/dbTypes/IJobPosting';
 
 export const JOBS_LIST_TABS_ROUTES = {
-  [JobOfferStatus.ACTIVE]: JobOfferStatus.ACTIVE,
-  [JobOfferStatus.CLOSED]: JobOfferStatus.CLOSED,
-  [JobOfferStatus.PAUSED]: JobOfferStatus.PAUSED,
+  [jobPostingStatus.ACTIVE]: jobPostingStatus.ACTIVE,
+  [jobPostingStatus.CLOSED]: jobPostingStatus.CLOSED,
+  [jobPostingStatus.PAUSED]: jobPostingStatus.PAUSED,
 };
 
 export default JOBS_LIST_TABS_ROUTES;

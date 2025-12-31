@@ -1,10 +1,10 @@
 import { View, StyleSheet } from 'react-native';
 import React, { PropsWithChildren } from 'react';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobPosting';
 import AppCardWrapper from '@ui/AppCardWrapper';
 import { Card, IconButton, Text, useTheme } from 'react-native-paper';
 
-import jobOfferHasLocation from '@utils/jobOfferHasLocation';
+import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 import { CustomTheme } from 'src/providers/PublicProviders';
 import dateFormatter from '@utils/dateFormatter ';
 import { getLocales } from 'expo-localization';
@@ -50,7 +50,7 @@ const JobPostingCard = (props: JobPostingCardProps) => {
                 style={{ ...styles.subtitle, textTransform: 'capitalize' }}
               >
                 {jobPosting.shiftTime} |{' '}
-                {(jobOfferHasLocation(jobPosting) &&
+                {(jobPostingHasLocation(jobPosting) &&
                   jobPosting.province.nombre +
                     ' , ' +
                     jobPosting.city.nombre) ||

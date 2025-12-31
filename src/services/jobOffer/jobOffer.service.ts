@@ -13,22 +13,22 @@ import {
   where,
 } from 'firebase/firestore';
 import {
-  IJobOffer,
+  IJobPosting,
   IJobPostingDB,
-  JobOfferStatus,
-} from 'src/types/dbTypes/IJobOffer';
+  jobPostingStatus,
+} from 'src/types/dbTypes/IJobPosting';
 import {
   FirebaseErrorResponse,
   FirebaseResponse,
 } from 'src/types/firebaseResponse/firebaseResponses';
-const jobsOfferCollection = collection(db, 'jobOffers').withConverter(
-  genericConverter<IJobOffer>()
+const jobsOfferCollection = collection(db, 'jobPostings').withConverter(
+  genericConverter<IJobPosting>()
 );
-export const createJobOffer = async (
-  jobOffer: IJobOffer
+export const createjobPosting = async (
+  jobPosting: IJobPosting
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
-    const savedOffer = await addDoc(jobsOfferCollection, jobOffer);
+    const savedOffer = await addDoc(jobsOfferCollection, jobPosting);
     if (savedOffer) {
       return { message: 'Oferta creada correctamente', success: true };
     } else {
@@ -40,14 +40,14 @@ export const createJobOffer = async (
     return { success: false, message: 'Error creando oferta' };
   }
 };
-export const updateJobOffer = async (
+export const updatejobPosting = async (
   idToUpdate: string,
-  jobOfferUpdate: Partial<IJobOffer>
+  jobPostingUpdate: Partial<IJobPosting>
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
-    const docRef = await doc(db, 'jobOffers', idToUpdate);
+    const docRef = await doc(db, 'jobPostings', idToUpdate);
 
-    await updateDoc(docRef, { ...jobOfferUpdate });
+    await updateDoc(docRef, { ...jobPostingUpdate });
 
     return { message: 'Oferta actualizada', success: true };
   } catch (error) {
@@ -58,7 +58,7 @@ export const updateJobOffer = async (
 };
 
 export const getJobPostings = async (
-  jobPostingStatus: JobOfferStatus = JobOfferStatus.ACTIVE
+  jobPostingStatus: jobPostingStatus = jobPostingStatus.ACTIVE
 ) => {
   try {
     const q = query(

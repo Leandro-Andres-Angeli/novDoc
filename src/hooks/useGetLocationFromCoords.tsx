@@ -2,7 +2,7 @@ import geoRefAxiosInstance, {
   geoRefAxiosInstanceEndpoints,
 } from 'axios/geoRef';
 import React, { useState } from 'react';
-import { MapLocation } from 'src/types/dbTypes/IJobOffer';
+import { MapLocation } from 'src/types/dbTypes/IJobPosting';
 import { GeoLocationReversed } from 'src/types/geoRefResponses/geoLocationReversed';
 import { Toast } from 'toastify-react-native';
 

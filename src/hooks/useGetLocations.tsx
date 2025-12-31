@@ -1,6 +1,6 @@
 import geoRefAxiosInstance from 'axios/geoRef';
 import { useEffect, useRef, useState } from 'react';
-import { MapLocation } from 'src/types/dbTypes/IJobOffer';
+
 const SANTA_CRUZ_DATA = {
   cantidad: 10,
   inicio: 0,

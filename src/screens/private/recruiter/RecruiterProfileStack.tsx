@@ -4,7 +4,7 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobPosting';
 
 import RecruiterProfileScreen from './RecruiterProfileScreen';
 import JobDetailsScreen from 'src/screens/private/shared/JobDetailScreen';

@@ -1,6 +1,6 @@
 import { FormikHelpers } from 'formik';
 import { FormMode } from './formMode';
-import { IJobOffer } from './dbTypes/IJobOffer';
+import { IJobPosting } from './dbTypes/IJobPosting';
 import {
   IRecruiter,
   IUser,
@@ -15,7 +15,7 @@ interface GenericFormProps<T, K = T> {
 }
 export type UpdateRecruiterProfileFormShape = IUser & Omit<IRecruiter, 'jobs'>;
 
-export interface JobPostingFormProps<T, K = IJobOffer>
+export interface JobPostingFormProps<T, K = IJobPosting>
   extends GenericFormProps<T, K> {
   userId: string;
   valuesToEdit?: K & { id: string };

@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
 import React, { useContext, useState } from 'react';
 import JobPostingForm from '@components/forms/JobPostingForm';
-import { IJobOffer } from 'src/types/dbTypes/IJobOffer';
+import { IJobPosting } from 'src/types/dbTypes/IJobPosting';
 import { FormikHelpers } from 'formik';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from './RecruiterProfileStack';
-import { updateJobOffer } from '../../../services/jobOffer/jobOffer.service';
+import { updatejobPosting } from '../../../services/jobPosting/jobPosting.service';
 import { Toast } from 'toastify-react-native';
 import { formModes } from 'src/types/formMode';
 import AppLoading from '@ui/AppLoading';
@@ -28,28 +28,31 @@ const EditJobPostingScreen = ({
     loading: loadingUser,
   } = useContext(AuthContext);
 
-  async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
+  async function handleSubmit(
+    values: IJobPosting,
+    helpers: FormikHelpers<any>
+  ) {
     setLoading(true);
     console.log(values);
 
     try {
-      const newJobOfferResponse = await updateJobOffer(jobPosting.id, {
+      const newjobPostingResponse = await updatejobPosting(jobPosting.id, {
         ...values,
         updatedAt: Timestamp.fromDate(new Date()),
       });
-      console.log(newJobOfferResponse);
-      if (newJobOfferResponse.success) {
+      console.log(newjobPostingResponse);
+      if (newjobPostingResponse.success) {
         Toast.show({
           onHide: () => {
             navigation.navigate('RECRUITER_PROFILE_TABS', {});
           },
-          text1: newJobOfferResponse.message,
+          text1: newjobPostingResponse.message,
           visibilityTime: 700,
           autoHide: true,
         });
         helpers.resetForm();
         return;
-      } else Toast.error(newJobOfferResponse.message);
+      } else Toast.error(newjobPostingResponse.message);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -67,7 +70,7 @@ const EditJobPostingScreen = ({
     return <AppLoading></AppLoading>;
   }
   return (
-    <JobPostingForm<IJobOffer>
+    <JobPostingForm<IJobPosting>
       loading={loading}
       handleSubmit={handleSubmit}
       userId={user.id}

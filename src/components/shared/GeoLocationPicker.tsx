@@ -5,7 +5,7 @@ import { IconButton, useTheme } from 'react-native-paper';
 import * as Location from 'expo-location';
 import { Toast } from 'toastify-react-native';
 
-import { MapLocation } from 'src/types/dbTypes/IJobOffer';
+import { MapLocation } from 'src/types/dbTypes/IJobPosting';
 import useGetLocationFromCoords from 'src/hooks/useGetLocationFromCoords';
 interface GeoLocationPickerProps {
   handleSelectProvince: (val: MapLocation) => void;

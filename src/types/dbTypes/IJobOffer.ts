@@ -20,23 +20,23 @@ export enum ShiftTime {
   PART_TIME = 'part-time',
   CONTRACTOR = 'contractor',
 }
-export enum JobOfferStatus {
+export enum jobPostingStatus {
   ACTIVE = 'activa',
   CLOSED = 'cerrada',
   PAUSED = 'pausada',
 }
-export interface IJobOfferOnSite extends IJobOfferGeneral {
+export interface IJobPostingOnSite extends IJobPostingGeneral {
   jobLocation: JobLocation.ON_SITE;
   province: MapLocation;
   city: MapLocation;
 }
-export interface IJobOfferHybrid extends IJobOfferGeneral {
+export interface IJobPostingHybrid extends IJobPostingGeneral {
   jobLocation: JobLocation.HYBRID;
   province: MapLocation;
   city: MapLocation;
 }
-export type IJobPostingDB = IJobOffer & { id: string };
-export interface IJobOfferGeneral {
+export type IJobPostingDB = IJobPosting & { id: string };
+export interface IJobPostingGeneral {
   title: string;
   company: string;
   recruiter_id: string;
@@ -46,13 +46,17 @@ export interface IJobOfferGeneral {
   jobLocation: JobLocation;
   shiftTime: ShiftTime;
   salary: number;
-  status: JobOfferStatus;
+  status: jobPostingStatus;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
 
-export interface IJobOfferRemote extends Omit<IJobOfferGeneral, 'jobLocation'> {
+export interface IJobPostingRemote
+  extends Omit<IJobPostingGeneral, 'jobLocation'> {
   jobLocation: JobLocation.REMOTE;
 }
 
-export type IJobOffer = IJobOfferOnSite | IJobOfferHybrid | IJobOfferRemote;
+export type IJobPosting =
+  | IJobPostingOnSite
+  | IJobPostingHybrid
+  | IJobPostingRemote;
