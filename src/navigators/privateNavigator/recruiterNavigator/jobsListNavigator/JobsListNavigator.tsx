@@ -3,14 +3,13 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import { IJobPostingDB, JobOfferStatus } from 'src/types/dbTypes/IJobOffer';
 
+import JobOffersList from 'src/screens/private/recruiter/JobOffersList';
 import JobsListTabNavigator, {
   JobsListTabNavigatorRootParams,
 } from '../JobsListTabNavigator';
 import { useRoute } from '@react-navigation/native';
-import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
-import JobPostingsList from 'src/screens/private/recruiter/JobOffersList';
-import { DrawerScreenProps } from '@react-navigation/drawer';
 
 export const JOBS_LIST_ROUTES = {
   JOB_POSTING_DETAIL: 'JOB_POSTING_DETAIL',
@@ -21,15 +20,15 @@ export type JobListNavigatorRootParams = {
     jobPosting: IJobPostingDB;
   };
   [JOBS_LIST_ROUTES.JOB_POSTING_LIST]: {
-    jobPostingStatus: jobPostingStatus;
+    jobPostingStatus: JobOfferStatus;
   };
 };
 const Stack = createNativeStackNavigator<JobListNavigatorRootParams>();
 interface JobsListTabNavigatorProps
-  extends DrawerScreenProps<JobsListTabNavigatorRootParams> {}
+  extends NativeStackScreenProps<JobsListTabNavigatorRootParams> {}
 const JobsListNavigator = (props: JobsListTabNavigatorProps) => {
   const route = useRoute();
-  console.log('route hoook');
+  console.log('route hoook', route.params);
   return (
     <Stack.Navigator
       initialRouteName={JOBS_LIST_ROUTES.JOB_POSTING_LIST}
@@ -39,8 +38,10 @@ const JobsListNavigator = (props: JobsListTabNavigatorProps) => {
     >
       <Stack.Screen
         name={JOBS_LIST_ROUTES.JOB_POSTING_LIST}
-        component={JobPostingsList}
-        initialParams={{ jobPostingStatus: props.route.params.jobStatus }}
+        component={JobOffersList}
+        initialParams={{
+          jobPostingStatus: props.route.params.jobStatus,
+        }}
       ></Stack.Screen>
     </Stack.Navigator>
   );

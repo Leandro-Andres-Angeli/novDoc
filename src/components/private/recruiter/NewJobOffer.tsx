@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import React, { useContext, useState } from 'react';
+import { IJobOffer } from 'src/types/dbTypes/IJobOffer';
 
 import { Toast } from 'toastify-react-native';
 
@@ -7,7 +8,7 @@ import { Text } from 'react-native-paper';
 
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
-
+import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
 import AppLocationSelected from '@ui/AppLocationSelected';
 
 import {
@@ -20,10 +21,8 @@ import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruite
 import { FormikHelpers } from 'formik';
 
 import JobPostingForm from '@components/forms/JobPostingForm';
-import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
-import { createjobPosting } from 'src/services/jobOffer/jobOffer.service';
 
-const NewjobPosting = () => {
+const NewJobOffer = () => {
   const {
     authState: { user },
     loading: loadingUser,
@@ -47,30 +46,24 @@ const NewjobPosting = () => {
     >();
   /* const navigator =
     useNavigation<NavigationProp<RecruiterNavigatorRootParams>>(); */
-  async function handleSubmit(
-    values: IJobPosting,
-    helpers: FormikHelpers<any>
-  ) {
+  async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
     setLoading(true);
 
     try {
-      const newjobPostingResponse = await createjobPosting(values);
+      const newJobOfferResponse = await createJobOffer(values);
 
-      if (newjobPostingResponse.success) {
+      if (newJobOfferResponse.success) {
         Toast.show({
           onHide: () => {
-            // navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {
-            //   params: { shouldUpdate: true, screen: 'RECRUITER_PROFILE_STACK' },
-            // });
             navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});
           },
-          text1: newjobPostingResponse.message,
+          text1: newJobOfferResponse.message,
           visibilityTime: 700,
           autoHide: true,
         });
         helpers.resetForm();
         return;
-      } else Toast.error(newjobPostingResponse.message);
+      } else Toast.error(newJobOfferResponse.message);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -79,7 +72,7 @@ const NewjobPosting = () => {
   }
 
   return (
-    <JobPostingForm<IJobPosting>
+    <JobPostingForm<IJobOffer>
       loading={loading}
       handleSubmit={handleSubmit}
       userId={user.id}
@@ -87,4 +80,4 @@ const NewjobPosting = () => {
   );
 };
 
-export default NewjobPosting;
+export default NewJobOffer;
