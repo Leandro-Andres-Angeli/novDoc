@@ -6,19 +6,74 @@ import {
   Query,
   where,
   onSnapshot,
+  DocumentSnapshot,
 } from 'firebase/firestore';
 import {
   createContext,
   PropsWithChildren,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
 import { AuthContext } from '../authContext/AuthContext';
-import { IJobPosting, IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import {
+  IJobPosting,
+  IJobPostingDB,
+  jobPostingStatus,
+} from 'src/types/dbTypes/IJobOffer';
 
-export const useJobPosting = () => {};
+const jobPostingCollection = collection(db, 'jobPostings').withConverter(
+  genericConverter<IJobPostingDB>()
+);
+export interface jobPostingsObj {
+  [jobPostingStatus.ACTIVE]: Array<IJobPostingDB>;
+  [jobPostingStatus.CLOSED]: Array<IJobPostingDB>;
+  [jobPostingStatus.PAUSED]: Array<IJobPostingDB>;
+}
+export const useJobPosting = () => {
+  const [jobPostings, setJobPostings] = useState<jobPostingsObj>({
+    activa: [],
+    cerrada: [],
+    pausada: [],
+  });
+  // Track loading state per status
+  const [loading, setLoading] = useState<Record<jobPostingStatus, boolean>>({
+    activa: false,
+    cerrada: false,
+    pausada: false,
+  });
+
+  // Track if there are more items to load
+  const [hasMore, setHasMore] = useState<Record<jobPostingStatus, boolean>>({
+    activa: true,
+    cerrada: true,
+    pausada: true,
+  });
+  // Keep track of last document per status for pagination
+  const lastDocRef = useRef<Record<jobPostingStatus, DocumentSnapshot | null>>({
+    activa: null,
+    cerrada: null,
+    pausada: null,
+  });
+
+  const loadJobPostings = async (jobsPostingStatusParam: jobPostingStatus) => {
+    setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
+    try {
+      console.log('FETCHINNGGG JOBPOSTINGS ');
+      setJobPostings((prev) => ({
+        ...prev,
+        [jobsPostingStatusParam]: [],
+      }));
+      // let q = query(jobPostingCollection, where());
+    } catch (error) {
+      console.log('error fetching job Postings');
+    } finally {
+      setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: false }));
+    }
+  };
+};
 export interface RecruiterContextInterface {
   jobPostings: IJobPostingDB[];
   loading: boolean;
