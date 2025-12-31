@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
+
 import { getJobPostings } from 'src/services/jobOffer/jobOffer.service';
+import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 
 const useGetJobPostings = (jobPostingStatus: jobPostingStatus) => {
   const [jobPostings, setJobPostings] = useState<IJobPostingDB[]>([]);

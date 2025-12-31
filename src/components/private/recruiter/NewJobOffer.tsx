@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import React, { useContext, useState } from 'react';
-import { IJobOffer } from 'src/types/dbTypes/IJobOffer';
 
 import { Toast } from 'toastify-react-native';
 
@@ -8,7 +7,7 @@ import { Text } from 'react-native-paper';
 
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
-import { createJobOffer } from 'src/services/jobOffer/jobOffer.service';
+
 import AppLocationSelected from '@ui/AppLocationSelected';
 
 import {
@@ -21,6 +20,9 @@ import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruite
 import { FormikHelpers } from 'formik';
 
 import JobPostingForm from '@components/forms/JobPostingForm';
+
+import { createjobPosting } from 'src/services/jobOffer/jobOffer.service';
+import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
 
 const NewJobOffer = () => {
   const {
@@ -46,11 +48,14 @@ const NewJobOffer = () => {
     >();
   /* const navigator =
     useNavigation<NavigationProp<RecruiterNavigatorRootParams>>(); */
-  async function handleSubmit(values: IJobOffer, helpers: FormikHelpers<any>) {
+  async function handleSubmit(
+    values: IJobPosting,
+    helpers: FormikHelpers<any>
+  ) {
     setLoading(true);
 
     try {
-      const newJobOfferResponse = await createJobOffer(values);
+      const newJobOfferResponse = await createjobPosting(values);
 
       if (newJobOfferResponse.success) {
         Toast.show({
@@ -72,7 +77,7 @@ const NewJobOffer = () => {
   }
 
   return (
-    <JobPostingForm<IJobOffer>
+    <JobPostingForm<IJobPosting>
       loading={loading}
       handleSubmit={handleSubmit}
       userId={user.id}

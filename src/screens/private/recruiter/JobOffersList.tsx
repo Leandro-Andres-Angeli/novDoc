@@ -16,6 +16,7 @@ import useGetJobPostings from 'src/hooks/useGetJobPostings';
 import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+
 interface jobPostingsListProps
   extends NativeStackScreenProps<
     JobListNavigatorRootParams,

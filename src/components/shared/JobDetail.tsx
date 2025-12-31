@@ -18,9 +18,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RecruiterProfileStackRootParams } from 'src/screens/private/recruiter/RecruiterProfileStack';
 import { Toast } from 'toastify-react-native';
 import { CustomTheme } from 'src/providers/PublicProviders';
-import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
+
 import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 import { updatejobPosting } from 'src/services/jobOffer/jobOffer.service';
+import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 
 interface JobDetailProp {
   jobPosting: IJobPostingDB;

@@ -11,8 +11,9 @@ import { Toast } from 'toastify-react-native';
 import { formModes } from 'src/types/formMode';
 import AppLoading from '@ui/AppLoading';
 import { Timestamp } from 'firebase/firestore';
-import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
+
 import { updatejobPosting } from 'src/services/jobOffer/jobOffer.service';
+import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
 interface EditJobPostingScreen
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,
