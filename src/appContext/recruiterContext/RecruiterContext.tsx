@@ -23,6 +23,7 @@ import {
   IJobPostingDB,
   jobPostingStatus,
 } from 'src/types/dbTypes/IJobOffer';
+import useGetJobPostings, { Error } from 'src/hooks/useGetJobPostings';
 
 const jobPostingCollection = collection(db, 'jobPostings').withConverter(
   genericConverter<IJobPostingDB>()
@@ -75,9 +76,13 @@ export const useJobPosting = () => {
   };
 };
 export interface RecruiterContextInterface {
-  jobPostings: IJobPostingDB[];
-  loading: boolean;
-  error: string;
+  // jobPostings: IJobPostingDB[];
+  jobPostings: jobPostingsObj;
+  // loading: boolean;
+  loading: Record<jobPostingStatus, boolean>;
+  // error: string;
+  errors: Record<jobPostingStatus, Error>;
+  loadJobPostings: (jobsPostingStatusParam: jobPostingStatus) => Promise<void>;
 }
 export const RecruiterContext = createContext<RecruiterContextInterface>(
   {} as RecruiterContextInterface
@@ -92,42 +97,47 @@ export const RecruiterContextProvider = (
   const jobPostingsCollection = collection(db, 'jobPostings').withConverter(
     genericConverter<IJobPosting>()
   );
-  const [jobPostings, setjobPostings] = useState<IJobPostingDB[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const q = query(jobPostingsCollection, where('recruiter_id', '==', user?.id));
-  const jobPostingUpdateListener = () => {
-    if (!user) {
-      return;
-    }
-    setLoading(true);
-    const subscription = onSnapshot(
-      q,
-      function (doc) {
-        setjobPostings(doc.docs.map((el) => ({ id: el.id, ...el.data() })));
-        setLoading(false);
-      },
-      (err) => {
-        console.log('error in job offers subscription');
-        setjobPostings([]);
-        setLoading(false);
-        setError('error obteniendo ofertas de trabajo');
-      }
-    );
-    setLoading(false);
-    return subscription;
-  };
-  useEffect(() => {
-    const unsubscribe = jobPostingUpdateListener();
-    return () => {
-      if (unsubscribe) {
-        return unsubscribe();
-      }
-    };
-  }, [user]);
+  // const [jobPostings, setjobPostings] = useState<IJobPostingDB[]>([]);
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string>('');
 
+  const q = query(jobPostingsCollection, where('recruiter_id', '==', user?.id));
+  if (!user) {
+    throw Error('user not found');
+  }
+  // const jobPostingUpdateListener = () => {
+  //   setLoading(true);
+  //   const subscription = onSnapshot(
+  //     q,
+  //     function (doc) {
+  //       setjobPostings(doc.docs.map((el) => ({ id: el.id, ...el.data() })));
+  //       setLoading(false);
+  //     },
+  //     (err) => {
+  //       console.log('error in job offers subscription');
+  //       setjobPostings([]);
+  //       setLoading(false);
+  //       setError('error obteniendo ofertas de trabajo');
+  //     }
+  //   );
+  //   setLoading(false);
+  //   return subscription;
+  // };
+  useEffect(() => {
+    // const unsubscribe = jobPostingUpdateListener();
+    // return () => {
+    //   if (unsubscribe) {
+    //     return unsubscribe();
+    //   }
+    // };
+  }, [user]);
+  const { loadJobPostings, loading, jobPostings, errors } = useGetJobPostings({
+    user,
+  });
   return (
-    <RecruiterContext.Provider value={{ error, loading, jobPostings }}>
+    <RecruiterContext.Provider
+      value={{ errors, loading, jobPostings, loadJobPostings }}
+    >
       {props.children}
     </RecruiterContext.Provider>
   );

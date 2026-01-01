@@ -1,5 +1,5 @@
 import { View, Pressable } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
 
@@ -16,6 +16,7 @@ import useGetJobPostings from 'src/hooks/useGetJobPostings';
 import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 interface jobPostingsListProps
   extends NativeStackScreenProps<
@@ -26,10 +27,12 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   const { params } = route;
   console.log('paramssss', params);
   const { jobPostingStatus } = params;
-  const { error, jobPostings, loading } = useGetJobPostings(jobPostingStatus);
-  // console.log('parent', navigation.getParent());
-  // const parent = navigation.getParent();
-  // console.log('stateeee', parent?.getState());
+  // const { error, jobPostings, loading } = useGetJobPostings(jobPostingStatus);
+  const { loadJobPostings, loading, jobPostings, errors } =
+    useContext(RecruiterContext);
+  const {
+    authState: { user },
+  } = useContext(AuthContext);
   const navigation = useNavigation<
     NavigationProp<{
       ['JOB_POSTING_DETAILS']: {
@@ -37,7 +40,23 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
       };
     }>
   >();
-  if (loading) {
+  const jobPostingStatusLoading = loading[jobPostingStatus];
+  const jobPostingsByStatus = jobPostings[jobPostingStatus];
+  const error = errors[jobPostingStatus];
+  useEffect(() => {
+    console.log('IN EFFECTTTT');
+    if (jobPostingsByStatus.length === 0 && !jobPostingStatusLoading) {
+      loadJobPostings(jobPostingStatus);
+    }
+  }, [user, jobPostingStatus]);
+
+  // return (
+  //   <View>
+  //     <Text>Refactoring getting data</Text>
+  //   </View>
+  // );
+
+  if (jobPostingStatusLoading) {
     return <AppLoading></AppLoading>;
   }
 
@@ -74,7 +93,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
               <JobPostingCard jobPosting={item}></JobPostingCard>
             </Pressable>
           )}
-          data={jobPostings}
+          data={jobPostingsByStatus}
         ></GenericList>
       </View>
     </>

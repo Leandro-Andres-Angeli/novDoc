@@ -38,7 +38,6 @@ interface RecruiterProfileScreenProps
 const RecruiterProfileStack = ({ route }: RecruiterProfileScreenProps) => {
   const theme = useTheme<CustomTheme>();
 
-  console.log('PPPPPPP', JSON.stringify(route.params));
   return (
     <Stack.Navigator
       initialRouteName={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}
