@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
 
-import { getJobPostings } from 'src/services/jobOffer/jobOffer.service';
 import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 import {
   collection,
@@ -16,6 +15,8 @@ import {
 import { genericConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
 import { IUser, UserTypes } from 'src/types/authContextTypes/authContextTypes';
+import { getJobPostings } from 'src/services/jobOffer/jobOffer.service';
+import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
 const jobPostingCollection = collection(db, 'jobPostings').withConverter(
   genericConverter<IJobPostingDB>()
 );
@@ -67,6 +68,69 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     pausada: { error: false, message: null },
   });
   const PAGE_SIZE = 5;
+  /*  const loadJobPostings = useCallback(
+    async (jobsPostingStatusParam: jobPostingStatus) => {
+      setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
+      setErrors((prev) => ({
+        ...prev,
+        [jobsPostingStatusParam]: { error: false, message: null },
+      }));
+      try {
+        // console.log('FETCHINNGGG JOBPOSTINGS ');
+        // setJobPostings((prev) => ({
+        //   ...prev,
+        //   [jobsPostingStatusParam]: [],
+        // }));
+        // let q = query(
+        //   jobPostingCollection,
+        //   where('recruiter_id', '==', user.id),
+        //   where('status', '==', jobsPostingStatusParam),
+        //   orderBy('updatedAt', 'desc'),
+        //   limit(PAGE_SIZE)
+        // );
+        // const querySnapshot = await getDocs(q);
+        // const collectionRes = querySnapshot.docs.map<IJobPostingDB>((doc) => ({
+        //   ...doc.data(),
+        //   id: doc.id,
+        // }));
+        // setJobPostings((prev) => ({
+        //   ...prev,
+        //   [jobsPostingStatusParam]: collectionRes,
+        // }));
+
+        const jobPosting = await getJobPostings(jobsPostingStatusParam);
+         setJobPostings((prev) => ({
+          ...prev,
+          [jobsPostingStatusParam]: jobPosting ,
+        }));
+        if (!jobPosting.success) {
+          throw Error((jobPosting as FirebaseErrorResponse).message);
+        }
+      } catch (err) {
+        setErrors((prev) => ({
+          ...prev,
+          [jobsPostingStatusParam]: {
+            error: true,
+            message: (err as Error).message,
+          },
+        }));
+      } finally {
+        // catch (error) {
+        //   console.log(error);
+        //   console.log('error fetching job Postings');
+        //   setErrors((prev) => ({
+        //     ...prev,
+        //     [jobsPostingStatusParam]: {
+        //       error: true,
+        //       message: 'Error fetching job postings',
+        //     },
+        //   }));
+        // }
+        setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: false }));
+      }
+    },
+    [user]
+  ); */
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus) => {
       setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));

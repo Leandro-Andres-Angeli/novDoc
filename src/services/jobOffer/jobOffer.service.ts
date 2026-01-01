@@ -16,7 +16,8 @@ import {
   IJobPosting,
   IJobPostingDB,
   jobPostingStatus,
-} from 'src/types/dbTypes/IJobPosting';
+} from 'src/types/dbTypes/IJobOffer';
+
 import {
   FirebaseErrorResponse,
   FirebaseResponse,
@@ -58,17 +59,18 @@ export const updatejobPosting = async (
 };
 
 export const getJobPostings = async (
-  jobPostingStatus: jobPostingStatus = jobPostingStatus.ACTIVE
+  jobPostingStatusParam: jobPostingStatus = jobPostingStatus.ACTIVE
 ) => {
+  const PAGE_SIZE = 5;
   try {
     const q = query(
       jobsOfferCollection,
-      where('status', '==', jobPostingStatus),
+      where('status', '==', jobPostingStatusParam),
       orderBy('updatedAt', 'desc'),
 
       orderBy('createdAt', 'desc'),
 
-      limit(10)
+      limit(PAGE_SIZE)
     );
     const querySnapshot = await getDocs(q);
     const collectionRes = querySnapshot.docs.map<IJobPostingDB>((el) => ({
@@ -81,9 +83,9 @@ export const getJobPostings = async (
     const parsedError = err as unknown as Error;
     console.log('errr', err);
     const errorRes: FirebaseErrorResponse = {
-      message: parsedError.message,
+      message: parsedError.message ?? err,
       success: false,
     };
-    return errorRes;
+    return errorRes as FirebaseErrorResponse;
   }
 };
