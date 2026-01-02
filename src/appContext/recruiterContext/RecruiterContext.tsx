@@ -123,6 +123,10 @@ export const RecruiterContextProvider = (
   //   setLoading(false);
   //   return subscription;
   // };
+
+  // const jobPostingUpdateListener = () => {
+
+  // };
   useEffect(() => {
     // const unsubscribe = jobPostingUpdateListener();
     // return () => {

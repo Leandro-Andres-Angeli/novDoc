@@ -4,12 +4,16 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 import {
+  and,
   collection,
   DocumentSnapshot,
   getDocs,
   limit,
+  onSnapshot,
+  or,
   orderBy,
   query,
+  Timestamp,
   where,
 } from 'firebase/firestore';
 import { genericConverter } from '@utils/converters/firebaseConverters';
@@ -133,11 +137,17 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   ); */
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus) => {
+      if (!user) {
+        console.log('USER NOT FOUND');
+        return;
+      }
       setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
       setErrors((prev) => ({
         ...prev,
         [jobsPostingStatusParam]: { error: false, message: null },
       }));
+      // Only listen for offers created in the last minute
+
       try {
         console.log('FETCHINNGGG JOBPOSTINGS ');
         setJobPostings((prev) => ({
@@ -176,6 +186,85 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     },
     [user]
   );
+  const jobPostingUpdateListener = () => {
+    const recentTimestamp = Timestamp.fromDate(new Date(Date.now() - 60000));
+    let q = query(
+      jobPostingCollection,
+      and(
+        where('recruiter_id', '==', user.id),
+
+        where('updatedAt', '>', recentTimestamp)
+      ),
+      orderBy('updatedAt', 'desc'),
+      limit(PAGE_SIZE)
+    );
+    const subscription = onSnapshot(
+      q,
+      (snapshot) => {
+        snapshot.docChanges().forEach(function (change) {
+          if (change.type === 'added') {
+            console.log('ADDING POSTING ');
+            const newDoc: IJobPostingDB = {
+              ...change.doc.data(),
+              id: change.doc.id,
+            };
+            setJobPostings((prev) => {
+              const exists = prev[newDoc.status].some(
+                (offer) => offer.id === newDoc.id
+              );
+              if (exists) return prev;
+              return {
+                ...prev,
+                activa: [newDoc, ...prev['activa']],
+              };
+            });
+          }
+          if (change.type === 'modified') {
+            console.log('IN MODIF');
+            const updatedDoc: IJobPostingDB = {
+              ...change.doc.data(),
+              id: change.doc.id,
+            };
+            const jobPostingFiltered: Record<
+              jobPostingStatus,
+              IJobPostingDB[]
+            > = {
+              activa: [],
+              cerrada: [],
+              pausada: [],
+            };
+            Object.values(jobPostingStatus).forEach((key) => {
+              console.log('KEYSSS', key);
+              console.log('BEFORE FILTER LENGTH', jobPostings[key].length);
+              const filteredJobPostingCategory = jobPostings[key].filter(
+                (jobPosting) => jobPosting.id !== updatedDoc.id
+              );
+              console.log('AFTER FILTER LENGTH', jobPostings[key].length);
+              if (key === updatedDoc.status) {
+                filteredJobPostingCategory.unshift(updatedDoc);
+              }
+
+              jobPostingFiltered[key] = filteredJobPostingCategory;
+            });
+
+            setJobPostings((prev) => ({ ...prev, ...jobPostingFiltered }));
+          }
+        });
+      },
+      function (err) {
+        console.log('IN ERROR');
+        console.log('IN ERROR', err);
+      }
+    );
+    return subscription;
+  };
+  useEffect(() => {
+    console.log('rendering');
+    const unsubscribe = jobPostingUpdateListener();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [user]);
   return { loadJobPostings, jobPostings, loading, errors };
 };
 

@@ -68,7 +68,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     );
   }
 
-  if (isEmptyArray(jobPostings)) {
+  if (isEmptyArray(jobPostingsByStatus)) {
     return (
       <ProfileProfileJobPostingEmptyState
         {...{ jobPostingStatus }}
@@ -78,6 +78,8 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
 
   return (
     <>
+      {/* <Text>{JSON.stringify(jobPostings)}</Text> */}
+      {/* <Text>{JSON.stringify(jobPostingsByStatus, null, 2)}</Text> */}
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
           renderItem={({ item }) => (
