@@ -46,7 +46,7 @@ export const updatejobPosting = async (
   jobPostingUpdate: Partial<IJobPosting>
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
-    const docRef = await doc(db, 'jobPostings', idToUpdate);
+    const docRef = doc(db, 'jobPostings', idToUpdate);
 
     await updateDoc(docRef, { ...jobPostingUpdate });
 

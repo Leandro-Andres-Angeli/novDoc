@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, ScrollView } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
@@ -25,9 +25,9 @@ interface jobPostingsListProps
   > {}
 const JobPostingsList = ({ route }: jobPostingsListProps) => {
   const { params } = route;
-  console.log('paramssss', params);
+
   const { jobPostingStatus } = params;
-  // const { error, jobPostings, loading } = useGetJobPostings(jobPostingStatus);
+
   const { loadJobPostings, loading, jobPostings, errors } =
     useContext(RecruiterContext);
   const {
@@ -44,7 +44,6 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   const jobPostingsByStatus = jobPostings[jobPostingStatus];
   const error = errors[jobPostingStatus];
   useEffect(() => {
-    console.log('IN EFFECTTTT');
     if (jobPostingsByStatus.length === 0 && !jobPostingStatusLoading) {
       loadJobPostings(jobPostingStatus);
     }
@@ -78,11 +77,13 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
 
   return (
     <>
-      {/* <Text>{JSON.stringify(jobPostings)}</Text> */}
-      {/* <Text>{JSON.stringify(jobPostingsByStatus, null, 2)}</Text> */}
+      {/* <ScrollView>
+        <Text>{JSON.stringify(jobPostings, null, 2)}</Text>
+      </ScrollView> */}
+
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <Pressable
               onPress={() => {
                 // navigate to detail
@@ -90,6 +91,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
                   jobPosting: item,
                 });
               }}
+              // key={item.id}
               key={item.id}
             >
               <JobPostingCard jobPosting={item}></JobPostingCard>

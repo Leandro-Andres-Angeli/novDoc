@@ -59,7 +59,7 @@ const Favorites = () => {
       <Text>Test</Text>
       <Text>
         {JSON.stringify(
-          jobPostings.map((el) => ({
+          jobPostings.activa.map((el) => ({
             ...el,
             createdAt: el.createdAt.toDate().toLocaleDateString(languageTag),
           }))

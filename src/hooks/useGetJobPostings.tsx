@@ -21,6 +21,7 @@ import { db } from 'firebase/config';
 import { IUser, UserTypes } from 'src/types/authContextTypes/authContextTypes';
 import { getJobPostings } from 'src/services/jobOffer/jobOffer.service';
 import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
+
 const jobPostingCollection = collection(db, 'jobPostings').withConverter(
   genericConverter<IJobPostingDB>()
 );
@@ -28,11 +29,11 @@ export type Error = {
   error: boolean;
   message: string | null;
 };
-export interface jobPostingsObj {
-  [jobPostingStatus.ACTIVE]: Array<IJobPostingDB>;
-  [jobPostingStatus.CLOSED]: Array<IJobPostingDB>;
-  [jobPostingStatus.PAUSED]: Array<IJobPostingDB>;
-}
+export type jobPostingsObj = {
+  activa: Array<IJobPostingDB>;
+  cerrada: Array<IJobPostingDB>;
+  pausada: Array<IJobPostingDB>;
+};
 interface useGetJobPostingsProps {
   user: UserTypes;
 }
@@ -186,22 +187,122 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     },
     [user]
   );
-  const jobPostingUpdateListener = () => {
+  const jobPostingUpdateListener = useCallback(() => {
     const recentTimestamp = Timestamp.fromDate(new Date(Date.now() - 60000));
     let q = query(
       jobPostingCollection,
-      and(
-        where('recruiter_id', '==', user.id),
 
-        where('updatedAt', '>', recentTimestamp)
-      ),
-      orderBy('updatedAt', 'desc'),
-      limit(PAGE_SIZE)
+      where('recruiter_id', '==', user.id),
+
+      where('updatedAt', '>', recentTimestamp),
+
+      orderBy('updatedAt', 'desc')
     );
+
+    console.log('🟡 About to set up onSnapshot...'); // Add this!
     const subscription = onSnapshot(
       q,
       (snapshot) => {
+        console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs); // Add this!
+        console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs.length); // Add this!
+        // ... rest
+        console.log('snapshoooot ', snapshot.docs);
+        console.log('snapshoooot  changes', snapshot.docChanges());
+        console.log('snapshoooot  changes');
+        snapshot.docChanges().forEach((change) => {
+          // console.log(change.oldIndex);
+
+          console.log('EACH CHANGE ', change.type);
+
+          // if (Number(change.oldIndex) === -1) {
+          //   const newDoc: IJobPostingDB = {
+          //     ...change.doc.data(),
+          //     id: change.doc.id,
+          //   };
+          //   setJobPostings((prev) => {
+          //     const exists = prev[newDoc.status].some(
+          //       (offer) => offer.id === newDoc.id
+          //     );
+          //     if (exists) return prev;
+          //     return {
+          //       ...prev,
+          //       [newDoc.status]: [newDoc, ...prev[newDoc.status]],
+          //     };
+          //   });
+          // }
+
+          // if (Number(change.oldIndex) !== -1) {
+          //   console.log('ISNSIDE MODIF ');
+          //   const updatedDoc: IJobPostingDB = {
+          //     ...change.doc.data(),
+          //     id: change.doc.id,
+          //   };
+          //   setJobPostings((prev) => {
+          //     for (const key in prev) {
+          //       let [filteredEl] = prev[key as keyof jobPostingsObj].filter(
+          //         (el) => el.id === updatedDoc.id
+          //       );
+          //       if (filteredEl) {
+          //         const u = {
+          //           ...prev,
+          //           [filteredEl.status]: [
+          //             filteredEl.status === updatedDoc.status && updatedDoc,
+          //             ...prev[filteredEl.status].filter(
+          //               (el) => el.id !== filteredEl.id
+          //             ),
+          //           ],
+          //           [updatedDoc.status]: [
+          //             updatedDoc,
+          //             ...prev[updatedDoc.status],
+          //           ],
+          //         };
+          //         console.log('UUUU', u);
+          //       }
+          //     }
+          //     return { ...prev };
+          //   });
+          // Object.values(jobPostingStatus).forEach((key) => {
+          //   console.log('KEYSSS', key);
+          //   console.log('BEFORE FILTER LENGTH', jobPostings[key].length);
+          //   const filteredJobPostingCategory = jobPostings[key].filter(
+          //     (jobPosting) => jobPosting.id !== updatedDoc.id
+          //   );
+          //   console.log('AFTER FILTER LENGTH', jobPostings[key].length);
+          //   if (key === updatedDoc.status) {
+          //     filteredJobPostingCategory.unshift(updatedDoc);
+          //   }
+
+          //   jobPostingFiltered[key] = filteredJobPostingCategory;
+          // });
+
+          // setJobPostings((prev) => ({ ...prev, ...jobPostingFiltered }));
+          // }
+        });
+      },
+      function (err) {
+        console.log('IN ERROR');
+        console.log('IN ERROR', err);
+      }
+    );
+
+    return subscription;
+    /*   const subscription = onSnapshot(
+      q,
+      (snapshot) => {
+        console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs.length); // Add this!
+        // ... rest
+      },
+      function (err) {
+        console.log('🔴 onSnapshot ERROR:', err); // This should already be here
+      }
+    );
+
+    return subscription; */
+    /*     const subscription = onSnapshot(
+      q,
+      (snapshot) => {
         snapshot.docChanges().forEach(function (change) {
+          console.log('DOCCCC CHANGE', change);
           if (change.type === 'added') {
             console.log('ADDING POSTING ');
             const newDoc: IJobPostingDB = {
@@ -233,6 +334,8 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
               cerrada: [],
               pausada: [],
             };
+            //  const elementToUpdate = jobPostings
+            console.log('JPOSTINGSSSS', jobPostings);
             Object.values(jobPostingStatus).forEach((key) => {
               console.log('KEYSSS', key);
               console.log('BEFORE FILTER LENGTH', jobPostings[key].length);
@@ -255,11 +358,10 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         console.log('IN ERROR');
         console.log('IN ERROR', err);
       }
-    );
+    ); */
     return subscription;
-  };
+  }, [user]);
   useEffect(() => {
-    console.log('rendering');
     const unsubscribe = jobPostingUpdateListener();
     return () => {
       if (unsubscribe) unsubscribe();
