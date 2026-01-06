@@ -73,69 +73,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     pausada: { error: false, message: null },
   });
   const PAGE_SIZE = 5;
-  /*  const loadJobPostings = useCallback(
-    async (jobsPostingStatusParam: jobPostingStatus) => {
-      setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
-      setErrors((prev) => ({
-        ...prev,
-        [jobsPostingStatusParam]: { error: false, message: null },
-      }));
-      try {
-        // console.log('FETCHINNGGG JOBPOSTINGS ');
-        // setJobPostings((prev) => ({
-        //   ...prev,
-        //   [jobsPostingStatusParam]: [],
-        // }));
-        // let q = query(
-        //   jobPostingCollection,
-        //   where('recruiter_id', '==', user.id),
-        //   where('status', '==', jobsPostingStatusParam),
-        //   orderBy('updatedAt', 'desc'),
-        //   limit(PAGE_SIZE)
-        // );
-        // const querySnapshot = await getDocs(q);
-        // const collectionRes = querySnapshot.docs.map<IJobPostingDB>((doc) => ({
-        //   ...doc.data(),
-        //   id: doc.id,
-        // }));
-        // setJobPostings((prev) => ({
-        //   ...prev,
-        //   [jobsPostingStatusParam]: collectionRes,
-        // }));
 
-        const jobPosting = await getJobPostings(jobsPostingStatusParam);
-         setJobPostings((prev) => ({
-          ...prev,
-          [jobsPostingStatusParam]: jobPosting ,
-        }));
-        if (!jobPosting.success) {
-          throw Error((jobPosting as FirebaseErrorResponse).message);
-        }
-      } catch (err) {
-        setErrors((prev) => ({
-          ...prev,
-          [jobsPostingStatusParam]: {
-            error: true,
-            message: (err as Error).message,
-          },
-        }));
-      } finally {
-        // catch (error) {
-        //   console.log(error);
-        //   console.log('error fetching job Postings');
-        //   setErrors((prev) => ({
-        //     ...prev,
-        //     [jobsPostingStatusParam]: {
-        //       error: true,
-        //       message: 'Error fetching job postings',
-        //     },
-        //   }));
-        // }
-        setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: false }));
-      }
-    },
-    [user]
-  ); */
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus) => {
       if (!user) {
@@ -189,6 +127,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   );
   const jobPostingUpdateListener = useCallback(() => {
     const recentTimestamp = Timestamp.fromDate(new Date(Date.now() - 60000));
+    console.log('rec', recentTimestamp == Timestamp.fromDate(new Date()));
     let q = query(
       jobPostingCollection,
 
@@ -203,122 +142,46 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     const subscription = onSnapshot(
       q,
       (snapshot) => {
-        console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs); // Add this!
-        console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs.length); // Add this!
-        // ... rest
-        console.log('snapshoooot ', snapshot.docs);
-        console.log('snapshoooot  changes', snapshot.docChanges());
-        console.log('snapshoooot  changes');
+        // console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs); // Add this!
+        // console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs.length); // Add this!
+        // // ... rest
+        // console.log('snapshoooot ', snapshot.docs);
+        // console.log('snapshoooot  changes', snapshot.docChanges());
+        // console.log('snapshoooot  changes');
         snapshot.docChanges().forEach((change) => {
-          // console.log(change.oldIndex);
-
           console.log('EACH CHANGE ', change.type);
 
-          // if (Number(change.oldIndex) === -1) {
-          //   const newDoc: IJobPostingDB = {
-          //     ...change.doc.data(),
-          //     id: change.doc.id,
-          //   };
-          //   setJobPostings((prev) => {
-          //     const exists = prev[newDoc.status].some(
-          //       (offer) => offer.id === newDoc.id
-          //     );
-          //     if (exists) return prev;
-          //     return {
-          //       ...prev,
-          //       [newDoc.status]: [newDoc, ...prev[newDoc.status]],
-          //     };
-          //   });
-          // }
-
-          // if (Number(change.oldIndex) !== -1) {
-          //   console.log('ISNSIDE MODIF ');
-          //   const updatedDoc: IJobPostingDB = {
-          //     ...change.doc.data(),
-          //     id: change.doc.id,
-          //   };
-          //   setJobPostings((prev) => {
-          //     for (const key in prev) {
-          //       let [filteredEl] = prev[key as keyof jobPostingsObj].filter(
-          //         (el) => el.id === updatedDoc.id
-          //       );
-          //       if (filteredEl) {
-          //         const u = {
-          //           ...prev,
-          //           [filteredEl.status]: [
-          //             filteredEl.status === updatedDoc.status && updatedDoc,
-          //             ...prev[filteredEl.status].filter(
-          //               (el) => el.id !== filteredEl.id
-          //             ),
-          //           ],
-          //           [updatedDoc.status]: [
-          //             updatedDoc,
-          //             ...prev[updatedDoc.status],
-          //           ],
-          //         };
-          //         console.log('UUUU', u);
-          //       }
-          //     }
-          //     return { ...prev };
-          //   });
-          // Object.values(jobPostingStatus).forEach((key) => {
-          //   console.log('KEYSSS', key);
-          //   console.log('BEFORE FILTER LENGTH', jobPostings[key].length);
-          //   const filteredJobPostingCategory = jobPostings[key].filter(
-          //     (jobPosting) => jobPosting.id !== updatedDoc.id
-          //   );
-          //   console.log('AFTER FILTER LENGTH', jobPostings[key].length);
-          //   if (key === updatedDoc.status) {
-          //     filteredJobPostingCategory.unshift(updatedDoc);
-          //   }
-
-          //   jobPostingFiltered[key] = filteredJobPostingCategory;
-          // });
-
-          // setJobPostings((prev) => ({ ...prev, ...jobPostingFiltered }));
-          // }
-        });
-      },
-      function (err) {
-        console.log('IN ERROR');
-        console.log('IN ERROR', err);
-      }
-    );
-
-    return subscription;
-    /*   const subscription = onSnapshot(
-      q,
-      (snapshot) => {
-        console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs.length); // Add this!
-        // ... rest
-      },
-      function (err) {
-        console.log('🔴 onSnapshot ERROR:', err); // This should already be here
-      }
-    );
-
-    return subscription; */
-    /*     const subscription = onSnapshot(
-      q,
-      (snapshot) => {
-        snapshot.docChanges().forEach(function (change) {
-          console.log('DOCCCC CHANGE', change);
           if (change.type === 'added') {
-            console.log('ADDING POSTING ');
-            const newDoc: IJobPostingDB = {
+            // console.log('doccccc', change.doc.data());
+
+            const createdJobPosting: IJobPostingDB = {
               ...change.doc.data(),
               id: change.doc.id,
             };
-            setJobPostings((prev) => {
-              const exists = prev[newDoc.status].some(
-                (offer) => offer.id === newDoc.id
-              );
-              if (exists) return prev;
-              return {
-                ...prev,
-                activa: [newDoc, ...prev['activa']],
-              };
-            });
+            console.log('XXXX', createdJobPosting);
+            // let exists: IJobPostingDB | null = null;
+            // for (const vals of Object.values(jobPostings)) {
+            //   console.log('VALSSS', vals);
+            // if (!vals) {
+            //   break;
+            // }
+            // const exists =
+            //   (vals &&
+            //     vals.filter((el) => (el.id = createdJobPosting.id))[0]) ??
+            //   null;
+            // if (exists !== null) {
+            //   break;
+            // }
+            // }
+            // if (!exists) {
+            return setJobPostings((prev) => ({
+              ...prev,
+              [createdJobPosting.status]: {
+                createdJobPosting,
+                ...prev[createdJobPosting.status],
+              },
+            }));
+            // } else setJobPostings((prev) => ({ ...prev }));
           }
           if (change.type === 'modified') {
             console.log('IN MODIF');
@@ -358,7 +221,8 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         console.log('IN ERROR');
         console.log('IN ERROR', err);
       }
-    ); */
+    );
+
     return subscription;
   }, [user]);
   useEffect(() => {
@@ -371,73 +235,3 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
 };
 
 export default useGetJobPostings;
-/* 
-const useGetJobPostings = (jobPostingStatus: jobPostingStatus) => {
-  const [jobPostings, setJobPostings] = useState<IJobPostingDB[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<{
-    error: boolean;
-    message: string | null;
-  }>({ error: false, message: null });
-
-  const handleGetJobPostings = useCallback(async () => {
-    try {
-      setError({ error: false, message: null });
-      setLoading(true);
-      const jobPostingPromise = await getJobPostings(jobPostingStatus);
-      if (jobPostingPromise.success) {
-        setJobPostings(jobPostingPromise.data);
-      }
-    } catch (err) {
-      console.log('errr', err);
-      setError({ error: true, message: 'Error fetching job postings' });
-    } finally {
-      setLoading(false);
-    }
-  }, [jobPostingStatus]);
-
-  useFocusEffect(
-    useCallback(() => {
-      console.log('in callback');
-      handleGetJobPostings();
-    }, [handleGetJobPostings])
-  );
-  return { jobPostings, loading, error };
-};
-
-export default useGetJobPostings; */
-/* const useGetJobPostings = (jobPostingStatus: jobPostingStatus) => {
-  const [jobPostings, setJobPostings] = useState<IJobPostingDB[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<{
-    error: boolean;
-    message: string | null;
-  }>({ error: false, message: null });
-
-  const handleGetJobPostings = useCallback(async () => {
-    try {
-      setError({ error: false, message: null });
-      setLoading(true);
-      const jobPostingPromise = await getJobPostings(jobPostingStatus);
-      if (jobPostingPromise.success) {
-        setJobPostings(jobPostingPromise.data);
-      }
-    } catch (err) {
-      console.log('errr', err);
-      setError({ error: true, message: 'Error fetching job postings' });
-    } finally {
-      setLoading(false);
-    }
-  }, [jobPostingStatus]);
-
-  useFocusEffect(
-    useCallback(() => {
-      console.log('in callback');
-      handleGetJobPostings();
-    }, [handleGetJobPostings])
-  );
-  return { jobPostings, loading, error };
-};
-
-export default useGetJobPostings;
- */
