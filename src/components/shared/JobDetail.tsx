@@ -202,7 +202,7 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
           </View>
         </ScrollView>
       </View>
-      {/* <CloseJobPostModal {...{ elementVisible }}></CloseJobPostModal> */}
+
       <AppModal
         onDismiss={() => handleElementVisibility(false)}
         dismissable={true}
