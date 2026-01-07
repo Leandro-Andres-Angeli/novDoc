@@ -41,13 +41,17 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     }>
   >();
   const jobPostingStatusLoading = loading[jobPostingStatus];
-  const jobPostingsByStatus = jobPostings[jobPostingStatus];
+  // const jobPostingsByStatus = jobPostings.filter(
+  //   (el) => el.status === jobPostingStatus
+  // );
   const error = errors[jobPostingStatus];
+
   useEffect(() => {
-    if (jobPostingsByStatus.length === 0 && !jobPostingStatusLoading) {
+    if (jobPostings.length === 0 && !jobPostingStatusLoading) {
+      console.log('LOADINGGGGG');
       loadJobPostings(jobPostingStatus);
     }
-  }, [user, jobPostingStatus]);
+  }, [user, jobPostings, jobPostingStatus, jobPostingStatusLoading, loading]);
 
   // return (
   //   <View>
@@ -67,7 +71,9 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     );
   }
 
-  if (isEmptyArray(jobPostingsByStatus)) {
+  if (
+    isEmptyArray(jobPostings.filter((el) => el.status === jobPostingStatus))
+  ) {
     return (
       <ProfileProfileJobPostingEmptyState
         {...{ jobPostingStatus }}
@@ -80,7 +86,6 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
       {/* <ScrollView>
         <Text>{JSON.stringify(jobPostings, null, 2)}</Text>
       </ScrollView> */}
-
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
           renderItem={({ item, index }) => (
@@ -97,7 +102,11 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
               <JobPostingCard jobPosting={item}></JobPostingCard>
             </Pressable>
           )}
-          data={jobPostingsByStatus}
+          data={
+            (jobPostings &&
+              jobPostings.filter((el) => el.status === jobPostingStatus)) ||
+            []
+          }
         ></GenericList>
       </View>
     </>

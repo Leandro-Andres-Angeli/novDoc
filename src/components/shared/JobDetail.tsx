@@ -148,26 +148,6 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
             </Text>
           </View>
 
-          {/* Responsibilities Section  */}
-          {/*   <View style={styles.section}>
-          <Text variant='titleMedium' style={styles.sectionTitle}>
-            Responsabilidades
-          </Text>
-          {[
-            'Diseñar y construir aplicaciones avanzadas para la plataforma iOS.',
-            'Colaborar con equipos multifuncionales para definir y diseñar nuevas funciones.',
-            'Realizar pruebas unitarias para garantizar la robustez y fiabilidad del código.',
-            'Corregir errores y mejorar el rendimiento de la aplicación.',
-          ].map((item, index) => (
-            <View key={index} style={styles.bulletItem}>
-              <Text style={styles.bullet}>•</Text>
-              <Text variant='bodyMedium' style={styles.bulletText}>
-                {item}
-              </Text>
-            </View>
-          ))}
-        </View> */}
-
           {/* Requirements Section */}
           <View style={styles.section}>
             <Text variant='titleMedium' style={styles.sectionTitle}>
@@ -194,18 +174,20 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
 
           {/* Close Button */}
           <View style={styles.btnContainer}>
-            <Button
-              mode='contained'
-              onPress={() => console.log('Close offer')}
-              // style={styles.closeButton}
-              buttonColor='#FFE5E5'
-              textColor='#C62828'
-              icon={'close'}
-              contentStyle={{ ...utilityStyles.btn }}
-              onPressIn={() => handleElementVisibility()}
-            >
-              Cerrar Oferta
-            </Button>
+            {jobPosting.status !== jobPostingStatus.CLOSED && (
+              <Button
+                mode='contained'
+                onPress={() => console.log('Close offer')}
+                // style={styles.closeButton}
+                buttonColor='#FFE5E5'
+                textColor='#C62828'
+                icon={'close'}
+                contentStyle={{ ...utilityStyles.btn }}
+                onPressIn={() => handleElementVisibility()}
+              >
+                Cerrar Oferta
+              </Button>
+            )}
             <Button
               mode='contained'
               onPress={() =>

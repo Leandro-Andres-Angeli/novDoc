@@ -29,20 +29,13 @@ export type Error = {
   error: boolean;
   message: string | null;
 };
-export type jobPostingsObj = {
-  activa: Array<IJobPostingDB>;
-  cerrada: Array<IJobPostingDB>;
-  pausada: Array<IJobPostingDB>;
-};
+export type jobPostingsArr = Array<IJobPostingDB>;
+
 interface useGetJobPostingsProps {
   user: UserTypes;
 }
 export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
-  const [jobPostings, setJobPostings] = useState<jobPostingsObj>({
-    activa: [],
-    cerrada: [],
-    pausada: [],
-  });
+  const [jobPostings, setJobPostings] = useState<jobPostingsArr>([]);
   // Track loading state per status
   const [loading, setLoading] = useState<Record<jobPostingStatus, boolean>>({
     activa: false,
@@ -89,10 +82,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
 
       try {
         console.log('FETCHINNGGG JOBPOSTINGS ');
-        setJobPostings((prev) => ({
-          ...prev,
-          [jobsPostingStatusParam]: [],
-        }));
+        // setJobPostings((prev) => [...prev]);
         let q = query(
           jobPostingCollection,
           where('recruiter_id', '==', user.id),
@@ -105,10 +95,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
           ...doc.data(),
           id: doc.id,
         }));
-        setJobPostings((prev) => ({
-          ...prev,
-          [jobsPostingStatusParam]: collectionRes,
-        }));
+        setJobPostings((prev) => [...prev, ...collectionRes]);
       } catch (error) {
         console.log(error);
         console.log('error fetching job Postings');
@@ -133,7 +120,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
 
       where('recruiter_id', '==', user.id),
 
-      where('updatedAt', '>', recentTimestamp),
+      // where('updatedAt', '>', recentTimestamp),
 
       orderBy('updatedAt', 'desc')
     );
@@ -147,10 +134,11 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         // // ... rest
         // console.log('snapshoooot ', snapshot.docs);
         // console.log('snapshoooot  changes', snapshot.docChanges());
-        // console.log('snapshoooot  changes');
+
         snapshot.docChanges().forEach((change) => {
           console.log('EACH CHANGE ', change.type);
-
+          console.log('snapshoooot  changes');
+          console.log('snapshoooot  changes');
           if (change.type === 'added') {
             // console.log('doccccc', change.doc.data());
 
@@ -159,61 +147,32 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
               id: change.doc.id,
             };
             console.log('XXXX', createdJobPosting);
-            // let exists: IJobPostingDB | null = null;
-            // for (const vals of Object.values(jobPostings)) {
-            //   console.log('VALSSS', vals);
-            // if (!vals) {
-            //   break;
-            // }
-            // const exists =
-            //   (vals &&
-            //     vals.filter((el) => (el.id = createdJobPosting.id))[0]) ??
-            //   null;
-            // if (exists !== null) {
-            //   break;
-            // }
-            // }
-            // if (!exists) {
-            return setJobPostings((prev) => ({
-              ...prev,
-              [createdJobPosting.status]: {
-                createdJobPosting,
-                ...prev[createdJobPosting.status],
-              },
-            }));
-            // } else setJobPostings((prev) => ({ ...prev }));
+
+            return setJobPostings((prev) => {
+              const [exists] = prev.filter(
+                (el) => el.id === createdJobPosting.id
+              );
+              if (exists) {
+                return prev.map((el) =>
+                  el.id === exists.id ? { ...el, createdJobPosting } : el
+                );
+              }
+              return [createdJobPosting, ...prev];
+            });
           }
           if (change.type === 'modified') {
-            console.log('IN MODIF');
             const updatedDoc: IJobPostingDB = {
               ...change.doc.data(),
               id: change.doc.id,
             };
-            const jobPostingFiltered: Record<
-              jobPostingStatus,
-              IJobPostingDB[]
-            > = {
-              activa: [],
-              cerrada: [],
-              pausada: [],
-            };
-            //  const elementToUpdate = jobPostings
-            console.log('JPOSTINGSSSS', jobPostings);
-            Object.values(jobPostingStatus).forEach((key) => {
-              console.log('KEYSSS', key);
-              console.log('BEFORE FILTER LENGTH', jobPostings[key].length);
-              const filteredJobPostingCategory = jobPostings[key].filter(
-                (jobPosting) => jobPosting.id !== updatedDoc.id
+            console.log('HEREEEEEEEE');
+            console.log('HEREEEEEEEE UPDATE', updatedDoc.id);
+
+            setJobPostings((prev) => {
+              return prev.map((el) =>
+                el.id === updatedDoc.id ? { ...el, ...updatedDoc } : el
               );
-              console.log('AFTER FILTER LENGTH', jobPostings[key].length);
-              if (key === updatedDoc.status) {
-                filteredJobPostingCategory.unshift(updatedDoc);
-              }
-
-              jobPostingFiltered[key] = filteredJobPostingCategory;
             });
-
-            setJobPostings((prev) => ({ ...prev, ...jobPostingFiltered }));
           }
         });
       },
