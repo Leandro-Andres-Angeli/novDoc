@@ -15,7 +15,7 @@ import { JOBS_LIST_ROUTES } from '../../../navigators/privateNavigator/recruiter
 import useGetJobPostings from 'src/hooks/useGetJobPostings';
 import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
+import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 interface jobPostingsListProps
@@ -28,7 +28,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
 
   const { jobPostingStatus } = params;
 
-  const { loadJobPostings, loading, jobPostings, errors } =
+  const { loadJobPostings, loading, jobPostings, errors, hasMore, lastDocRef } =
     useContext(RecruiterContext);
   const {
     authState: { user },
@@ -80,14 +80,23 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
       ></ProfileProfileJobPostingEmptyState>
     );
   }
-
+  const handleEndReached = () => {
+    console.log('in end reached');
+    // loadJobPostings(jobPostingStatus);
+  };
   return (
     <>
       {/* <ScrollView>
         <Text>{JSON.stringify(jobPostings, null, 2)}</Text>
       </ScrollView> */}
+      <Text>Has more {JSON.stringify(hasMore[jobPostingStatus])}</Text>
+      <Text>
+        Has more ref{JSON.stringify(lastDocRef.current[jobPostingStatus])}
+      </Text>
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
+          onEndReachedThreshold={0.7}
+          onEndReached={() => handleEndReached()}
           renderItem={({ item, index }) => (
             <Pressable
               onPress={() => {

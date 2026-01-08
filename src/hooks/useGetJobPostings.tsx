@@ -13,6 +13,7 @@ import {
   or,
   orderBy,
   query,
+  startAfter,
   Timestamp,
   where,
 } from 'firebase/firestore';
@@ -44,10 +45,12 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   });
 
   // Track if there are more items to load
-  const [hasMore, setHasMore] = useState<Record<jobPostingStatus, boolean>>({
-    activa: true,
-    cerrada: true,
-    pausada: true,
+  const [hasMore, setHasMore] = useState<
+    Record<jobPostingStatus, 'initial' | boolean>
+  >({
+    activa: 'initial',
+    cerrada: 'initial',
+    pausada: 'initial',
   });
   // Keep track of last document per status for pagination
   const lastDocRef = useRef<Record<jobPostingStatus, DocumentSnapshot | null>>({
@@ -69,10 +72,12 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
 
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus) => {
+      let lastDocRefByStatus: IJobPostingDB | null | undefined;
       if (!user) {
         console.log('USER NOT FOUND');
         return;
       }
+      const recentTimestamp = Timestamp.fromDate(new Date(Date.now() - 60000));
       setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
       setErrors((prev) => ({
         ...prev,
@@ -87,15 +92,33 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
           jobPostingCollection,
           where('recruiter_id', '==', user.id),
           where('status', '==', jobsPostingStatusParam),
+          where('updatedAt', '<=', recentTimestamp),
           orderBy('updatedAt', 'desc'),
-          limit(PAGE_SIZE)
+
+          limit(PAGE_SIZE + 1)
         );
+
+        // if (hasMore[jobsPostingStatusParam] === true) {
+        //   console.log('in pagination');
+        //   q = query(q, startAfter(lastDocRef.current[jobsPostingStatusParam]));
+        // }
         const querySnapshot = await getDocs(q);
         const collectionRes = querySnapshot.docs.map<IJobPostingDB>((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        setJobPostings((prev) => [...prev, ...collectionRes]);
+
+        if (collectionRes.length === PAGE_SIZE + 1) {
+          console.log('EQUAL', collectionRes.length);
+          lastDocRefByStatus = collectionRes.pop();
+        }
+
+        console.log('COLL POPPED', lastDocRefByStatus);
+        console.log('LAST DOC STATUS', collectionRes.length);
+
+        if (hasMore[jobsPostingStatusParam] === 'initial') {
+          setJobPostings((prev) => [...prev, ...collectionRes]);
+        }
       } catch (error) {
         console.log(error);
         console.log('error fetching job Postings');
@@ -108,6 +131,14 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         }));
       } finally {
         setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: false }));
+        lastDocRef.current = {
+          ...lastDocRef.current,
+          [jobsPostingStatusParam]: lastDocRefByStatus,
+        };
+        setHasMore((prev) => ({
+          ...prev,
+          [jobsPostingStatusParam]: !!lastDocRefByStatus,
+        }));
       }
     },
     [user]
@@ -120,7 +151,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
 
       where('recruiter_id', '==', user.id),
 
-      // where('updatedAt', '>', recentTimestamp),
+      where('updatedAt', '>', recentTimestamp),
 
       orderBy('updatedAt', 'desc')
     );
@@ -190,7 +221,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
       if (unsubscribe) unsubscribe();
     };
   }, [user]);
-  return { loadJobPostings, jobPostings, loading, errors };
+  return { loadJobPostings, jobPostings, loading, errors, lastDocRef, hasMore };
 };
 
 export default useGetJobPostings;

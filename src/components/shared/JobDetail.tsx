@@ -314,7 +314,6 @@ const styles = StyleSheet.create({
   },
   candidateCard: {
     flexDirection: 'row',
-    // paddingVertical: 12,
   },
   candidateInfo: {
     flex: 1,

@@ -7,6 +7,7 @@ import {
   where,
   onSnapshot,
   DocumentSnapshot,
+  DocumentData,
 } from 'firebase/firestore';
 import {
   createContext,
@@ -36,6 +37,13 @@ export interface RecruiterContextInterface {
   // error: string;
   errors: Record<jobPostingStatus, Error>;
   loadJobPostings: (jobsPostingStatusParam: jobPostingStatus) => Promise<void>;
+  hasMore: Record<jobPostingStatus, 'initial' | boolean>;
+  lastDocRef: React.RefObject<
+    Record<
+      jobPostingStatus,
+      DocumentSnapshot<DocumentData, DocumentData> | null
+    >
+  >;
 }
 export const RecruiterContext = createContext<RecruiterContextInterface>(
   {} as RecruiterContextInterface
@@ -52,12 +60,20 @@ export const RecruiterContextProvider = (
     throw Error('user not found');
   }
 
-  const { loadJobPostings, loading, jobPostings, errors } = useGetJobPostings({
-    user,
-  });
+  const { loadJobPostings, loading, jobPostings, errors, hasMore, lastDocRef } =
+    useGetJobPostings({
+      user,
+    });
   return (
     <RecruiterContext.Provider
-      value={{ errors, loading, jobPostings, loadJobPostings }}
+      value={{
+        errors,
+        loading,
+        jobPostings,
+        loadJobPostings,
+        hasMore,
+        lastDocRef,
+      }}
     >
       {props.children}
     </RecruiterContext.Provider>
