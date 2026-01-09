@@ -59,9 +59,9 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   //   </View>
   // );
 
-  if (jobPostingStatusLoading) {
-    return <AppLoading></AppLoading>;
-  }
+  // if (jobPostingStatusLoading) {
+  //   return <AppLoading></AppLoading>;
+  // }
 
   if (error.error) {
     return (
@@ -72,7 +72,10 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   }
 
   if (
-    isEmptyArray(jobPostings.filter((el) => el.status === jobPostingStatus))
+    isEmptyArray(
+      jobPostings.filter((el) => el.status === jobPostingStatus) &&
+        !jobPostingStatusLoading
+    )
   ) {
     return (
       <ProfileProfileJobPostingEmptyState
@@ -81,6 +84,8 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     );
   }
   const handleEndReached = () => {
+    if (jobPostingStatusLoading) return;
+    if (!hasMore[jobPostingStatus]) return;
     console.log('in end reached');
     loadJobPostings(jobPostingStatus);
   };
@@ -95,6 +100,12 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
       </Text> */}
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
+          // ListHeaderComponent={
+          //   (jobPostingStatusLoading && <AppLoading></AppLoading>) || null
+          // }
+          ListFooterComponent={
+            (hasMore[jobPostingStatus] && <AppLoading></AppLoading>) || null
+          }
           onEndReachedThreshold={0.9}
           onEndReached={() => handleEndReached()}
           renderItem={({ item, index }) => (

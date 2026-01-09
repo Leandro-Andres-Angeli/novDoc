@@ -109,10 +109,11 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
           where('status', '==', jobsPostingStatusParam),
           // where('updatedAt', '<=', recentTimestamp),
           orderBy('updatedAt', 'desc'),
-          limit(PAGE_SIZE + 1),
+
           ...(lastDocRef.current[jobsPostingStatusParam] && !isRefresh
             ? [startAfter(lastDocRef.current[jobsPostingStatusParam])]
-            : [])
+            : []),
+          limit(PAGE_SIZE + 1)
         );
 
         const querySnapshot = await getDocs(q);
