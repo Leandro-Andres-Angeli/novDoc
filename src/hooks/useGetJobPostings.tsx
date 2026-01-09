@@ -155,7 +155,15 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
               );
               return [...otherStatusJobs, ...collectionRes];
             }
-            return [...prev, ...collectionRes];
+            // return [...prev, ...collectionRes];
+            // 2. Handle Load More (The Safety Net 🕸️)
+            // Filter out any new item that is ALREADY in the 'prev' list
+            const uniqueNewItems = collectionRes.filter(
+              (newItem) =>
+                !prev.some((existingItem) => existingItem.id === newItem.id)
+            );
+
+            return [...prev, ...uniqueNewItems];
           });
         }
       } catch (error) {
