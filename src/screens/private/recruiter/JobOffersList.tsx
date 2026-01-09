@@ -41,17 +41,17 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     }>
   >();
   const jobPostingStatusLoading = loading[jobPostingStatus];
-  // const jobPostingsByStatus = jobPostings.filter(
-  //   (el) => el.status === jobPostingStatus
-  // );
+  const jobPostingsByStatus = jobPostings.filter(
+    (el) => el.status === jobPostingStatus
+  );
   const error = errors[jobPostingStatus];
   //  const [first, setfirst] = useState(second)
   useEffect(() => {
-    if (jobPostings.length === 0 && !jobPostingStatusLoading) {
+    if (jobPostingsByStatus.length === 0 && !jobPostingStatusLoading) {
       console.log('LOADINGGGGG');
       loadJobPostings(jobPostingStatus);
     }
-  }, [user]);
+  }, [user, jobPostingStatus]);
 
   // return (
   //   <View>
@@ -82,20 +82,20 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   }
   const handleEndReached = () => {
     console.log('in end reached');
-    loadJobPostings(jobPostingStatus, true);
+    loadJobPostings(jobPostingStatus);
   };
   return (
     <>
       {/* <ScrollView>
         <Text>{JSON.stringify(jobPostings, null, 2)}</Text>
       </ScrollView> */}
-      <Text>Has more {JSON.stringify(hasMore[jobPostingStatus])}</Text>
+      {/* <Text>Has more {JSON.stringify(hasMore[jobPostingStatus])}</Text>
       <Text>
         Has more ref{JSON.stringify(lastDocRef.current[jobPostingStatus])}
-      </Text>
+      </Text> */}
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
-          onEndReachedThreshold={0.7}
+          onEndReachedThreshold={0.9}
           onEndReached={() => handleEndReached()}
           renderItem={({ item, index }) => (
             <Pressable

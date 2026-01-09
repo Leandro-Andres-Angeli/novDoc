@@ -143,7 +143,19 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
           hasMore[jobsPostingStatusParam] === 'initial' ||
           hasMore[jobsPostingStatusParam] === true
         ) {
-          setJobPostings((prev) => [...prev, ...collectionRes]);
+          setJobPostings((prev) => {
+            // A simpler fix for now:
+            // If isRefresh is true, we should filter out the current status from 'prev'
+            // and then add the new 'collectionRes'.
+
+            if (isRefresh) {
+              const otherStatusJobs = prev.filter(
+                (job) => job.status !== jobsPostingStatusParam
+              );
+              return [...otherStatusJobs, ...collectionRes];
+            }
+            return [...prev, ...collectionRes];
+          });
         }
       } catch (error) {
         console.log(error);
