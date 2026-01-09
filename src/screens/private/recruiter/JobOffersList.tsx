@@ -45,13 +45,13 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   //   (el) => el.status === jobPostingStatus
   // );
   const error = errors[jobPostingStatus];
-
+  //  const [first, setfirst] = useState(second)
   useEffect(() => {
     if (jobPostings.length === 0 && !jobPostingStatusLoading) {
       console.log('LOADINGGGGG');
       loadJobPostings(jobPostingStatus);
     }
-  }, [user, jobPostings, jobPostingStatus, jobPostingStatusLoading, loading]);
+  }, [user]);
 
   // return (
   //   <View>
@@ -82,7 +82,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   }
   const handleEndReached = () => {
     console.log('in end reached');
-    // loadJobPostings(jobPostingStatus);
+    loadJobPostings(jobPostingStatus, true);
   };
   return (
     <>

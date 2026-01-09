@@ -27,11 +27,15 @@ const jobsOfferCollection = collection(db, 'jobPostings').withConverter(
 );
 export const createjobPosting = async (
   jobPosting: IJobPosting
-): Promise<FirebaseResponse | FirebaseErrorResponse> => {
+): Promise<(FirebaseResponse & { id: string }) | FirebaseErrorResponse> => {
   try {
     const savedOffer = await addDoc(jobsOfferCollection, jobPosting);
     if (savedOffer) {
-      return { message: 'Oferta creada correctamente', success: true };
+      return {
+        id: savedOffer.id,
+        message: 'Oferta creada correctamente',
+        success: true,
+      };
     } else {
       throw Error();
     }

@@ -36,7 +36,10 @@ export interface RecruiterContextInterface {
   loading: Record<jobPostingStatus, boolean>;
   // error: string;
   errors: Record<jobPostingStatus, Error>;
-  loadJobPostings: (jobsPostingStatusParam: jobPostingStatus) => Promise<void>;
+  loadJobPostings: (
+    jobsPostingStatusParam: jobPostingStatus,
+    isRefresh?: boolean
+  ) => Promise<void>;
   hasMore: Record<jobPostingStatus, 'initial' | boolean>;
   lastDocRef: React.RefObject<
     Record<

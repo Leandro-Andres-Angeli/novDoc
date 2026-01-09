@@ -57,14 +57,14 @@ const Favorites = () => {
   return (
     <View style={{ ...utilityStyles.flex }}>
       <Text>Test</Text>
-      <Text>
+      {/* <Text>
         {JSON.stringify(
           jobPostings.activa.map((el) => ({
             ...el,
             createdAt: el.createdAt.toDate().toLocaleDateString(languageTag),
           }))
         )}
-      </Text>
+      </Text> */}
     </View>
   );
 };

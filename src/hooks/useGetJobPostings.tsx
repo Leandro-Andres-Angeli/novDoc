@@ -6,13 +6,16 @@ import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 import {
   and,
   collection,
+  DocumentData,
   DocumentSnapshot,
   getDocs,
   limit,
   onSnapshot,
   or,
   orderBy,
+  Query,
   query,
+  QueryDocumentSnapshot,
   startAfter,
   Timestamp,
   where,
@@ -69,15 +72,27 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     pausada: { error: false, message: null },
   });
   const PAGE_SIZE = 5;
+  // Helper to manually PREPEND a new job to the list
+  const addLocalJob = useCallback((newJob: IJobPostingDB) => {
+    setJobPostings((prev) => [newJob, ...prev]);
+  }, []);
 
+  // Helper to manually UPDATE a specific job in the list
+  const updateLocalJob = useCallback((updatedJob: IJobPostingDB) => {
+    setJobPostings((prev) =>
+      prev.map((job) => (job.id === updatedJob.id ? updatedJob : job))
+    );
+  }, []);
   const loadJobPostings = useCallback(
-    async (jobsPostingStatusParam: jobPostingStatus) => {
-      let lastDocRefByStatus: IJobPostingDB | null | undefined;
+    async (jobsPostingStatusParam: jobPostingStatus, isRefresh = false) => {
+      let lastDocRefByStatus:
+        | QueryDocumentSnapshot<IJobPostingDB, DocumentData>
+        | undefined;
       if (!user) {
         console.log('USER NOT FOUND');
         return;
       }
-      const recentTimestamp = Timestamp.fromDate(new Date(Date.now() - 60000));
+
       setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
       setErrors((prev) => ({
         ...prev,
@@ -88,35 +103,46 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
       try {
         console.log('FETCHINNGGG JOBPOSTINGS ');
         // setJobPostings((prev) => [...prev]);
-        let q = query(
+        let q: Query<IJobPostingDB, DocumentData> = query(
           jobPostingCollection,
           where('recruiter_id', '==', user.id),
           where('status', '==', jobsPostingStatusParam),
-          where('updatedAt', '<=', recentTimestamp),
+          // where('updatedAt', '<=', recentTimestamp),
           orderBy('updatedAt', 'desc'),
-
-          limit(PAGE_SIZE + 1)
+          limit(PAGE_SIZE + 1),
+          ...(lastDocRef.current[jobsPostingStatusParam] && !isRefresh
+            ? [startAfter(lastDocRef.current[jobsPostingStatusParam])]
+            : [])
         );
 
-        // if (hasMore[jobsPostingStatusParam] === true) {
-        //   console.log('in pagination');
-        //   q = query(q, startAfter(lastDocRef.current[jobsPostingStatusParam]));
-        // }
         const querySnapshot = await getDocs(q);
         const collectionRes = querySnapshot.docs.map<IJobPostingDB>((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        if (collectionRes.length === PAGE_SIZE + 1) {
-          console.log('EQUAL', collectionRes.length);
-          lastDocRefByStatus = collectionRes.pop();
+        if (collectionRes.length > PAGE_SIZE) {
+          lastDocRefByStatus = querySnapshot.docs.at(-2);
+          collectionRes.pop();
+          setHasMore((prev) => ({
+            ...prev,
+            [jobsPostingStatusParam]: true,
+          }));
+        } else {
+          setHasMore((prev) => ({
+            ...prev,
+            [jobsPostingStatusParam]: false,
+          }));
+          lastDocRefByStatus = querySnapshot.docs.at(-1);
         }
 
         console.log('COLL POPPED', lastDocRefByStatus);
         console.log('LAST DOC STATUS', collectionRes.length);
 
-        if (hasMore[jobsPostingStatusParam] === 'initial') {
+        if (
+          hasMore[jobsPostingStatusParam] === 'initial' ||
+          hasMore[jobsPostingStatusParam] === true
+        ) {
           setJobPostings((prev) => [...prev, ...collectionRes]);
         }
       } catch (error) {
@@ -135,93 +161,21 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
           ...lastDocRef.current,
           [jobsPostingStatusParam]: lastDocRefByStatus,
         };
-        setHasMore((prev) => ({
-          ...prev,
-          [jobsPostingStatusParam]: !!lastDocRefByStatus,
-        }));
       }
     },
     [user]
   );
-  const jobPostingUpdateListener = useCallback(() => {
-    const recentTimestamp = Timestamp.fromDate(new Date(Date.now() - 60000));
-    console.log('rec', recentTimestamp == Timestamp.fromDate(new Date()));
-    let q = query(
-      jobPostingCollection,
 
-      where('recruiter_id', '==', user.id),
-
-      where('updatedAt', '>', recentTimestamp),
-
-      orderBy('updatedAt', 'desc')
-    );
-
-    console.log('🟡 About to set up onSnapshot...'); // Add this!
-    const subscription = onSnapshot(
-      q,
-      (snapshot) => {
-        // console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs); // Add this!
-        // console.log('🟢 onSnapshot FIRED! Docs:', snapshot.docs.length); // Add this!
-        // // ... rest
-        // console.log('snapshoooot ', snapshot.docs);
-        // console.log('snapshoooot  changes', snapshot.docChanges());
-
-        snapshot.docChanges().forEach((change) => {
-          console.log('EACH CHANGE ', change.type);
-          console.log('snapshoooot  changes');
-          console.log('snapshoooot  changes');
-          if (change.type === 'added') {
-            // console.log('doccccc', change.doc.data());
-
-            const createdJobPosting: IJobPostingDB = {
-              ...change.doc.data(),
-              id: change.doc.id,
-            };
-            console.log('XXXX', createdJobPosting);
-
-            return setJobPostings((prev) => {
-              const [exists] = prev.filter(
-                (el) => el.id === createdJobPosting.id
-              );
-              if (exists) {
-                return prev.map((el) =>
-                  el.id === exists.id ? { ...el, createdJobPosting } : el
-                );
-              }
-              return [createdJobPosting, ...prev];
-            });
-          }
-          if (change.type === 'modified') {
-            const updatedDoc: IJobPostingDB = {
-              ...change.doc.data(),
-              id: change.doc.id,
-            };
-            console.log('HEREEEEEEEE');
-            console.log('HEREEEEEEEE UPDATE', updatedDoc.id);
-
-            setJobPostings((prev) => {
-              return prev.map((el) =>
-                el.id === updatedDoc.id ? { ...el, ...updatedDoc } : el
-              );
-            });
-          }
-        });
-      },
-      function (err) {
-        console.log('IN ERROR');
-        console.log('IN ERROR', err);
-      }
-    );
-
-    return subscription;
-  }, [user]);
-  useEffect(() => {
-    const unsubscribe = jobPostingUpdateListener();
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [user]);
-  return { loadJobPostings, jobPostings, loading, errors, lastDocRef, hasMore };
+  return {
+    loadJobPostings,
+    jobPostings,
+    loading,
+    errors,
+    lastDocRef,
+    hasMore,
+    addLocalJob,
+    updateLocalJob,
+  };
 };
 
 export default useGetJobPostings;
