@@ -14,6 +14,7 @@ import { Timestamp } from 'firebase/firestore';
 
 import { updatejobPosting } from 'src/services/jobOffer/jobOffer.service';
 import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
+import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 interface EditJobPostingScreen
   extends NativeStackScreenProps<
     RecruiterProfileStackRootParams,
@@ -30,7 +31,7 @@ const EditJobPostingScreen = ({
     authState: { user },
     loading: loadingUser,
   } = useContext(AuthContext);
-
+  const { updateLocalJob } = useContext(RecruiterContext);
   async function handleSubmit(
     values: IJobPosting,
     helpers: FormikHelpers<any>
@@ -39,23 +40,24 @@ const EditJobPostingScreen = ({
     console.log(values);
 
     try {
-      const newjobPostingResponse = await updatejobPosting(jobPosting.id, {
+      const updatejobPostingResponse = await updatejobPosting(jobPosting.id, {
         ...values,
         updatedAt: Timestamp.fromDate(new Date()),
       });
-      console.log(newjobPostingResponse);
-      if (newjobPostingResponse.success) {
+      console.log(updatejobPostingResponse);
+      if (updatejobPostingResponse.success) {
+        updateLocalJob(updatejobPostingResponse.data);
         Toast.show({
           onHide: () => {
             navigation.navigate('RECRUITER_PROFILE_TABS', {});
           },
-          text1: newjobPostingResponse.message,
+          text1: updatejobPostingResponse.message,
           visibilityTime: 700,
           autoHide: true,
         });
         helpers.resetForm();
         return;
-      } else Toast.error(newjobPostingResponse.message);
+      } else Toast.error(updatejobPostingResponse.message);
     } catch (error) {
       console.log('error', error);
     } finally {

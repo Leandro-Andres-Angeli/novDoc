@@ -41,6 +41,10 @@ export interface RecruiterContextInterface {
     isRefresh?: boolean
   ) => Promise<void>;
   hasMore: Record<jobPostingStatus, 'initial' | boolean>;
+  addLocalJob: (newJob: IJobPostingDB) => void;
+  updateLocalJob: (
+    updatedJobData: Partial<IJobPosting> & { id: string }
+  ) => void;
   lastDocRef: React.RefObject<
     Record<
       jobPostingStatus,
@@ -63,13 +67,23 @@ export const RecruiterContextProvider = (
     throw Error('user not found');
   }
 
-  const { loadJobPostings, loading, jobPostings, errors, hasMore, lastDocRef } =
-    useGetJobPostings({
-      user,
-    });
+  const {
+    loadJobPostings,
+    loading,
+    jobPostings,
+    errors,
+    hasMore,
+    lastDocRef,
+    addLocalJob,
+    updateLocalJob,
+  } = useGetJobPostings({
+    user,
+  });
   return (
     <RecruiterContext.Provider
       value={{
+        addLocalJob,
+        updateLocalJob,
         errors,
         loading,
         jobPostings,

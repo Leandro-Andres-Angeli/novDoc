@@ -23,12 +23,14 @@ import JobPostingForm from '@components/forms/JobPostingForm';
 
 import { createjobPosting } from 'src/services/jobOffer/jobOffer.service';
 import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
+import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 
 const NewJobOffer = () => {
   const {
     authState: { user },
     loading: loadingUser,
   } = useContext(AuthContext);
+  const { addLocalJob } = useContext(RecruiterContext);
   if (loadingUser) {
     return <AppLoading></AppLoading>;
   }
@@ -58,6 +60,7 @@ const NewJobOffer = () => {
       const newJobOfferResponse = await createjobPosting(values);
 
       if (newJobOfferResponse.success) {
+        addLocalJob(newJobOfferResponse.data);
         Toast.show({
           onHide: () => {
             navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});

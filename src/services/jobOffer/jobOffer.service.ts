@@ -5,6 +5,8 @@ import {
   addDoc,
   collection,
   doc,
+  DocumentData,
+  DocumentReference,
   getDocs,
   limit,
   orderBy,
@@ -27,12 +29,12 @@ const jobsOfferCollection = collection(db, 'jobPostings').withConverter(
 );
 export const createjobPosting = async (
   jobPosting: IJobPosting
-): Promise<(FirebaseResponse & { id: string }) | FirebaseErrorResponse> => {
+): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
     const savedOffer = await addDoc(jobsOfferCollection, jobPosting);
     if (savedOffer) {
       return {
-        id: savedOffer.id,
+        data: { ...jobPosting, id: savedOffer.id },
         message: 'Oferta creada correctamente',
         success: true,
       };
@@ -48,13 +50,21 @@ export const createjobPosting = async (
 export const updatejobPosting = async (
   idToUpdate: string,
   jobPostingUpdate: Partial<IJobPosting>
-): Promise<FirebaseResponse | FirebaseErrorResponse> => {
+): Promise<
+  FirebaseResponse<Partial<IJobPostingDB>> | FirebaseErrorResponse
+> => {
   try {
-    const docRef = doc(db, 'jobPostings', idToUpdate);
+    const docRef = doc(db, 'jobPostings', idToUpdate).withConverter(
+      genericConverter<IJobPosting>()
+    );
 
     await updateDoc(docRef, { ...jobPostingUpdate });
 
-    return { message: 'Oferta actualizada', success: true };
+    return {
+      message: 'Oferta actualizada',
+      success: true,
+      data: { ...jobPostingUpdate, id: idToUpdate },
+    };
   } catch (error) {
     console.log('error saving job offer');
     console.log(error);

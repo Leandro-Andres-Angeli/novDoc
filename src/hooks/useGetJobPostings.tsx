@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
 
-import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
+import {
+  IJobPosting,
+  IJobPostingDB,
+  jobPostingStatus,
+} from 'src/types/dbTypes/IJobOffer';
 import {
   and,
   collection,
@@ -61,10 +65,6 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     cerrada: null,
     pausada: null,
   });
-  // const [error, setError] = useState<{
-  //   error: boolean;
-  //   message: string | null;
-  // }>({ error: false, message: null });
 
   const [errors, setErrors] = useState<Record<jobPostingStatus, Error>>({
     activa: { error: false, message: null },
@@ -78,11 +78,18 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   }, []);
 
   // Helper to manually UPDATE a specific job in the list
-  const updateLocalJob = useCallback((updatedJob: IJobPostingDB) => {
-    setJobPostings((prev) =>
-      prev.map((job) => (job.id === updatedJob.id ? updatedJob : job))
-    );
-  }, []);
+  const updateLocalJob = useCallback(
+    (updatedJobData: Partial<IJobPosting> & { id: string }) => {
+      setJobPostings((prev) =>
+        prev.map((job) =>
+          job.id === updatedJobData.id
+            ? ({ ...job, ...updatedJobData } as typeof job)
+            : job
+        )
+      );
+    },
+    []
+  );
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus, isRefresh = false) => {
       let lastDocRefByStatus:
