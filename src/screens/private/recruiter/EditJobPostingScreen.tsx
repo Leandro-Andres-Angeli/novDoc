@@ -46,7 +46,7 @@ const EditJobPostingScreen = ({
       });
       console.log(updatejobPostingResponse);
       if (updatejobPostingResponse.success) {
-        updateLocalJob(updatejobPostingResponse.data);
+        updateLocalJob({ ...values, id: updatejobPostingResponse.data.id });
         Toast.show({
           onHide: () => {
             navigation.navigate('RECRUITER_PROFILE_TABS', {});

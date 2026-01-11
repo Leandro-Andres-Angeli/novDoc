@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import AppForm from './AppForm';
 
@@ -42,6 +42,7 @@ import {
   ShiftTime,
 } from 'src/types/dbTypes/IJobOffer';
 import { IJobPosting } from '../../types/dbTypes/IJobOffer';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const generateJobOfferForm = (
   jobLocation: JobLocation,
@@ -212,13 +213,12 @@ const JobPostingForm = <T,>({
         marginBottom: 40,
       }}
     >
-      {/* <Text>{JSON.stringify(jobOfferForm)}</Text> */}
       <AppForm<IJobPosting>
         handleSubmit={handleSubmit}
         loadingPostIndicator={loading}
         validationSchema={jobOfferValidationSchema}
         formFields={valuesToEdit ?? jobOfferForm}
-        enableReinitialize={true}
+        // enableReinitialize={true}
       >
         {({
           handleInputValue,
@@ -256,6 +256,20 @@ const JobPostingForm = <T,>({
               )
             );
           }, [jobOfferForm.jobLocation]);
+
+          useFocusEffect(
+            useCallback(() => {
+              // This function runs when the screen is focused.
+
+              return () => {
+                // This function runs when the screen is unfocused (blured).
+                // It acts as the cleanup function.
+                handleResetForm();
+                // Perform cleanup tasks here, e.g., blur a TextInput
+                // or stop a video.
+              };
+            }, [])
+          );
           return (
             <>
               <View
@@ -484,6 +498,7 @@ const JobPostingForm = <T,>({
                                             longitudeDelta: 0.0421,
                                           },
                                           showsUserLocation: true,
+
                                           zoomEnabled: true,
                                           zoomControlEnabled: true,
                                           zoomTapEnabled: true,

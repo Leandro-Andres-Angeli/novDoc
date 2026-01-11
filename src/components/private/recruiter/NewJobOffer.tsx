@@ -48,8 +48,7 @@ const NewJobOffer = () => {
     useNavigation<
       NavigationProp<RecruiterNavigatorRootParams & ParamListBase>
     >();
-  /* const navigator =
-    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>(); */
+
   async function handleSubmit(
     values: IJobPosting,
     helpers: FormikHelpers<any>
@@ -61,6 +60,7 @@ const NewJobOffer = () => {
 
       if (newJobOfferResponse.success) {
         addLocalJob(newJobOfferResponse.data);
+        helpers.resetForm();
         Toast.show({
           onHide: () => {
             navigator.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {});
@@ -69,7 +69,7 @@ const NewJobOffer = () => {
           visibilityTime: 700,
           autoHide: true,
         });
-        helpers.resetForm();
+
         return;
       } else Toast.error(newJobOfferResponse.message);
     } catch (error) {

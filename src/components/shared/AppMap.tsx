@@ -12,7 +12,7 @@ import MapView, {
 import * as Location from 'expo-location';
 import { Toast } from 'toastify-react-native';
 import useGetLocationFromCoords from 'src/hooks/useGetLocationFromCoords';
-import { MapLocation } from 'src/types/dbTypes/IJobPosting';
+import { MapLocation } from 'src/types/dbTypes/IJobOffer';
 
 interface AppMapProps {
   handleSelectMarker?: (...args: Array<MapLocation>) => void;

@@ -5,7 +5,6 @@ import GenericList from '@components/genericList/GenericList';
 
 import utilityStyles from 'src/styles/utilityStyles';
 import JobPostingCard from '@components/jobPostingCard/JobPostingCard';
-import { isEmptyArray } from 'formik';
 
 import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -17,6 +16,7 @@ import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
 import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
+import { isEmptyArray } from 'formik';
 
 interface jobPostingsListProps
   extends NativeStackScreenProps<
@@ -53,12 +53,6 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     }
   }, [user, jobPostingStatus]);
 
-  // return (
-  //   <View>
-  //     <Text>Refactoring getting data</Text>
-  //   </View>
-  // );
-
   // if (jobPostingStatusLoading) {
   //   return <AppLoading></AppLoading>;
   // }
@@ -72,10 +66,8 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   }
 
   if (
-    isEmptyArray(
-      jobPostings.filter((el) => el.status === jobPostingStatus) &&
-        !jobPostingStatusLoading
-    )
+    isEmptyArray(jobPostings.filter((el) => el.status === jobPostingStatus)) &&
+    !jobPostingStatusLoading
   ) {
     return (
       <ProfileProfileJobPostingEmptyState
@@ -91,13 +83,6 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   };
   return (
     <>
-      {/* <ScrollView>
-        <Text>{JSON.stringify(jobPostings, null, 2)}</Text>
-      </ScrollView> */}
-      {/* <Text>Has more {JSON.stringify(hasMore[jobPostingStatus])}</Text>
-      <Text>
-        Has more ref{JSON.stringify(lastDocRef.current[jobPostingStatus])}
-      </Text> */}
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
           // ListHeaderComponent={

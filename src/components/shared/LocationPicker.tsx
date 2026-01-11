@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'react-native-paper';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import useGetLocations from 'src/hooks/useGetLocations';
-import { MapLocation } from 'src/types/dbTypes/IJobPosting';
+import { MapLocation } from '../../types/dbTypes/IJobOffer';
+
 import {
   Ciudad,
   GeoRefCitiesResponse,
