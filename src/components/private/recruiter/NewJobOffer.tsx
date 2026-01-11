@@ -24,6 +24,7 @@ import JobPostingForm from '@components/forms/JobPostingForm';
 import { createjobPosting } from 'src/services/jobOffer/jobOffer.service';
 import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
+import { Timestamp } from 'firebase/firestore';
 
 const NewJobOffer = () => {
   const {
@@ -56,7 +57,12 @@ const NewJobOffer = () => {
     setLoading(true);
 
     try {
-      const newJobOfferResponse = await createjobPosting(values);
+      const creationDate = Timestamp.fromDate(new Date());
+      const newJobOfferResponse = await createjobPosting({
+        ...values,
+        createdAt: creationDate,
+        updatedAt: creationDate,
+      });
 
       if (newJobOfferResponse.success) {
         addLocalJob(newJobOfferResponse.data);

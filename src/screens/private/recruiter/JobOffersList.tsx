@@ -10,11 +10,10 @@ import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/Pr
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { JobListNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/jobsListNavigator/JobsListNavigator';
-import { JOBS_LIST_ROUTES } from '../../../navigators/privateNavigator/recruiterNavigator/jobsListNavigator/JobsListNavigator';
-import useGetJobPostings from 'src/hooks/useGetJobPostings';
+
 import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
-import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { isEmptyArray } from 'formik';
 
@@ -53,9 +52,9 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     }
   }, [user, jobPostingStatus]);
 
-  // if (jobPostingStatusLoading) {
-  //   return <AppLoading></AppLoading>;
-  // }
+  if (jobPostingStatusLoading) {
+    return <AppLoading></AppLoading>;
+  }
 
   if (error.error) {
     return (
