@@ -160,9 +160,6 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
           lastDocRefByStatus = querySnapshot.docs.at(-1);
         }
 
-        console.log('COLL POPPED', lastDocRefByStatus);
-        console.log('LAST DOC STATUS', collectionRes.length);
-
         if (
           hasMore[jobsPostingStatusParam] === 'initial' ||
           hasMore[jobsPostingStatusParam] === true

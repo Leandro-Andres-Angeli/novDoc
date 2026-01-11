@@ -1,10 +1,4 @@
-import {
-  View,
-  Pressable,
-  ScrollView,
-  RefreshControl,
-  Animated,
-} from 'react-native';
+import { View, Pressable, RefreshControl, Animated } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
@@ -50,7 +44,13 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     (el) => el.status === jobPostingStatus
   );
   const error = errors[jobPostingStatus];
-  //  const [first, setfirst] = useState(second)
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  };
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const showLoadedData = () => {
     return Animated.timing(fadeAnim, {
@@ -70,14 +70,13 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   }, [user, jobPostingStatus]);
   useEffect(() => {
     if (!jobPostingStatusLoading) {
-      console.log('HEREEEEE ANIM');
       return showLoadedData().start();
     }
-  }, []);
+  }, [jobPostingStatusLoading]);
 
-  // if (jobPostingStatusLoading) {
-  //   return <AppLoading></AppLoading>;
-  // }
+  if (jobPostingStatusLoading) {
+    return <AppLoading></AppLoading>;
+  }
 
   if (error.error) {
     return (
@@ -109,48 +108,41 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   }
 
   return (
-    <>
-      <Text>Here</Text>
-      <Text>{JSON.stringify(fadeAnim)}</Text>
-      <Animated.View
-        style={{ opacity: fadeAnim, backgroundColor: 'red', flex: 1 }}
-      >
-        <View style={[utilityStyles.container, utilityStyles.flex]}>
-          <GenericList<IJobPostingDB>
-            ListFooterComponent={
-              (hasMore[jobPostingStatus] && <AppLoading></AppLoading>) || null
-            }
-            onEndReachedThreshold={0.9}
-            onEndReached={() => handleEndReached()}
-            // onRefresh={() => (
-            //   <RefreshControl
-            //     refreshing={refreshing}
-            //     onRefresh={() => onRefresh()}
-            //   ></RefreshControl>
-            // )}
-            renderItem={({ item, index }) => (
-              <Pressable
-                onPress={() => {
-                  // navigate to detail
-                  navigation.navigate('JOB_POSTING_DETAILS', {
-                    jobPosting: item,
-                  });
-                }}
-                // key={item.id}
-                key={item.id}
-              >
-                <JobPostingCard jobPosting={item}></JobPostingCard>
-              </Pressable>
-            )}
-            data={
-              (jobPostings &&
-                jobPostings.filter((el) => el.status === jobPostingStatus)) ||
-              []
-            }
-          ></GenericList>
-        </View>
-      </Animated.View>
-    </>
+    <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
+      <View style={[utilityStyles.container, utilityStyles.flex]}>
+        <GenericList<IJobPostingDB>
+          ListFooterComponent={
+            (hasMore[jobPostingStatus] && <AppLoading></AppLoading>) || null
+          }
+          onEndReachedThreshold={0.9}
+          onEndReached={() => handleEndReached()}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            ></RefreshControl>
+          }
+          renderItem={({ item }) => (
+            <Pressable
+              onPress={() => {
+                // navigate to detail
+                navigation.navigate('JOB_POSTING_DETAILS', {
+                  jobPosting: item,
+                });
+              }}
+              key={item.id}
+            >
+              <JobPostingCard jobPosting={item}></JobPostingCard>
+            </Pressable>
+          )}
+          data={
+            (jobPostings &&
+              jobPostings.filter((el) => el.status === jobPostingStatus)) ||
+            []
+          }
+        ></GenericList>
+      </View>
+    </Animated.View>
   );
 };
 
