@@ -1,5 +1,11 @@
-import { View, Pressable, ScrollView } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import {
+  View,
+  Pressable,
+  ScrollView,
+  RefreshControl,
+  Animated,
+} from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import GenericList from '@components/genericList/GenericList';
 
@@ -45,16 +51,33 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   );
   const error = errors[jobPostingStatus];
   //  const [first, setfirst] = useState(second)
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const showLoadedData = () => {
+    return Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+      delay: 500,
+    });
+  };
+
   useEffect(() => {
     if (jobPostingsByStatus.length === 0 && !jobPostingStatusLoading) {
       console.log('LOADINGGGGG');
+
       loadJobPostings(jobPostingStatus);
     }
   }, [user, jobPostingStatus]);
+  useEffect(() => {
+    if (!jobPostingStatusLoading) {
+      console.log('HEREEEEE ANIM');
+      return showLoadedData().start();
+    }
+  }, []);
 
-  if (jobPostingStatusLoading) {
-    return <AppLoading></AppLoading>;
-  }
+  // if (jobPostingStatusLoading) {
+  //   return <AppLoading></AppLoading>;
+  // }
 
   if (error.error) {
     return (
@@ -77,42 +100,56 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   const handleEndReached = () => {
     if (jobPostingStatusLoading) return;
     if (!hasMore[jobPostingStatus]) return;
-    console.log('in end reached');
+
     loadJobPostings(jobPostingStatus);
   };
+
+  if (jobPostingStatusLoading) {
+    return <AppLoading></AppLoading>;
+  }
+
   return (
     <>
-      <View style={[utilityStyles.container, utilityStyles.flex]}>
-        <GenericList<IJobPostingDB>
-          // ListHeaderComponent={
-          //   (jobPostingStatusLoading && <AppLoading></AppLoading>) || null
-          // }
-          ListFooterComponent={
-            (hasMore[jobPostingStatus] && <AppLoading></AppLoading>) || null
-          }
-          onEndReachedThreshold={0.9}
-          onEndReached={() => handleEndReached()}
-          renderItem={({ item, index }) => (
-            <Pressable
-              onPress={() => {
-                // navigate to detail
-                navigation.navigate('JOB_POSTING_DETAILS', {
-                  jobPosting: item,
-                });
-              }}
-              // key={item.id}
-              key={item.id}
-            >
-              <JobPostingCard jobPosting={item}></JobPostingCard>
-            </Pressable>
-          )}
-          data={
-            (jobPostings &&
-              jobPostings.filter((el) => el.status === jobPostingStatus)) ||
-            []
-          }
-        ></GenericList>
-      </View>
+      <Text>Here</Text>
+      <Text>{JSON.stringify(fadeAnim)}</Text>
+      <Animated.View
+        style={{ opacity: fadeAnim, backgroundColor: 'red', flex: 1 }}
+      >
+        <View style={[utilityStyles.container, utilityStyles.flex]}>
+          <GenericList<IJobPostingDB>
+            ListFooterComponent={
+              (hasMore[jobPostingStatus] && <AppLoading></AppLoading>) || null
+            }
+            onEndReachedThreshold={0.9}
+            onEndReached={() => handleEndReached()}
+            // onRefresh={() => (
+            //   <RefreshControl
+            //     refreshing={refreshing}
+            //     onRefresh={() => onRefresh()}
+            //   ></RefreshControl>
+            // )}
+            renderItem={({ item, index }) => (
+              <Pressable
+                onPress={() => {
+                  // navigate to detail
+                  navigation.navigate('JOB_POSTING_DETAILS', {
+                    jobPosting: item,
+                  });
+                }}
+                // key={item.id}
+                key={item.id}
+              >
+                <JobPostingCard jobPosting={item}></JobPostingCard>
+              </Pressable>
+            )}
+            data={
+              (jobPostings &&
+                jobPostings.filter((el) => el.status === jobPostingStatus)) ||
+              []
+            }
+          ></GenericList>
+        </View>
+      </Animated.View>
     </>
   );
 };

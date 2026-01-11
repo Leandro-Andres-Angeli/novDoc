@@ -80,6 +80,22 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   // Helper to manually UPDATE a specific job in the list
   const updateLocalJob = useCallback(
     (updatedJobData: Partial<IJobPosting> & { id: string }) => {
+      setJobPostings((prev) => {
+        const updatedJob = prev.find((job) => job.id === updatedJobData.id);
+        const filteredList = prev.filter((job) => job.id !== updatedJobData.id);
+        if (updatedJob) {
+          filteredList.unshift({
+            ...updatedJob,
+            ...updatedJobData,
+          } as IJobPostingDB);
+        }
+        return filteredList;
+      });
+    },
+    []
+  );
+  /*  const updateLocalJob = useCallback(
+    (updatedJobData: Partial<IJobPosting> & { id: string }) => {
       setJobPostings((prev) =>
         prev.map((job) =>
           job.id === updatedJobData.id
@@ -89,7 +105,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
       );
     },
     []
-  );
+  ); */
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus, isRefresh = false) => {
       let lastDocRefByStatus:
