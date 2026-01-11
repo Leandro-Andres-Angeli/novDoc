@@ -1,5 +1,5 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Chip, Text, Button, useTheme, Modal } from 'react-native-paper';
 
 import { getLocales } from 'expo-localization';
@@ -22,6 +22,8 @@ import { CustomTheme } from 'src/providers/PublicProviders';
 import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 import { updatejobPosting } from 'src/services/jobOffer/jobOffer.service';
 import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
+import { Timestamp } from 'firebase/firestore';
+import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 
 interface JobDetailProp {
   jobPosting: IJobPostingDB;
@@ -30,7 +32,7 @@ interface JobDetailProp {
 const JobDetail = ({ jobPosting }: JobDetailProp) => {
   const [locale] = getLocales();
   const { elementVisible, handleElementVisibility } = useOpenElement();
-
+  const { updateLocalJob } = useContext(RecruiterContext);
   const navigator =
     useNavigation<NativeStackNavigationProp<RecruiterProfileStackRootParams>>();
   const theme = useTheme<CustomTheme>();
@@ -38,7 +40,15 @@ const JobDetail = ({ jobPosting }: JobDetailProp) => {
     try {
       const updatejobPostingResult = await updatejobPosting(jobPosting.id, {
         status: jobPostingStatus.CLOSED,
+        updatedAt: Timestamp.fromDate(new Date()),
       });
+
+      if (updatejobPostingResult.success) {
+        updateLocalJob({
+          ...updatejobPostingResult.data,
+          id: updatejobPostingResult.data.id,
+        });
+      }
       handleElementVisibility(false);
       if (!updatejobPostingResult.success) {
         throw Error(updatejobPostingResult.message);
