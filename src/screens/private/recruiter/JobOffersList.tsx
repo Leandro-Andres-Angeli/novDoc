@@ -49,7 +49,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1500);
+    }, 1000);
   };
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const showLoadedData = () => {
