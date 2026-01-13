@@ -8,8 +8,11 @@ export interface FirebaseErrorResponse {
   success: false;
   message: string;
 }
-export interface FirebaseResponse<T = IJobPostingDB> {
+export interface FirebaseResponse {
   success: true;
   message: string;
+}
+export interface FirebaseResponseJobPosting<T = IJobPostingDB>
+  extends FirebaseResponse {
   data: T;
 }

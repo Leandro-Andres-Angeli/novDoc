@@ -1,6 +1,7 @@
 import { genericConverter } from '@utils/converters/firebaseConverters';
 import { FirebaseError } from 'firebase/app';
 import { db } from 'firebase/config';
+import { FirebaseResponseJobPosting } from '../../types/firebaseResponse/firebaseResponses';
 import {
   addDoc,
   collection,
@@ -29,7 +30,7 @@ const jobsOfferCollection = collection(db, 'jobPostings').withConverter(
 );
 export const createjobPosting = async (
   jobPosting: IJobPosting
-): Promise<FirebaseResponse | FirebaseErrorResponse> => {
+): Promise<FirebaseResponseJobPosting | FirebaseErrorResponse> => {
   try {
     const savedOffer = await addDoc(jobsOfferCollection, jobPosting);
     if (savedOffer) {
@@ -51,7 +52,7 @@ export const updatejobPosting = async (
   idToUpdate: string,
   jobPostingUpdate: Partial<IJobPosting>
 ): Promise<
-  | FirebaseResponse<Partial<IJobPostingDB> & { id: string }>
+  | FirebaseResponseJobPosting<Partial<IJobPostingDB> & { id: string }>
   | FirebaseErrorResponse
 > => {
   try {

@@ -1,22 +1,5 @@
-import { genericConverter } from '@utils/converters/firebaseConverters';
-import { db } from 'firebase/config';
-import {
-  collection,
-  query,
-  Query,
-  where,
-  onSnapshot,
-  DocumentSnapshot,
-  DocumentData,
-} from 'firebase/firestore';
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { DocumentSnapshot, DocumentData } from 'firebase/firestore';
+import { createContext, PropsWithChildren, useContext } from 'react';
 
 import { AuthContext } from '../authContext/AuthContext';
 import {

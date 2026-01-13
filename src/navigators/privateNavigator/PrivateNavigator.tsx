@@ -10,6 +10,7 @@ import RecruiterNavigator from './recruiterNavigator/RecruiterNavigator';
 import ProfessionalNavigator from './ProfessionalNavigator';
 import { RecruiterContextProvider } from 'src/appContext/recruiterContext/RecruiterContext';
 import useSubscribeToLoggedUserUpdate from 'src/hooks/useSubscribeToLoggedUserUpdate';
+import { ProfessionalContextProvider } from 'src/appContext/professionalContext/ProfessionalContext';
 
 const NavigatorByRole = () => {
   const {
@@ -20,7 +21,11 @@ const NavigatorByRole = () => {
   }
   switch (user.role) {
     case Role.PROFESSIONAL:
-      return <ProfessionalNavigator></ProfessionalNavigator>;
+      return (
+        <ProfessionalContextProvider>
+          <ProfessionalNavigator></ProfessionalNavigator>
+        </ProfessionalContextProvider>
+      );
 
     case Role.RECRUITER:
       return (
