@@ -1,32 +1,27 @@
 import { View } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 
 import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { IconButton, Text, useTheme } from 'react-native-paper';
+import {
+  BottomNavigation,
+  IconButton,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import { bottomNavigationsOptions } from '@utils/styling/bottomNavigationOptions';
-
-import AppHeader from '@ui/AppHeader';
-
 import NoJobsPosted from 'src/components/private/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
-
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
-
 import AppLoading from '@ui/AppLoading';
-
-import { getLocales } from 'expo-localization';
-
-import RecruiterProfileStack from 'src/screens/private/recruiter/RecruiterProfileStack';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
-import RecruiterProfileDrawer, {
-  recruiterProfileDrawerRootStack,
-} from 'src/screens/private/recruiter/RecruiterProfileDrawer';
+import RecruiterProfileDrawer from 'src/screens/private/recruiter/RecruiterProfileDrawer';
 import { CustomTheme } from 'src/providers/PublicProviders';
-import { useRoute } from '@react-navigation/native';
+
 import NewjobPostingscreen from 'src/screens/private/recruiter/NewJobOfferScreen';
+import { CommonActions } from '@react-navigation/native';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -52,7 +47,6 @@ const Favorites = () => {
   if (loadingjobPostings) {
     return <AppLoading></AppLoading>;
   }
-  const [{ languageTag }] = getLocales();
 
   return (
     <View style={{ ...utilityStyles.flex }}>
@@ -77,6 +71,7 @@ export type RecruiterNavigatorRootParams = {
   [RECRUITER_NAVIGATOR_ROUTES.FAVORITES]: {};
 };
 const Tab = createBottomTabNavigator<RecruiterNavigatorRootParams>();
+// const Tab = createMaterial<RecruiterNavigatorRootParams>();
 
 const RecruiterNavigator = () => {
   const theme = useTheme<CustomTheme>();
@@ -89,6 +84,148 @@ const RecruiterNavigator = () => {
         sceneStyle: {
           backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
         },
+        animation: 'shift',
+      }}
+      tabBar={({ navigation, state, descriptors, insets }) => (
+        <BottomNavigation.Bar
+          navigationState={state}
+          safeAreaInsets={insets}
+          onTabPress={({ route, preventDefault }) => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (event.defaultPrevented) {
+              preventDefault();
+            } else {
+              navigation.dispatch({
+                ...CommonActions.navigate(route.name, route.params),
+                target: state.key,
+              });
+            }
+          }}
+          renderIcon={({ route, focused, color }) =>
+            descriptors[route.key].options.tabBarIcon?.({
+              focused,
+              color,
+              size: 24,
+            }) || null
+          }
+          getLabelText={({ route }) => {
+            console.log('ROUTEEE', route);
+            const { options } = descriptors[route.key];
+            console.log('OPSSSS', route);
+            const label =
+              typeof options.tabBarLabel === 'string'
+                ? options.tabBarLabel
+                : typeof options.title === 'string'
+                ? options.title
+                : route.name;
+
+            return label;
+          }}
+        />
+      )}
+    >
+      <Tab.Screen
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
+            ...props,
+            iconName: 'account-group-outline',
+            iconNameFocused: 'account-group',
+            tabBarLabel: 'Descubrir',
+
+            theme: theme,
+          });
+          return {
+            ...iconOptions,
+            header: () => (
+              <AppHeaderWithSettingsLink title='Postulaciones'></AppHeaderWithSettingsLink>
+            ),
+
+            headerShown: true,
+          };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.SWIPE}
+        component={SwipeRecruiter}
+      ></Tab.Screen>
+      <Tab.Screen
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
+            ...props,
+            iconName: 'heart-outline',
+            iconNameFocused: 'heart',
+            tabBarLabel: 'Favoritos',
+            theme: theme,
+          });
+          return { ...iconOptions, headerShown: false };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.FAVORITES}
+        component={Favorites}
+      ></Tab.Screen>
+      <Tab.Screen
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
+            ...props,
+            iconName: 'account-circle',
+            iconNameFocused: 'account-circle-outline',
+            tabBarLabel: 'Mi perfil',
+            theme: theme,
+          });
+          return {
+            ...iconOptions,
+            headerShown: false,
+          };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
+        component={RecruiterProfileDrawer}
+      ></Tab.Screen>
+      <Tab.Screen
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
+            ...props,
+            iconName: 'plus-circle',
+            iconNameFocused: 'plus-circle-outline',
+            tabBarLabel: 'Publicar Oferta',
+            theme: theme,
+          });
+          return {
+            ...iconOptions,
+            headerShown: true,
+            headerTitle: 'Publicar Oferta',
+            headerTitleAlign: 'center',
+            headerTitleStyle: { marginRight: 40 },
+
+            headerLeft() {
+              return (
+                <IconButton
+                  onPress={() => props.navigation.goBack()}
+                  icon={'chevron-left'}
+                ></IconButton>
+              );
+            },
+          };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
+        component={NewjobPostingscreen}
+      ></Tab.Screen>
+    </Tab.Navigator>
+  );
+};
+/* const RecruiterNavigator = () => {
+  const theme = useTheme<CustomTheme>();
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        sceneStyle: {
+          backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
+        },
+        animation: 'shift',
       }}
     >
       <Tab.Screen
@@ -174,6 +311,6 @@ const RecruiterNavigator = () => {
       ></Tab.Screen>
     </Tab.Navigator>
   );
-};
+}; */
 
 export default RecruiterNavigator;

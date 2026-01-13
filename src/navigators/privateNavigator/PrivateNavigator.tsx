@@ -7,7 +7,7 @@ import AppLoading from '@ui/AppLoading';
 import { Role } from 'src/types/authContextTypes/userRole';
 import utilityStyles from 'src/styles/utilityStyles';
 import RecruiterNavigator from './recruiterNavigator/RecruiterNavigator';
-import ProfessionalNavigator from './ProfessionalNavigator';
+import ProfessionalNavigator from './professionalNavigator/ProfessionalNavigator';
 import { RecruiterContextProvider } from 'src/appContext/recruiterContext/RecruiterContext';
 import useSubscribeToLoggedUserUpdate from 'src/hooks/useSubscribeToLoggedUserUpdate';
 import { ProfessionalContextProvider } from 'src/appContext/professionalContext/ProfessionalContext';

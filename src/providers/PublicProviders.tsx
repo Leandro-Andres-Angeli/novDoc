@@ -87,6 +87,7 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
   MD3Theme,
+  Provider,
   adaptNavigationTheme,
 } from 'react-native-paper';
 import merge from 'deepmerge';

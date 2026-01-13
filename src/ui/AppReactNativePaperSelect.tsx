@@ -52,7 +52,6 @@ export const AppReactNativePaperSelectMultiple = (
   return (
     <>
       <PaperSelect
-        containerStyle={{ backgroundColor: 'red' }}
         theme={theme}
         dialogStyle={{
           backgroundColor: theme.colors.background,
