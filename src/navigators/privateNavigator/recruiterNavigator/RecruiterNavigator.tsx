@@ -7,6 +7,7 @@ import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   BottomNavigation,
+  Icon,
   IconButton,
   Text,
   useTheme,
@@ -81,6 +82,7 @@ const RecruiterNavigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
+
         sceneStyle: {
           backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
         },
@@ -88,6 +90,7 @@ const RecruiterNavigator = () => {
       }}
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
+          theme={theme}
           navigationState={state}
           safeAreaInsets={insets}
           onTabPress={({ route, preventDefault }) => {
@@ -113,6 +116,7 @@ const RecruiterNavigator = () => {
               size: 24,
             }) || null
           }
+          activeColor={theme.colors.primary}
           getLabelText={({ route }) => {
             console.log('ROUTEEE', route);
             const { options } = descriptors[route.key];
@@ -130,6 +134,100 @@ const RecruiterNavigator = () => {
       )}
     >
       <Tab.Screen
+        options={{
+          headerShown: true,
+          header: () => (
+            <AppHeaderWithSettingsLink title='Postulaciones'></AppHeaderWithSettingsLink>
+          ),
+          title: 'Postulaciones',
+          tabBarLabel: 'Descubrir',
+          tabBarLabelStyle: {
+            color: 'red',
+          },
+
+          tabBarIcon: (props) => {
+            return (
+              <Icon
+                theme={theme}
+                size={24}
+                color={theme.colors.primary}
+                source={
+                  !props.focused ? 'account-group-outline' : 'account-group'
+                }
+              ></Icon>
+            );
+          },
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.SWIPE}
+        component={SwipeRecruiter}
+      ></Tab.Screen>
+      <Tab.Screen
+        options={{
+          headerShown: false,
+
+          tabBarLabel: 'Favoritos',
+
+          tabBarIcon: (props) => {
+            return (
+              <Icon
+                theme={theme}
+                size={24}
+                color={theme.colors.primary}
+                source={!props.focused ? 'heart-outline' : 'heart'}
+              ></Icon>
+            );
+          },
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.FAVORITES}
+        component={Favorites}
+      ></Tab.Screen>
+      <Tab.Screen
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
+            ...props,
+            iconName: 'account-circle',
+            iconNameFocused: 'account-circle-outline',
+            tabBarLabel: 'Mi perfil',
+            theme: theme,
+          });
+          return {
+            ...iconOptions,
+            headerShown: false,
+          };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
+        component={RecruiterProfileDrawer}
+      ></Tab.Screen>
+      <Tab.Screen
+        options={(props) => {
+          const iconOptions = bottomNavigationsOptions({
+            ...props,
+            iconName: 'plus-circle',
+            iconNameFocused: 'plus-circle-outline',
+            tabBarLabel: 'Publicar Oferta',
+            theme: theme,
+          });
+          return {
+            ...iconOptions,
+            headerShown: true,
+            headerTitle: 'Publicar Oferta',
+            headerTitleAlign: 'center',
+            headerTitleStyle: { marginRight: 40 },
+
+            headerLeft() {
+              return (
+                <IconButton
+                  onPress={() => props.navigation.goBack()}
+                  icon={'chevron-left'}
+                ></IconButton>
+              );
+            },
+          };
+        }}
+        name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
+        component={NewjobPostingscreen}
+      ></Tab.Screen>
+      {/*       <Tab.Screen
         options={(props) => {
           const iconOptions = bottomNavigationsOptions({
             ...props,
@@ -210,7 +308,7 @@ const RecruiterNavigator = () => {
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
         component={NewjobPostingscreen}
-      ></Tab.Screen>
+      ></Tab.Screen> */}
     </Tab.Navigator>
   );
 };
