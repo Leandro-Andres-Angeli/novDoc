@@ -82,7 +82,7 @@ const RecruiterNavigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
-
+        tabBarIconStyle: { color: 'red' },
         sceneStyle: {
           backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
         },
@@ -118,9 +118,8 @@ const RecruiterNavigator = () => {
           }
           activeColor={theme.colors.primary}
           getLabelText={({ route }) => {
-            console.log('ROUTEEE', route);
             const { options } = descriptors[route.key];
-            console.log('OPSSSS', route);
+
             const label =
               typeof options.tabBarLabel === 'string'
                 ? options.tabBarLabel
@@ -141,9 +140,6 @@ const RecruiterNavigator = () => {
           ),
           title: 'Postulaciones',
           tabBarLabel: 'Descubrir',
-          tabBarLabelStyle: {
-            color: 'red',
-          },
 
           tabBarIcon: (props) => {
             return (
@@ -182,38 +178,57 @@ const RecruiterNavigator = () => {
         component={Favorites}
       ></Tab.Screen>
       <Tab.Screen
-        options={(props) => {
-          const iconOptions = bottomNavigationsOptions({
-            ...props,
-            iconName: 'account-circle',
-            iconNameFocused: 'account-circle-outline',
-            tabBarLabel: 'Mi perfil',
-            theme: theme,
-          });
-          return {
-            ...iconOptions,
-            headerShown: false,
-          };
+        options={{
+          headerShown: false,
+
+          tabBarLabel: 'Mi perfil',
+
+          tabBarIcon: (props) => {
+            return (
+              <Icon
+                theme={theme}
+                size={24}
+                color={theme.colors.primary}
+                source={
+                  !props.focused ? 'account-circle-outline' : 'account-circle'
+                }
+              ></Icon>
+            );
+          },
         }}
         name={RECRUITER_NAVIGATOR_ROUTES.PROFILE}
         component={RecruiterProfileDrawer}
       ></Tab.Screen>
       <Tab.Screen
-        options={(props) => {
-          const iconOptions = bottomNavigationsOptions({
-            ...props,
-            iconName: 'plus-circle',
-            iconNameFocused: 'plus-circle-outline',
-            tabBarLabel: 'Publicar Oferta',
-            theme: theme,
-          });
-          return {
-            ...iconOptions,
-            headerShown: true,
-            headerTitle: 'Publicar Oferta',
-            headerTitleAlign: 'center',
-            headerTitleStyle: { marginRight: 40 },
+        // options={(props) => {
+        //   const iconOptions = bottomNavigationsOptions({
+        //     ...props,
+        //     iconName: 'plus-circle',
+        //     iconNameFocused: 'plus-circle-outline',
+        //     tabBarLabel: 'Publicar Oferta',
+        //     theme: theme,
+        //   });
+        //   return {
+        //     ...iconOptions,
+        //     headerShown: true,
+        //     headerTitle: 'Publicar Oferta',
+        //     headerTitleAlign: 'center',
+        //     headerTitleStyle: { marginRight: 40 },
 
+        //     headerLeft() {
+        //       return (
+        //         <IconButton
+        //           onPress={() => props.navigation.goBack()}
+        //           icon={'chevron-left'}
+        //         ></IconButton>
+        //       );
+        //     },
+        //   };
+        // }}
+        options={(props) => {
+          return {
+            title: 'Publicar Oferta',
+            headerShown: true,
             headerLeft() {
               return (
                 <IconButton
@@ -222,8 +237,47 @@ const RecruiterNavigator = () => {
                 ></IconButton>
               );
             },
+            tabBarLabel: 'Publicar Oferta',
+
+            tabBarIcon: (props) => {
+              return (
+                <Icon
+                  theme={theme}
+                  size={24}
+                  color={theme.colors.primary}
+                  source={
+                    !props.focused ? 'plus-circle-outline' : 'plus-circle'
+                  }
+                ></Icon>
+              );
+            },
           };
         }}
+        /*         options={{
+          headerShown: true,
+  headerLeft(props) {
+               return (
+                 <IconButton
+                   onPress={() => props.navigation.goBack()}
+                   icon={'chevron-left'}
+                 ></IconButton>
+               );
+             },
+         tabBarLabel: 'Publicar Oferta',
+
+          tabBarIcon: (props) => {
+            return (
+              <Icon
+                theme={theme}
+                size={24}
+                color={theme.colors.primary}
+                source={
+                  !props.focused ? 'plus-circle' : 'plus-circle-outline'
+                }
+              ></Icon>
+            );
+          },
+        }} */
         name={RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS}
         component={NewjobPostingscreen}
       ></Tab.Screen>
