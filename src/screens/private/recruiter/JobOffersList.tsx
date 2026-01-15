@@ -27,7 +27,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
 
   const { jobPostingStatus } = params;
 
-  const { loadJobPostings, loading, jobPostings, errors, hasMore, lastDocRef } =
+  const { loadJobPostings, loading, jobPostings, errors, hasMore } =
     useContext(RecruiterContext);
   const {
     authState: { user },

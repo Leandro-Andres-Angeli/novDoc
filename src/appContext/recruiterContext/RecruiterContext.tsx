@@ -25,6 +25,9 @@ export interface RecruiterContextInterface {
   ) => Promise<void>;
   hasMore: Record<jobPostingStatus, 'initial' | boolean>;
   addLocalJob: (newJob: IJobPostingDB) => void;
+  checkIsLoadingData: () => boolean;
+  checkJobPostingsByUsersLength: () => Promise<void>;
+  hasJobPostings: boolean;
   updateLocalJob: (
     updatedJobData: Partial<IJobPosting> & { id: string }
   ) => void;
@@ -59,6 +62,9 @@ export const RecruiterContextProvider = (
     lastDocRef,
     addLocalJob,
     updateLocalJob,
+    hasJobPostings,
+    checkJobPostingsByUsersLength,
+    checkIsLoadingData,
   } = useGetJobPostings({
     user,
   });
@@ -73,6 +79,9 @@ export const RecruiterContextProvider = (
         loadJobPostings,
         hasMore,
         lastDocRef,
+        checkIsLoadingData,
+        hasJobPostings,
+        checkJobPostingsByUsersLength,
       }}
     >
       {props.children}

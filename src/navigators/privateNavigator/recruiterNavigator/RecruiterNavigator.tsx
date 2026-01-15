@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
@@ -13,7 +13,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { bottomNavigationsOptions } from '@utils/styling/bottomNavigationOptions';
-import NoJobsPosted from 'src/components/private/NoJobsPosted';
+import NoJobsPosted from '@components/private/recruiter/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import AppLoading from '@ui/AppLoading';
@@ -23,6 +23,7 @@ import { CustomTheme } from 'src/providers/PublicProviders';
 
 import NewjobPostingscreen from 'src/screens/private/recruiter/NewJobOfferScreen';
 import { CommonActions } from '@react-navigation/native';
+import NoCandidates from '@components/private/recruiter/NoCandidates';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -31,10 +32,37 @@ const SwipeRecruiter = () => {
   const user = useContext(AuthContext).authState.user as IRecruiter;
 
   const noJobsPosted = recruiterNoJobsPosted(user);
+  const {
+    jobPostings,
+    loading,
+    checkIsLoadingData,
+    checkJobPostingsByUsersLength,
+    hasJobPostings,
+  } = useContext(RecruiterContext);
+  useEffect(() => {
+    checkJobPostingsByUsersLength();
+  }, []);
 
-  if (noJobsPosted) {
-    return <NoJobsPosted></NoJobsPosted>;
+  if (checkIsLoadingData()) {
+    return <AppLoading></AppLoading>;
   }
+  // return (
+  //   <View>
+  //     <Text>{JSON.stringify(jobPostings)}</Text>
+  //   </View>
+  // );
+  if (!checkIsLoadingData() && !hasJobPostings) {
+    return (
+      <View>
+        <Text>{JSON.stringify(hasJobPostings)}</Text>
+        <Text>{JSON.stringify(checkIsLoadingData())}</Text>
+        <NoJobsPosted></NoJobsPosted>
+      </View>
+    );
+  }
+  //HARDCODING NO CANDIDATES FOR JOB POSTINGS
+  return <NoCandidates></NoCandidates>;
+  //HARDCODING NO CANDIDATES FOR JOB POSTINGS
   return (
     <View>
       <Text>Ofertas</Text>

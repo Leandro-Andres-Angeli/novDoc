@@ -26,9 +26,7 @@ import {
 } from 'firebase/firestore';
 import { genericConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
-import { IUser, UserTypes } from 'src/types/authContextTypes/authContextTypes';
-import { getJobPostings } from 'src/services/jobOffer/jobOffer.service';
-import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
+import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
 
 const jobPostingCollection = collection(db, 'jobPostings').withConverter(
   genericConverter<IJobPostingDB>()
@@ -50,7 +48,10 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     cerrada: false,
     pausada: false,
   });
-
+  const checkIsLoadingData = useCallback(
+    () => loading.activa || loading.cerrada || loading.pausada,
+    [loading]
+  );
   // Track if there are more items to load
   const [hasMore, setHasMore] = useState<
     Record<jobPostingStatus, 'initial' | boolean>
@@ -76,7 +77,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   const addLocalJob = useCallback((newJob: IJobPostingDB) => {
     setJobPostings((prev) => [newJob, ...prev]);
   }, []);
-
+  const [hasJobPostings, setHasJobPostings] = useState(false);
   // Helper to manually UPDATE a specific job in the list
   const updateLocalJob = useCallback(
     (updatedJobData: Partial<IJobPosting> & { id: string }) => {
@@ -94,18 +95,18 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     },
     []
   );
-  /*  const updateLocalJob = useCallback(
-    (updatedJobData: Partial<IJobPosting> & { id: string }) => {
-      setJobPostings((prev) =>
-        prev.map((job) =>
-          job.id === updatedJobData.id
-            ? ({ ...job, ...updatedJobData } as typeof job)
-            : job
-        )
-      );
-    },
-    []
-  ); */
+
+  const checkJobPostingsByUsersLength = async () => {
+    const q = query(
+      jobPostingCollection,
+      where('recruiter_id', '==', user.id),
+      where('status', '==', jobPostingStatus.PAUSED),
+      limit(1)
+    );
+    const querySnapshot = await getDocs(q);
+    setHasJobPostings(!querySnapshot.empty);
+    //  const collectionResponse = await
+  };
   const loadJobPostings = useCallback(
     async (jobsPostingStatusParam: jobPostingStatus, isRefresh = false) => {
       let lastDocRefByStatus:
@@ -216,6 +217,9 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     hasMore,
     addLocalJob,
     updateLocalJob,
+    checkIsLoadingData,
+    checkJobPostingsByUsersLength,
+    hasJobPostings,
   };
 };
 

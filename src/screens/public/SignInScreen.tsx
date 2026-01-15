@@ -12,12 +12,12 @@ import AppFooter from '@ui/AppFooter';
 
 import SignIn from 'src/components/SignIn';
 
-const Container = styled.View`
+export const Container = styled.View`
   flex: 1;
   background-color: #f7fafc;
 `;
 
-const MainContent = styled.View<{ isLandscape: boolean }>`
+export const MainContent = styled.View<{ isLandscape?: boolean }>`
   flex: 1;
   justify-content: center;
   align-items: center;
@@ -26,14 +26,14 @@ const MainContent = styled.View<{ isLandscape: boolean }>`
   ${(props) => props.isLandscape && 'flex-direction: row;'}
 `;
 
-const ContentWrapper = styled.View<{ isLandscape: boolean }>`
+export const ContentWrapper = styled.View<{ isLandscape: boolean }>`
   width: 100%;
   max-width: 384px;
   align-items: center;
   ${(props) => props.isLandscape && 'flex: 1; max-width: 50%;'}
 `;
 
-const CardContainer = styled.View<{
+export const CardContainer = styled.View<{
   isLandscape: boolean;
   screenWidth: number;
 }>`
@@ -76,8 +76,6 @@ const TextWrapper = styled.View<{ isLandscape: boolean }>`
 `;
 
 const SignInScreen = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<publicNavigatorRootStack>>();
   const { width } = Dimensions.get('screen');
   return (
     <Container>
