@@ -15,8 +15,8 @@ const NoJobsPosted = () => {
           source={{
             uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD-9tt_YkHy_PZZkc1hYFSNGI1_q44v6LGT4UpNdMCAocL0gOuBfoYNPC9nYGGI5oLYo6VQFm7w4te6CFXz5AMjTOaQzkbU-tfVEksJCtpiPI5Bxv8phRHuyazIC9ISEBeoDF61UHW_bB3ek8CHvv1IQ4BkeWkfsyucFtvL3bH1ZJvAndgAjeeuPWg3pLlb7Y5B4ciVTg4R8ThkEDtsfrBo87FaO1X9MdyaBWhVSjzffmmz9pT7AO8Kz3tkkSnjkb60AJx4JwlDqGrA',
           }}
+          width={500}
           style={localStyles.image}
-          resizeMode='contain'
         />
 
         <Text variant='headlineMedium' style={localStyles.headline}>
@@ -59,8 +59,11 @@ const localStyles = StyleSheet.create({
     paddingVertical: 24,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    minHeight: 400,
+
+    resizeMode: 'cover',
+    borderRadius: 12,
     marginBottom: 24,
   },
   headline: {

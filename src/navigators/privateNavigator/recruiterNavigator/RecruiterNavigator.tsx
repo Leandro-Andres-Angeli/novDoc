@@ -51,14 +51,9 @@ const SwipeRecruiter = () => {
   //     <Text>{JSON.stringify(jobPostings)}</Text>
   //   </View>
   // );
+
   if (!checkIsLoadingData() && !hasJobPostings) {
-    return (
-      <View>
-        <Text>{JSON.stringify(hasJobPostings)}</Text>
-        <Text>{JSON.stringify(checkIsLoadingData())}</Text>
-        <NoJobsPosted></NoJobsPosted>
-      </View>
-    );
+    return <NoJobsPosted></NoJobsPosted>;
   }
   //HARDCODING NO CANDIDATES FOR JOB POSTINGS
   return <NoCandidates></NoCandidates>;
