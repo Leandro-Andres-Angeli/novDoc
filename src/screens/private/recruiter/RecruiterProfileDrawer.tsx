@@ -47,7 +47,11 @@ const RecruiterProfileDrawer = () => {
     <>
       <Drawer.Navigator
         screenOptions={{
-          drawerStyle: { padding: 0, backgroundColor: theme.colors.background },
+          drawerStyle: {
+            padding: 0,
+            backgroundColor: theme.colors.background,
+            borderBottomLeftRadius: 0,
+          },
           headerStyle: { backgroundColor: theme.colors.background },
           headerTitleAlign: 'center',
           drawerContentStyle: {
