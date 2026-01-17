@@ -24,6 +24,7 @@ import { CustomTheme } from 'src/providers/PublicProviders';
 import NewjobPostingscreen from 'src/screens/private/recruiter/NewJobOfferScreen';
 import { CommonActions } from '@react-navigation/native';
 import NoCandidates from '@components/private/recruiter/NoCandidates';
+import materialBottomTabBar from '@utils/materialBottomTabBar/materialBottomTabBar';
 
 const recruiterNoJobsPosted = (user: IRecruiter) => {
   return user?.jobs?.length === 0 || !user.jobs;
@@ -112,7 +113,8 @@ const RecruiterNavigator = () => {
         },
         animation: 'shift',
       }}
-      tabBar={({ navigation, state, descriptors, insets }) => (
+      tabBar={(props) => materialBottomTabBar({ ...props, theme })}
+      /*   tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
           theme={theme}
           navigationState={state}
@@ -154,7 +156,7 @@ const RecruiterNavigator = () => {
             return label;
           }}
         />
-      )}
+      )} */
     >
       <Tab.Screen
         options={{
