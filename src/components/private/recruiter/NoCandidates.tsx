@@ -1,13 +1,18 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AppButton from '@ui/AppButton';
 import AppButtonText from '@ui/AppButtonText';
 import React from 'react';
 import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Card, Text, Button, IconButton, useTheme } from 'react-native-paper';
+import RECRUITER_NAVIGATOR_ROUTES from 'src/navigators/privateNavigator/recruiterNavigator/RECRUITER_NAVIGATOR_ROUTES';
+import { RecruiterNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/RecruiterNavigator';
 import { Container, MainContent } from 'src/screens/public/SignInScreen';
 import utilityStyles from 'src/styles/utilityStyles';
 
 const NoCandidates = () => {
   const theme = useTheme();
+  const navigation =
+    useNavigation<NavigationProp<RecruiterNavigatorRootParams>>();
   return (
     <ScrollView style={{ ...utilityStyles.container, ...utilityStyles.flex }}>
       <View>
@@ -93,8 +98,12 @@ const NoCandidates = () => {
           </Card.Content>
         </Card>
         <View style={{ ...utilityStyles.contentContainer }}>
-          <AppButton onPress={() => {}}>
-            <AppButtonText>Volver a ver ofertas</AppButtonText>
+          <AppButton
+            onPress={() =>
+              navigation.navigate(RECRUITER_NAVIGATOR_ROUTES.PROFILE, {})
+            }
+          >
+            <AppButtonText>Volver a ofertas</AppButtonText>
           </AppButton>
         </View>
       </View>
