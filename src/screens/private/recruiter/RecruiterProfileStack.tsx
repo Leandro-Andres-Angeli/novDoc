@@ -13,7 +13,11 @@ import EditJobPostingScreen from './EditJobPostingScreen';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 import { CustomTheme } from 'src/providers/PublicProviders';
 import { recruiterProfileDrawerRootStack } from './RecruiterProfileDrawer';
-import { useRoute } from '@react-navigation/native';
+import {
+  DrawerActions,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 export const RecruiterProfileStackRoutes = {
@@ -35,9 +39,16 @@ interface RecruiterProfileScreenProps
   extends NativeStackScreenProps<
     typeof recruiterProfileDrawerRootStack.RECRUITER_PROFILE_STACK
   > {}
-const RecruiterProfileStack = ({ route }: RecruiterProfileScreenProps) => {
+const RecruiterProfileStack = ({
+  route,
+  navigation,
+}: RecruiterProfileScreenProps) => {
   const theme = useTheme<CustomTheme>();
-
+  useFocusEffect(() => {
+    return function () {
+      navigation.dispatch(DrawerActions.closeDrawer());
+    };
+  });
   return (
     <Stack.Navigator
       initialRouteName={RecruiterProfileStackRoutes.RECRUITER_PROFILE_TABS}

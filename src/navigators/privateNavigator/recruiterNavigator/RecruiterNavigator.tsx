@@ -5,14 +5,8 @@ import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
 import utilityStyles from 'src/styles/utilityStyles';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  BottomNavigation,
-  Icon,
-  IconButton,
-  Text,
-  useTheme,
-} from 'react-native-paper';
-import { bottomNavigationsOptions } from '@utils/styling/bottomNavigationOptions';
+import { Icon, IconButton, Text, useTheme } from 'react-native-paper';
+
 import NoJobsPosted from '@components/private/recruiter/NoJobsPosted';
 import RECRUITER_NAVIGATOR_ROUTES from './RECRUITER_NAVIGATOR_ROUTES';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
@@ -22,7 +16,7 @@ import RecruiterProfileDrawer from 'src/screens/private/recruiter/RecruiterProfi
 import { CustomTheme } from 'src/providers/PublicProviders';
 
 import NewjobPostingscreen from 'src/screens/private/recruiter/NewJobOfferScreen';
-import { CommonActions } from '@react-navigation/native';
+
 import NoCandidates from '@components/private/recruiter/NoCandidates';
 import materialBottomTabBar from '@utils/materialBottomTabBar/materialBottomTabBar';
 

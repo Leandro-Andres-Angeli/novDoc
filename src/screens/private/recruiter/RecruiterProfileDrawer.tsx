@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
   createDrawerNavigator,
   DrawerScreenProps,
@@ -18,7 +18,12 @@ import EditProfileScreen from '../shared/EditProfileScreen';
 import PasswordUpdateScreen from '../shared/PasswordUpdateScreen';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { boolean } from 'yup';
-import { useRoute } from '@react-navigation/native';
+import {
+  DrawerActions,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   RECRUITER_PROFILE_STACK: 'RECRUITER_PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
@@ -43,15 +48,19 @@ const RecruiterProfileDrawer = () => {
 
   const { elementVisible, handleElementVisibility } = useOpenElement();
   const { logout } = useContext(AuthContext);
+  const navigation = useNavigation();
+
   return (
     <>
       <Drawer.Navigator
+        defaultStatus='closed'
         screenOptions={{
           drawerStyle: {
             padding: 0,
             backgroundColor: theme.colors.background,
             borderBottomLeftRadius: 0,
           },
+
           headerStyle: { backgroundColor: theme.colors.background },
           headerTitleAlign: 'center',
           drawerContentStyle: {
