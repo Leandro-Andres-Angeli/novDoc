@@ -101,56 +101,13 @@ const RecruiterNavigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
-        tabBarIconStyle: { color: 'red' },
+
         sceneStyle: {
           backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
         },
         animation: 'shift',
       }}
       tabBar={(props) => materialBottomTabBar({ ...props, theme })}
-      /*   tabBar={({ navigation, state, descriptors, insets }) => (
-        <BottomNavigation.Bar
-          theme={theme}
-          navigationState={state}
-          safeAreaInsets={insets}
-          onTabPress={({ route, preventDefault }) => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (event.defaultPrevented) {
-              preventDefault();
-            } else {
-              navigation.dispatch({
-                ...CommonActions.navigate(route.name, route.params),
-                target: state.key,
-              });
-            }
-          }}
-          renderIcon={({ route, focused, color }) =>
-            descriptors[route.key].options.tabBarIcon?.({
-              focused,
-              color,
-              size: 24,
-            }) || null
-          }
-          activeColor={theme.colors.primary}
-          getLabelText={({ route }) => {
-            const { options } = descriptors[route.key];
-
-            const label =
-              typeof options.tabBarLabel === 'string'
-                ? options.tabBarLabel
-                : typeof options.title === 'string'
-                ? options.title
-                : route.name;
-
-            return label;
-          }}
-        />
-      )} */
     >
       <Tab.Screen
         options={{

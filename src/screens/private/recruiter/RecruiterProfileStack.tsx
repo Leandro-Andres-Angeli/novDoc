@@ -39,15 +39,10 @@ interface RecruiterProfileScreenProps
   extends NativeStackScreenProps<
     typeof recruiterProfileDrawerRootStack.RECRUITER_PROFILE_STACK
   > {}
-const RecruiterProfileStack = ({
-  route,
-  navigation,
-}: RecruiterProfileScreenProps) => {
+const RecruiterProfileStack = ({ navigation }: RecruiterProfileScreenProps) => {
   const theme = useTheme<CustomTheme>();
   useFocusEffect(() => {
-    return function () {
-      navigation.dispatch(DrawerActions.closeDrawer());
-    };
+    return () => navigation.dispatch(DrawerActions.closeDrawer());
   });
   return (
     <Stack.Navigator

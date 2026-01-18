@@ -28,8 +28,8 @@ const Stack = createNativeStackNavigator<JobListNavigatorRootParams>();
 interface JobsListTabNavigatorProps
   extends DrawerScreenProps<JobsListTabNavigatorRootParams> {}
 const JobsListNavigator = (props: JobsListTabNavigatorProps) => {
-  const route = useRoute();
-  console.log('route hoook', route.params);
+  // const route = useRoute();
+
   return (
     <Stack.Navigator
       initialRouteName={JOBS_LIST_ROUTES.JOB_POSTING_LIST}

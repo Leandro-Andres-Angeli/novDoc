@@ -12,8 +12,7 @@ const RecruiterProfileScreen = () => {
   const {
     authState: { user },
   } = useContext(AuthContext);
-  const route = useRoute();
-  console.log('ROUTEEEE', route);
+
   return (
     <View style={[utilityStyles.container]}>
       <AppAvatarCard
