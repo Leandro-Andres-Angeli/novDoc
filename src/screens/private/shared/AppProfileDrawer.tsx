@@ -58,6 +58,8 @@ const AppProfileDrawer = (props: AppProfileDrawerProps) => {
             {...props}
           ></AppDrawerContent>
         )}
+        //TODO THIS ONE'S BREAKING RETHINK THE LOGIC
+        //TODO THIS ONE'S BREAKING RETHINK THE LOGIC
         // initialRouteName={'PROFILE_STACK'}
       >
         {/* <Drawer.Screen
@@ -65,6 +67,7 @@ const AppProfileDrawer = (props: AppProfileDrawerProps) => {
           options={{ title: 'Perfil' }}
           component={RecruiterProfileStack}
         ></Drawer.Screen> */}
+
         <Drawer.Screen
           name='EDIT_PROFILE'
           options={({ navigation }) => {
