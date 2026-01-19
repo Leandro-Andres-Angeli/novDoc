@@ -35,10 +35,9 @@ export type RecruiterProfileStackRootParams = {
   };
 };
 const Stack = createNativeStackNavigator<RecruiterProfileStackRootParams>();
-interface RecruiterProfileScreenProps
-  extends NativeStackScreenProps<
-    typeof recruiterProfileDrawerRootStack.RECRUITER_PROFILE_STACK
-  > {}
+interface RecruiterProfileScreenProps extends NativeStackScreenProps<
+  typeof recruiterProfileDrawerRootStack.PROFILE_STACK
+> {}
 const RecruiterProfileStack = ({ navigation }: RecruiterProfileScreenProps) => {
   const theme = useTheme<CustomTheme>();
   useFocusEffect(() => {

@@ -10,8 +10,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Toast } from 'toastify-react-native';
 import { recruiterProfileDrawerRootStack } from '../recruiter/RecruiterProfileDrawer';
 import { FormikHelpers } from 'formik';
-interface EditProfileScreenProps
-  extends NativeStackScreenProps<typeof recruiterProfileDrawerRootStack> {}
+interface EditProfileScreenProps extends NativeStackScreenProps<
+  typeof recruiterProfileDrawerRootStack
+> {}
 const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   const {
     authState: { user },
@@ -30,7 +31,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
       if (updatedProfileOp.success) {
         Toast.show({
           onHide() {
-            navigation.navigate('RECRUITER_PROFILE_STACK');
+            navigation.navigate('PROFILE_STACK');
           },
           text1: updatedProfileOp.message,
           visibilityTime: 700,

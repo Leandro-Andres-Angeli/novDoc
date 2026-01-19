@@ -11,6 +11,7 @@ import { CustomTheme } from 'src/providers/PublicProviders';
 import materialBottomTabBar from '@utils/materialBottomTabBar/materialBottomTabBar';
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 import SwipeProfessional from 'src/screens/private/professional/SwipeProfessional';
+import ProfessionalProfileDrawer from 'src/screens/private/professional/ProfessionalProfileDrawer';
 
 const Stack = createNativeStackNavigator();
 const FavoritesPlaceHolder = () => (
@@ -44,9 +45,6 @@ const ProfessionalNavigator = () => {
   const theme = useTheme<CustomTheme>();
   return (
     <>
-      <Button onPress={logout}>
-        <Text>Sign out </Text>
-      </Button>
       <Tab.Navigator
         screenOptions={{
           headerStyle: {
@@ -127,7 +125,7 @@ const ProfessionalNavigator = () => {
             },
           }}
           name={PROFESSIONAL_NAVIGATOR_ROUTES.PROFILE}
-          component={ProfileDrawerPlaceHolder}
+          component={ProfessionalProfileDrawer}
         ></Tab.Screen>
       </Tab.Navigator>
     </>
