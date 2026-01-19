@@ -131,21 +131,5 @@ const ProfessionalNavigator = () => {
     </>
   );
 };
-/* const ProfessionalNavigator = () => {
-  const {
-    authState: { user },
-    logout,
-  } = useContext(AuthContext);
-  return (
-    <>
-      <Button onPress={logout}>
-        <Text>Sign out </Text>
-      </Button>
-      <Stack.Navigator>
-        <Stack.Screen name='Onboarding' component={Onboarding}></Stack.Screen>
-      </Stack.Navigator>
-    </>
-  );
-}; */
 
 export default ProfessionalNavigator;
