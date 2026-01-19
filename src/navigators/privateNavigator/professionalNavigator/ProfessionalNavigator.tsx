@@ -13,6 +13,16 @@ import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsL
 import SwipeProfessional from 'src/screens/private/professional/SwipeProfessional';
 
 const Stack = createNativeStackNavigator();
+const FavoritesPlaceHolder = () => (
+  <View>
+    <Text>Favorites Placeholder</Text>
+  </View>
+);
+const ProfileDrawerPlaceHolder = () => (
+  <View>
+    <Text>ProfileDrawer Placeholder</Text>
+  </View>
+);
 const Onboarding = () => (
   <View style={{ ...utilityStyles.flex }}>
     <Text>Professional</Text>
@@ -24,11 +34,6 @@ export type ProfessionalNavigatorRootParams = {
   [PROFESSIONAL_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
   [PROFESSIONAL_NAVIGATOR_ROUTES.FAVORITES]: {};
   [PROFESSIONAL_NAVIGATOR_ROUTES.PROFILE]: {};
-  // [RECRUITER_NAVIGATOR_ROUTES.SWIPE]: {};
-  // [RECRUITER_NAVIGATOR_ROUTES.PROFILE]: {};
-  // [RECRUITER_NAVIGATOR_ROUTES.CREATE_JOB_OFFERS]: {};
-  // [RECRUITER_NAVIGATOR_ROUTES.CHAT_ROOMS]: {};
-  // [RECRUITER_NAVIGATOR_ROUTES.FAVORITES]: {};
 };
 const Tab = createBottomTabNavigator<ProfessionalNavigatorRootParams>();
 const ProfessionalNavigator = () => {
@@ -79,6 +84,50 @@ const ProfessionalNavigator = () => {
           }}
           name={PROFESSIONAL_NAVIGATOR_ROUTES.SWIPE}
           component={SwipeProfessional}
+        ></Tab.Screen>
+
+        <Tab.Screen
+          options={{
+            headerShown: false,
+
+            tabBarLabel: 'Favoritos',
+
+            tabBarIcon: (props) => {
+              return (
+                <Icon
+                  theme={theme}
+                  size={24}
+                  color={theme.colors.primary}
+                  source={!props.focused ? 'heart-outline' : 'heart'}
+                ></Icon>
+              );
+            },
+          }}
+          name={PROFESSIONAL_NAVIGATOR_ROUTES.FAVORITES}
+          component={FavoritesPlaceHolder}
+        ></Tab.Screen>
+
+        <Tab.Screen
+          options={{
+            headerShown: false,
+
+            tabBarLabel: 'Mi perfil',
+
+            tabBarIcon: (props) => {
+              return (
+                <Icon
+                  theme={theme}
+                  size={24}
+                  color={theme.colors.primary}
+                  source={
+                    !props.focused ? 'account-circle-outline' : 'account-circle'
+                  }
+                ></Icon>
+              );
+            },
+          }}
+          name={PROFESSIONAL_NAVIGATOR_ROUTES.PROFILE}
+          component={ProfileDrawerPlaceHolder}
         ></Tab.Screen>
       </Tab.Navigator>
     </>

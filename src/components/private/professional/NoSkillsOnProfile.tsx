@@ -190,9 +190,6 @@ const styles = StyleSheet.create<{
 
   blueCircle: {
     backgroundColor: '#5C6BC0',
-    //   bottom: 30,
-    //   right: 15,
-    //   opacity: 0.6,
   },
   mainTitle: {
     fontWeight: '700',

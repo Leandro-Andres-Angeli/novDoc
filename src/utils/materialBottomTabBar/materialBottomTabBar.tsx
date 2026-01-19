@@ -14,6 +14,7 @@ const materialBottomTabBar = ({
   return (
     <BottomNavigation.Bar
       theme={theme}
+      style={{ backgroundColor: theme.colors.background }}
       navigationState={state}
       safeAreaInsets={insets}
       onTabPress={({ route, preventDefault }) => {
@@ -47,8 +48,8 @@ const materialBottomTabBar = ({
           typeof options.tabBarLabel === 'string'
             ? options.tabBarLabel
             : typeof options.title === 'string'
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         return label;
       }}

@@ -103,7 +103,7 @@ const RecruiterNavigator = () => {
         },
 
         sceneStyle: {
-          backgroundColor: theme.colors.primaryDynamicOpacity(0.04),
+          backgroundColor: theme.colors.primaryDynamicOpacity(0.01),
         },
         animation: 'shift',
       }}
