@@ -1,5 +1,4 @@
-import { View, Text } from 'react-native';
-import React, { Children, PropsWithChildren, useContext } from 'react';
+import React, { useContext } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AppDrawerContent from '@components/shared/AppDrawerContent';
 import useOpenElement from 'src/hooks/useOpenElement';
@@ -8,9 +7,9 @@ import { IconButton } from 'react-native-paper';
 import PasswordUpdateScreen from './PasswordUpdateScreen';
 import AppModal from '@ui/AppModal';
 import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
-import RecruiterProfileStack from '../recruiter/RecruiterProfileStack';
+
 import EditProfileScreen from './EditProfileScreen';
-import { TypedNavigator } from '@react-navigation/native';
+import { NavigatorTypeBagBase, TypedNavigator } from '@react-navigation/native';
 import { Screen } from 'react-native-screens';
 
 type DrawerNavigatorPropsShape = {
@@ -22,11 +21,13 @@ type DrawerNavigatorPropsShape = {
 interface AppProfileDrawerProps {
   drawerNavigatorProps: DrawerNavigatorPropsShape;
   backgroundColor: string;
+  // children?: (Drawer:   TypedNavigator<  { ParamList : DrawerNavigatorPropsShape } & NavigatorTypeBagBase , undefined>) => React.ReactNode;
   children?: (Drawer: any) => React.ReactNode;
   initialRouteName?: keyof DrawerNavigatorPropsShape;
 }
 const AppProfileDrawer = (props: AppProfileDrawerProps) => {
   const Drawer = createDrawerNavigator<typeof props.drawerNavigatorProps>();
+
   const { elementVisible, handleElementVisibility } = useOpenElement();
   const { logout } = useContext(AuthContext);
 

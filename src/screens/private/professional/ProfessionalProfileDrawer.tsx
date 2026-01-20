@@ -26,6 +26,7 @@ const ProfessionalProfileDrawer = () => {
       initialRouteName='PROFILE_STACK'
     >
       {(Drawer) => {
+        // TODO TYPE BETTER DRAWER NOT ANY
         return (
           <>
             <Drawer.Screen
