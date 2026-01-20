@@ -19,24 +19,22 @@ type DrawerNavigatorPropsShape = {
   SIGN_OUT: {};
   UPDATE_PASSWORD: {};
 };
-interface AppProfileDrawerProps extends PropsWithChildren {
+interface AppProfileDrawerProps {
   drawerNavigatorProps: DrawerNavigatorPropsShape;
   backgroundColor: string;
+  children?: (Drawer: any) => React.ReactNode;
+  initialRouteName?: keyof DrawerNavigatorPropsShape;
 }
 const AppProfileDrawer = (props: AppProfileDrawerProps) => {
   const Drawer = createDrawerNavigator<typeof props.drawerNavigatorProps>();
   const { elementVisible, handleElementVisibility } = useOpenElement();
   const { logout } = useContext(AuthContext);
-  //   const childrenWithProps = React.Children.map(Children, (child) => {
-  //     if (React.isValidElement<{ drawer: typeof Drawer }>(child)) {
-  //       return React.cloneElement(child, { drawer: Drawer });
-  //     }
-  //     return child;
-  //   });
+
   return (
     <>
       <Drawer.Navigator
         defaultStatus='closed'
+        initialRouteName={props.initialRouteName ?? 'EDIT_PROFILE'}
         screenOptions={{
           drawerStyle: {
             padding: 0,
@@ -58,16 +56,8 @@ const AppProfileDrawer = (props: AppProfileDrawerProps) => {
             {...props}
           ></AppDrawerContent>
         )}
-        //TODO THIS ONE'S BREAKING RETHINK THE LOGIC
-        //TODO THIS ONE'S BREAKING RETHINK THE LOGIC
-        // initialRouteName={'PROFILE_STACK'}
       >
-        {/* <Drawer.Screen
-          name='PROFILE_STACK'
-          options={{ title: 'Perfil' }}
-          component={RecruiterProfileStack}
-        ></Drawer.Screen> */}
-
+        {props.children && props.children(Drawer)}
         <Drawer.Screen
           name='EDIT_PROFILE'
           options={({ navigation }) => {

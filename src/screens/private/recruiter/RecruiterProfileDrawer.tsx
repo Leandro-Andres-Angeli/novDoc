@@ -8,6 +8,10 @@ import useOpenElement from 'src/hooks/useOpenElement';
 import { useNavigation } from '@react-navigation/native';
 import AppProfileDrawer from '../shared/AppProfileDrawer';
 
+import RecruiterProfileStack from './RecruiterProfileStack';
+import * as Drawer from '@react-navigation/drawer';
+import { Screen } from 'react-native-screens';
+
 const RECRUITER_PROFILE_DRAWER_ROUTES = {
   PROFILE_STACK: 'PROFILE_STACK',
   SIGN_OUT: 'SIGN_OUT',
@@ -34,7 +38,20 @@ const RecruiterProfileDrawer = () => {
     <AppProfileDrawer
       backgroundColor={theme.colors.background}
       drawerNavigatorProps={recruiterProfileDrawerRootStack}
-    ></AppProfileDrawer>
+      initialRouteName='PROFILE_STACK'
+    >
+      {(Drawer) => {
+        return (
+          <>
+            <Drawer.Screen
+              name='PROFILE_STACK'
+              options={{ title: 'Perfil' }}
+              component={RecruiterProfileStack}
+            ></Drawer.Screen>
+          </>
+        );
+      }}
+    </AppProfileDrawer>
   );
 };
 

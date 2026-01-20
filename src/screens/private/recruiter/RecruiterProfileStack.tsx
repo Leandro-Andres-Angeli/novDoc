@@ -10,14 +10,10 @@ import JobDetailsScreen from 'src/screens/private/shared/JobDetailScreen';
 import { useTheme } from 'react-native-paper';
 
 import EditJobPostingScreen from './EditJobPostingScreen';
-import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
+
 import { CustomTheme } from 'src/providers/PublicProviders';
 import { recruiterProfileDrawerRootStack } from './RecruiterProfileDrawer';
-import {
-  DrawerActions,
-  useFocusEffect,
-  useRoute,
-} from '@react-navigation/native';
+import { DrawerActions, useFocusEffect } from '@react-navigation/native';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 
 export const RecruiterProfileStackRoutes = {

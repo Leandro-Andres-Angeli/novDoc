@@ -6,6 +6,7 @@ import {
 } from '../shared/SHARED_DRAWER_ROUTES';
 import AppProfileDrawer from '../shared/AppProfileDrawer';
 import { useTheme } from 'react-native-paper';
+import ProfessionalProfileStack from './ProfessionalProfileStack';
 // const RECRUITER_PROFILE_DRAWER_ROUTES  : sharedProfileDrawerRoute   = {...sharedProfileDrawerRootStack}
 export const professionalProfileDrawerRootStack: Record<
   sharedProfileDrawerRoute,
@@ -22,7 +23,20 @@ const ProfessionalProfileDrawer = () => {
     <AppProfileDrawer
       backgroundColor={theme.colors.background}
       drawerNavigatorProps={professionalProfileDrawerRootStack}
-    ></AppProfileDrawer>
+      initialRouteName='PROFILE_STACK'
+    >
+      {(Drawer) => {
+        return (
+          <>
+            <Drawer.Screen
+              name='PROFILE_STACK'
+              options={{ title: 'Perfil' }}
+              component={ProfessionalProfileStack}
+            ></Drawer.Screen>
+          </>
+        );
+      }}
+    </AppProfileDrawer>
   );
 };
 

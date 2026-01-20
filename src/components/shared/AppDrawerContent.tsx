@@ -31,7 +31,11 @@ const AppDrawerUserProfile = () => {
       <View style={{ marginTop: 5 }}>
         <Text
           variant='titleMedium'
-          style={{ color: theme.colors.onPrimary, textTransform: 'capitalize' }}
+          style={{
+            color: theme.colors.onPrimary,
+            textTransform: 'capitalize',
+            textAlign: 'center',
+          }}
         >
           {user?.name}
         </Text>

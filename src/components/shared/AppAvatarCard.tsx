@@ -13,10 +13,11 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 
 import AppPictureSelector from './AppPictureSelector';
 import utilityStyles from 'src/styles/utilityStyles';
-import { CustomTheme } from 'App';
+
 import AppCardWrapper from '@ui/AppCardWrapper';
 import RBSheetType from 'RBSheetType';
 import AppAvatar from '../../ui/AppAvatar';
+import { CustomTheme } from 'src/providers/PublicProviders';
 
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
