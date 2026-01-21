@@ -1,11 +1,13 @@
 import { FormikHelpers } from 'formik';
 import { FormMode } from './formMode';
-import { IJobPosting } from './dbTypes/IJobPosting';
+
 import {
+  IProfessional,
   IRecruiter,
   IUser,
   UserTypes,
 } from './authContextTypes/authContextTypes';
+import { IJobPosting } from './dbTypes/IJobOffer';
 
 interface GenericFormProps<T, K = T> {
   handleSubmit: (values: T, helpers: FormikHelpers<any>) => Promise<void>;
@@ -14,13 +16,16 @@ interface GenericFormProps<T, K = T> {
   valuesToEdit?: K;
 }
 export type UpdateRecruiterProfileFormShape = IUser & Omit<IRecruiter, 'jobs'>;
+export type UpdateProfessionalProfileFormShape = IUser & IProfessional;
 
-export interface JobPostingFormProps<T, K = IJobPosting>
-  extends GenericFormProps<T, K> {
+export interface JobPostingFormProps<
+  T,
+  K = IJobPosting,
+> extends GenericFormProps<T, K> {
   userId: string;
   valuesToEdit?: K & { id: string };
   mode?: FormMode;
 }
-export interface EditProfileFormProps<T, K> extends GenericFormProps<T, K> {
-  user: UserTypes;
+export interface EditProfileFormProps<T, K, L> extends GenericFormProps<T, K> {
+  user: L;
 }

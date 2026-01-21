@@ -9,7 +9,7 @@ import { useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 
 import { Role } from 'src/types/authContextTypes/userRole';
-// import { isRecruiter } from '@utils/checkUserType';
+import { isRecruiter } from '@utils/checkUserType';
 import { AppFormInput, AppFormInputWithHelper } from '../../ui/AppFormInputs';
 import {
   KeyboardAwareScrollView,
@@ -19,12 +19,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import {
   EditProfileFormProps,
+  UpdateProfessionalProfileFormShape,
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
-import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
+import { IProfessional } from 'src/types/authContextTypes/authContextTypes';
+import { ISkill } from 'src/types/dbTypes/ISkills';
 
-const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
+const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFormShape> =
   Yup.object({
     // password: Yup.string().required('campo obligatorio'),
 
@@ -34,21 +36,28 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormSh
     email: Yup.string()
       .email('ingresar un email válido')
       .required('campo obligatorio'),
-
+    skills: Yup.array<ISkill>()
+      .default([])
+      .min(1, 'elegir al menos una skill')
+      .required(),
+    languages: Yup.array()
+      .default([])
+      .min(1, 'elegir al menos un idioma')
+      .required(),
     role: Yup.string()
       .required()
-      .oneOf([Role.RECRUITER]) as Yup.Schema<Role.RECRUITER>,
+      .oneOf([Role.PROFESSIONAL]) as Yup.Schema<Role.PROFESSIONAL>,
     avatarUrl: Yup.string(),
   });
 
-const EditProfileRecruiterForm = ({
+const EditProfileProfessionalForm = ({
   user,
   loading,
   handleSubmit,
 }: EditProfileFormProps<
-  UpdateRecruiterProfileFormShape,
-  UpdateRecruiterProfileFormShape,
-  IRecruiter
+  UpdateProfessionalProfileFormShape,
+  UpdateProfessionalProfileFormShape,
+  IProfessional
 >) => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -64,7 +73,7 @@ const EditProfileRecruiterForm = ({
         marginBottom: 40,
       }}
     >
-      <AppForm<UpdateRecruiterProfileFormShape>
+      <AppForm<UpdateProfessionalProfileFormShape>
         handleSubmit={handleSubmit}
         formFields={user}
         loadingPostIndicator={loading}
@@ -193,4 +202,4 @@ const EditProfileRecruiterForm = ({
   );
 };
 
-export default EditProfileRecruiterForm;
+export default EditProfileProfessionalForm;

@@ -1,3 +1,4 @@
+import { ISkill } from '../dbTypes/ISkills';
 import { Role } from './userRole';
 
 //TODO type user
@@ -10,7 +11,7 @@ export interface IUser {
   avatarUrl?: string | undefined;
 }
 export interface IProfessional extends IUser {
-  skills: Array<string>;
+  skills: Array<ISkill>;
   languages: Array<string>;
   role: Role.PROFESSIONAL;
 }
