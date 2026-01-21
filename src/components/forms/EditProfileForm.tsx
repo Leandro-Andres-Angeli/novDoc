@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import AppForm from '@components/forms/AppForm';
 
 import * as Yup from 'yup';
@@ -20,6 +20,9 @@ import {
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
+import { editProfileTypeMapping } from './editProfileTypeMapping';
+import { UserTypeTypeMappingHelper } from './interfaceUserTypeTypeMappingHelper';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -38,7 +41,23 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormSh
     avatarUrl: Yup.string(),
   });
 
-const EditProfileForm = ({
+const EditProfileForm = () => {
+  const theme = useTheme();
+  const navigation = useNavigation();
+  const {
+    authState: { user },
+  } = useContext(AuthContext);
+  const { isVisible } = useKeyboardState();
+
+  if (!user) {
+    return <></>;
+  }
+
+  // return <FormForUserType {...{ handleSubmit, loading  , user}}></FormForUserType>;
+};
+
+export default EditProfileForm;
+/* const EditProfileForm = ({
   user,
   loading,
   handleSubmit,
@@ -200,4 +219,4 @@ const EditProfileForm = ({
   }
 };
 
-export default EditProfileForm;
+export default EditProfileForm; */
