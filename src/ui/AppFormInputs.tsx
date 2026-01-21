@@ -108,7 +108,7 @@ export function AppFormInputWithHelper<T>(
     errorMessage: string;
     isTextSecureEntry?: boolean;
     children?: React.ReactNode;
-  }
+  },
 ): JSX.Element {
   const {
     formKey,
@@ -180,7 +180,7 @@ export const InputHelper = ({
 }) => {
   return (
     errorCondition && (
-      <View style={localStyles.errorView}>
+      <View style={{ ...localStyles.errorView }}>
         <Icon source='alert-circle-outline' size={20} />
         <Text style={localStyles.errorText}> {errorMessage}</Text>
       </View>

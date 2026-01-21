@@ -30,6 +30,7 @@ import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 import { IProfessional } from 'src/types/authContextTypes/authContextTypes';
 import { ISkill, languagesList, skillsLists } from 'src/types/dbTypes/ISkills';
 import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
+import styled from 'styled-components/native';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFormShape> =
   Yup.object({
@@ -44,6 +45,7 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFor
     skills: Yup.array<ISkill>()
       .default([])
       .min(1, 'elegir al menos una skill')
+      .max(5, 'máximo de skills permitidas : 5 ')
       .required(),
     languages: Yup.array<ISkill>()
       .default([])
@@ -145,7 +147,7 @@ const EditProfileProfessionalForm = ({
                           disabled
                         ></AppFormInput>
                       </View>
-                      <View style={utilityStyles.inputsContainer}>
+                      <View style={{ gap: 8 }}>
                         <AppFormInputWithHelper<UpdateRecruiterProfileFormShape>
                           formKey='name'
                           value={values.name}
@@ -214,7 +216,7 @@ const EditProfileProfessionalForm = ({
                           ></InputHelper>
                         </AppReactNativePaperSelectMultiple>
                       </View>
-                      <View style={utilityStyles.inputsContainer}>
+                      <View style={{ gap: 8 }}>
                         <Text variant='titleLarge'>Que idiomas dominas ? </Text>
 
                         <AppReactNativePaperSelectMultiple
@@ -239,8 +241,8 @@ const EditProfileProfessionalForm = ({
                           }))}
                         >
                           <InputHelper
-                            errorCondition={errors.skills !== undefined}
-                            errorMessage={errors?.skills?.toString() ?? ''}
+                            errorCondition={errors.languages !== undefined}
+                            errorMessage={errors?.languages?.toString() ?? ''}
                           ></InputHelper>
                         </AppReactNativePaperSelectMultiple>
                       </View>

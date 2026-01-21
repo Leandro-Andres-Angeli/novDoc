@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import {
@@ -6,6 +7,7 @@ import {
   PaperSelectProps,
   SelectedItem,
 } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
+import utilityStyles from 'src/styles/utilityStyles';
 
 // Example of impl
 interface ReactNativePaperSelectProps<T = string> extends PaperSelectProps {}
@@ -53,7 +55,7 @@ export const AppReactNativePaperSelectMultiple = (
     'Skills';
   const theme = useTheme();
   return (
-    <>
+    <View style={{ display: 'flex', gap: 4, marginBottom: 4 }}>
       <PaperSelect
         theme={theme}
         dialogStyle={{
@@ -71,7 +73,7 @@ export const AppReactNativePaperSelectMultiple = (
         dialogDoneButtonText='Ok'
       ></PaperSelect>
       {props.children}
-    </>
+    </View>
   );
 };
 
