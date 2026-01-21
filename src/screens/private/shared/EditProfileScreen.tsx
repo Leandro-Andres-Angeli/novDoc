@@ -3,7 +3,10 @@ import React, { useContext, useState } from 'react';
 import utilityStyles from 'src/styles/utilityStyles';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import EditProfileForm from '@components/forms/EditProfileForm';
-import { UpdateRecruiterProfileFormShape } from 'src/types/FormProps';
+import {
+  UpdateProfessionalProfileFormShape,
+  UpdateRecruiterProfileFormShape,
+} from 'src/types/FormProps';
 
 import { updateProfile } from 'src/services/profile/profile.service';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -22,7 +25,11 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   }
 
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (values: UpdateRecruiterProfileFormShape) => {
+  const handleSubmit = async (
+    values:
+      | UpdateRecruiterProfileFormShape
+      | UpdateProfessionalProfileFormShape,
+  ) => {
     // console.log('submittt');
     setLoading(true);
     try {
@@ -44,15 +51,13 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
     }
   };
   return (
-    <>
-      <View style={{ ...utilityStyles.flex }}>
-        <EditProfileForm
-          handleSubmit={handleSubmit}
-          loading={loading}
-          user={user}
-        ></EditProfileForm>
-      </View>
-    </>
+    <View style={{ ...utilityStyles.flex }}>
+      <EditProfileForm
+        handleSubmit={handleSubmit}
+        loading={loading}
+        user={user}
+      ></EditProfileForm>
+    </View>
   );
 };
 

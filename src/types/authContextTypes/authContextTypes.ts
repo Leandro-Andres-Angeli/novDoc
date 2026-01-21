@@ -12,7 +12,7 @@ export interface IUser {
 }
 export interface IProfessional extends IUser {
   skills: Array<ISkill>;
-  languages: Array<string>;
+  languages: Array<ISkill>;
   role: Role.PROFESSIONAL;
 }
 export interface IRecruiter extends IUser {

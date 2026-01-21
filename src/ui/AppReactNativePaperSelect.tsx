@@ -10,7 +10,7 @@ import {
 // Example of impl
 interface ReactNativePaperSelectProps<T = string> extends PaperSelectProps {}
 const AppReactNativePaperSelect = <T,>(
-  props: ReactNativePaperSelectProps<T>
+  props: ReactNativePaperSelectProps<T>,
 ) => {
   const { ...defaultProps } = props;
 
@@ -23,7 +23,8 @@ const AppReactNativePaperSelect = <T,>(
   );
 };
 interface ReactNativePaperSelectMultipleProps
-  extends Omit<
+  extends
+    Omit<
       PaperSelectProps,
       | 'multiEnable'
       | 'selectedArrayList'
@@ -34,10 +35,11 @@ interface ReactNativePaperSelectMultipleProps
     PropsWithChildren {
   list: ListItem[];
   selectedList: ListItem[];
+  displayTitle?: string;
   handleSelectedListChange: (val: ListItem[]) => void;
 }
 export const AppReactNativePaperSelectMultiple = (
-  props: ReactNativePaperSelectMultipleProps
+  props: ReactNativePaperSelectMultipleProps,
 ) => {
   const { ...defaultProps } = props;
 
@@ -47,6 +49,7 @@ export const AppReactNativePaperSelectMultiple = (
   let displayValue =
     (props.selectedList.length > 0 &&
       props.selectedList.map((item) => item.value).join(',')) ||
+    props.displayTitle ||
     'Skills';
   const theme = useTheme();
   return (

@@ -6,15 +6,25 @@ import {
   SnapshotOptions,
   WithFieldValue,
 } from 'firebase/firestore';
-import { IUser, UserTypes } from 'src/types/authContextTypes/authContextTypes';
+import {
+  IProfessional,
+  IRecruiter,
+  IUser,
+  UserTypes,
+} from 'src/types/authContextTypes/authContextTypes';
+import { Role } from 'src/types/authContextTypes/userRole';
 
 export const userConverter: FirestoreDataConverter<UserTypes> = {
   toFirestore: (user: UserTypes) => {
-    return user;
+    if (user.role === Role.PROFESSIONAL) {
+      return user as IProfessional;
+    } else {
+      return user as IRecruiter;
+    }
   },
   fromFirestore: (
     snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>,
-    options: SnapshotOptions | undefined
+    options: SnapshotOptions | undefined,
   ): UserTypes => {
     const user = snapshot.data(options) as IUser;
 
@@ -28,7 +38,7 @@ export const genericConverter = <T extends DocumentData>() => {
     },
     fromFirestore: (
       snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>,
-      options: SnapshotOptions | undefined
+      options: SnapshotOptions | undefined,
     ): T => {
       const data = snapshot.data(options) as T;
       return data;

@@ -1,16 +1,20 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 
 import { useEffect } from 'react';
 import AppForm from '@components/forms/AppForm';
 
 import * as Yup from 'yup';
-import { useTheme } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 
 import { Role } from 'src/types/authContextTypes/userRole';
-import { isRecruiter } from '@utils/checkUserType';
-import { AppFormInput, AppFormInputWithHelper } from '../../ui/AppFormInputs';
+
+import {
+  AppFormInput,
+  AppFormInputWithHelper,
+  InputHelper,
+} from '../../ui/AppFormInputs';
 import {
   KeyboardAwareScrollView,
   useKeyboardState,
@@ -24,7 +28,8 @@ import {
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 import { IProfessional } from 'src/types/authContextTypes/authContextTypes';
-import { ISkill } from 'src/types/dbTypes/ISkills';
+import { ISkill, languagesList, skillsLists } from 'src/types/dbTypes/ISkills';
+import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFormShape> =
   Yup.object({
@@ -40,7 +45,7 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFor
       .default([])
       .min(1, 'elegir al menos una skill')
       .required(),
-    languages: Yup.array()
+    languages: Yup.array<ISkill>()
       .default([])
       .min(1, 'elegir al menos un idioma')
       .required(),
@@ -93,6 +98,7 @@ const EditProfileProfessionalForm = ({
             isValid,
             handleResetForm,
             handleSubmit,
+            setFieldValue,
             loadingPostIndicator,
           } = props;
           useEffect(() => {
@@ -104,8 +110,9 @@ const EditProfileProfessionalForm = ({
           }, [user]);
           return (
             <>
-              {/* <Text>{JSON.stringify(errors)}</Text>
-                <Text>{JSON.stringify(user)}</Text> */}
+              {/* <Text>User to update is Professional</Text> */}
+              <Text>{JSON.stringify(errors)}</Text>
+              {/* <Text>{JSON.stringify(user)}</Text> */}
               <View
                 style={[
                   {
@@ -172,6 +179,70 @@ const EditProfileProfessionalForm = ({
                           }
                           errorMessage={errors.lastName ?? ''}
                         ></AppFormInputWithHelper>
+                      </View>
+                      <View style={utilityStyles.inputsContainer}>
+                        <Text variant='titleLarge'>
+                          Cuales son tus skills ?{' '}
+                        </Text>
+                        <Text variant='labelSmall'>
+                          Selecciona hasta 5 para recibir los mejores
+                          matches{' '}
+                        </Text>
+                        <AppReactNativePaperSelectMultiple
+                          handleSelectedListChange={(val) =>
+                            setFieldValue(
+                              'skills',
+                              val.map((el) => ({ name: el.value })),
+                            )
+                          }
+                          label='Skills'
+                          selectedList={
+                            values?.skills?.map((el) => ({
+                              _id: el.name,
+                              value: el.name,
+                            })) || []
+                          }
+                          list={skillsLists.map((el) => ({
+                            _id: el.name,
+
+                            value: el.name,
+                          }))}
+                        >
+                          <InputHelper
+                            errorCondition={errors.skills !== undefined}
+                            errorMessage={errors?.skills?.toString() ?? ''}
+                          ></InputHelper>
+                        </AppReactNativePaperSelectMultiple>
+                      </View>
+                      <View style={utilityStyles.inputsContainer}>
+                        <Text variant='titleLarge'>Que idiomas dominas ? </Text>
+
+                        <AppReactNativePaperSelectMultiple
+                          displayTitle='Idiomas'
+                          handleSelectedListChange={(val) =>
+                            setFieldValue(
+                              'languages',
+                              val.map((el) => ({ name: el.value })),
+                            )
+                          }
+                          label='Idiomas'
+                          selectedList={
+                            values?.languages?.map((el) => ({
+                              _id: el.name,
+                              value: el.name,
+                            })) || []
+                          }
+                          list={languagesList.map((el) => ({
+                            _id: el.name,
+
+                            value: el.name,
+                          }))}
+                        >
+                          <InputHelper
+                            errorCondition={errors.skills !== undefined}
+                            errorMessage={errors?.skills?.toString() ?? ''}
+                          ></InputHelper>
+                        </AppReactNativePaperSelectMultiple>
                       </View>
                     </View>
                   </View>

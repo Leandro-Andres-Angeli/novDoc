@@ -95,6 +95,7 @@ const EditProfileRecruiterForm = ({
           }, [user]);
           return (
             <>
+              <Text>User to update is Recruiter</Text>
               {/* <Text>{JSON.stringify(errors)}</Text>
                 <Text>{JSON.stringify(user)}</Text> */}
               <View

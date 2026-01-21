@@ -17,12 +17,16 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import {
   EditProfileFormProps,
+  UpdateProfessionalProfileFormShape,
   UpdateRecruiterProfileFormShape,
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 import { editProfileTypeMapping } from './editProfileTypeMapping';
 import { UserTypeTypeMappingHelper } from './interfaceUserTypeTypeMappingHelper';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
+import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
+import EditProfileProfessionalForm from './EditProfileProfessionalForm';
+import EditProfileRecruiterForm from './EditProfileRecruiterForm';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -41,19 +45,36 @@ const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormSh
     avatarUrl: Yup.string(),
   });
 
-const EditProfileForm = () => {
-  const theme = useTheme();
-  const navigation = useNavigation();
-  const {
-    authState: { user },
-  } = useContext(AuthContext);
-  const { isVisible } = useKeyboardState();
-
+const EditProfileForm = ({
+  user,
+  loading,
+  handleSubmit,
+}: {
+  user: UserTypes;
+  loading: boolean;
+  handleSubmit: (
+    values:
+      | UpdateRecruiterProfileFormShape
+      | UpdateProfessionalProfileFormShape,
+  ) => Promise<void>;
+}) => {
   if (!user) {
     return <></>;
   }
-
-  // return <FormForUserType {...{ handleSubmit, loading  , user}}></FormForUserType>;
+  switch (user.role) {
+    case Role.PROFESSIONAL:
+      return (
+        <EditProfileProfessionalForm
+          {...{ user, handleSubmit, loading }}
+        ></EditProfileProfessionalForm>
+      );
+    case Role.RECRUITER:
+      return (
+        <EditProfileRecruiterForm
+          {...{ user, handleSubmit, loading }}
+        ></EditProfileRecruiterForm>
+      );
+  }
 };
 
 export default EditProfileForm;

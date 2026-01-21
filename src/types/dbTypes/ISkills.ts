@@ -10,3 +10,8 @@ export const skillsLists: ISkill[] = [
   { name: 'javascript' },
   { name: 'java' },
 ];
+export const languagesList: ISkill[] = [
+  { name: 'ingles' },
+  { name: 'español' },
+  { name: 'portugues' },
+];

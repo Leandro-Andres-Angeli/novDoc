@@ -1,7 +1,7 @@
 import { auth, db } from 'firebase/config';
-import { IUser } from '../types/authContextTypes/authContextTypes';
+import { IUser, UserTypes } from '../types/authContextTypes/authContextTypes';
 import { ISignUpUser } from 'src/components/SignUp';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, DocumentData } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
@@ -15,16 +15,18 @@ import {
   FirebaseResponse,
   FirebaseSignUpResponse,
 } from 'src/types/firebaseResponse/firebaseResponses';
+import { Role } from 'src/types/authContextTypes/userRole';
+import { userConverter } from '@utils/converters/firebaseConverters';
 
 const userCollection = collection(db, 'users');
 export const signUpNewUser = async (
-  user: ISignUpUser
+  user: ISignUpUser,
 ): Promise<FirebaseSignUpResponse> => {
   try {
     const userSignUp = await createUserWithEmailAndPassword(
       auth,
       user.email,
-      user.password
+      user.password,
     );
     const { password, ...userWithoutPassword } = user;
 
@@ -32,6 +34,9 @@ export const signUpNewUser = async (
       await addDoc(userCollection, {
         id: userSignUp.user.uid,
         ...userWithoutPassword,
+        ...(user.role === Role.PROFESSIONAL && {
+          ...{ skills: [], languages: [] },
+        }),
       });
       return { success: true, message: 'Perfil creado' };
     } else {
@@ -50,7 +55,7 @@ export const signUpNewUser = async (
 
 export const signInUser = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
     const signedUser = await signInWithEmailAndPassword(auth, email, password);
@@ -86,7 +91,7 @@ export const signOutUser = async (): Promise<
   }
 };
 export const updateUserPassword = async (
-  newPassword: string
+  newPassword: string,
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
     const currentUser = auth.currentUser;
