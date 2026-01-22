@@ -1,12 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React, { PropsWithChildren } from 'react';
-import { Button, Icon, useTheme } from 'react-native-paper';
-import AppButton from '../../ui/AppButton';
-import AppButtonText from '../../ui/AppButtonText';
-import { CustomTheme } from 'App';
+import { Button } from 'react-native-paper';
+
 interface AppPictureSelectorProps extends PropsWithChildren {}
 const AppPictureSelector = (props: AppPictureSelectorProps) => {
-  const theme = useTheme<CustomTheme>();
   return (
     <View style={localStyles.modalContainer}>
       <View style={localStyles.optionsContainer}>
@@ -64,12 +61,6 @@ const localStyles = StyleSheet.create({
     flex: 1,
     textAlign: 'left',
   },
-  // cancelButton: {
-  //   borderRadius: 12,
-  //   marginTop: 12,
-  //   marginBottom: 12,
-  //   paddingVertical: 8,
-  // },
 });
 
 export default AppPictureSelector;

@@ -117,7 +117,7 @@ const EditProfileProfessionalForm = ({
           return (
             <>
               {/* <Text>User to update is Professional</Text> */}
-              <Text>{JSON.stringify(errors)}</Text>
+
               {/* <Text>{JSON.stringify(user)}</Text> */}
               <View
                 style={[

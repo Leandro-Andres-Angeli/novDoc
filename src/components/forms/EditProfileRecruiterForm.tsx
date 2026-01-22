@@ -94,99 +94,93 @@ const EditProfileRecruiterForm = ({
             return unsubscribe;
           }, [user]);
           return (
-            <>
-              <Text>User to update is Recruiter</Text>
-              {/* <Text>{JSON.stringify(errors)}</Text>
-                <Text>{JSON.stringify(user)}</Text> */}
-              <View
-                style={[
-                  {
-                    backgroundColor: theme.colors.background,
-                    marginBottom: 'auto',
-                    flex: 1,
-                    overflow: 'scroll',
-                  },
-                ]}
+            <View
+              style={[
+                {
+                  backgroundColor: theme.colors.background,
+                  marginBottom: 'auto',
+                  flex: 1,
+                  overflow: 'scroll',
+                },
+              ]}
+            >
+              <KeyboardAwareScrollView
+                style={{ marginBottom: 100 }}
+                disableScrollOnKeyboardHide
+                automaticallyAdjustContentInsets
+                automaticallyAdjustKeyboardInsets
+                automaticallyAdjustsScrollIndicatorInsets
               >
-                <KeyboardAwareScrollView
-                  style={{ marginBottom: 100 }}
-                  disableScrollOnKeyboardHide
-                  automaticallyAdjustContentInsets
-                  automaticallyAdjustKeyboardInsets
-                  automaticallyAdjustsScrollIndicatorInsets
-                >
-                  <View
-                    style={{
-                      paddingBottom: isVisible ? 10 : 'auto',
-                    }}
-                  >
-                    <View style={utilityStyles.contentContainer}>
-                      <View style={utilityStyles.inputsContainer}>
-                        <AppFormInput
-                          label='E-mail'
-                          formKey={'email'}
-                          key={'email'}
-                          value={values.email}
-                          disabled
-                        ></AppFormInput>
-                      </View>
-                      <View style={utilityStyles.inputsContainer}>
-                        <AppFormInputWithHelper<UpdateRecruiterProfileFormShape>
-                          formKey='name'
-                          value={values.name}
-                          key={'name'}
-                          label='Nombre'
-                          onBlur={() => handleTextInputBlur('name')}
-                          onFocus={() => setFieldTouched('name', true)}
-                          onChangeText={(e) => {
-                            handleInputValue('name', e);
-                          }}
-                          errorCondition={
-                            Boolean(touched.name && errors.name) || false
-                          }
-                          errorMessage={errors.name ?? ''}
-                        ></AppFormInputWithHelper>
-                      </View>
-                      <View style={utilityStyles.inputsContainer}>
-                        <AppFormInputWithHelper<UpdateRecruiterProfileFormShape>
-                          formKey='lastName'
-                          value={values.lastName}
-                          key={'lastName'}
-                          label='Apellido'
-                          onBlur={() => handleTextInputBlur('lastName')}
-                          onFocus={() => setFieldTouched('lastName', true)}
-                          onChangeText={(e) => {
-                            handleInputValue('lastName', e);
-                          }}
-                          errorCondition={
-                            Boolean(touched.lastName && errors.lastName) ||
-                            false
-                          }
-                          errorMessage={errors.lastName ?? ''}
-                        ></AppFormInputWithHelper>
-                      </View>
-                    </View>
-                  </View>
-                </KeyboardAwareScrollView>
                 <View
                   style={{
-                    marginTop: 'auto',
-                    flex: 1,
-                    display: 'flex',
+                    paddingBottom: isVisible ? 10 : 'auto',
                   }}
                 >
-                  <AppGenericSubmitBtn
-                    {...{
-                      loadingPostIndicator,
-                      dirty,
-                      isValid,
-                      handleSubmit,
-                    }}
-                    submitTextBtn={'Actualizar Perfil'}
-                  ></AppGenericSubmitBtn>
+                  <View style={utilityStyles.contentContainer}>
+                    <View style={utilityStyles.inputsContainer}>
+                      <AppFormInput
+                        label='E-mail'
+                        formKey={'email'}
+                        key={'email'}
+                        value={values.email}
+                        disabled
+                      ></AppFormInput>
+                    </View>
+                    <View style={utilityStyles.inputsContainer}>
+                      <AppFormInputWithHelper<UpdateRecruiterProfileFormShape>
+                        formKey='name'
+                        value={values.name}
+                        key={'name'}
+                        label='Nombre'
+                        onBlur={() => handleTextInputBlur('name')}
+                        onFocus={() => setFieldTouched('name', true)}
+                        onChangeText={(e) => {
+                          handleInputValue('name', e);
+                        }}
+                        errorCondition={
+                          Boolean(touched.name && errors.name) || false
+                        }
+                        errorMessage={errors.name ?? ''}
+                      ></AppFormInputWithHelper>
+                    </View>
+                    <View style={utilityStyles.inputsContainer}>
+                      <AppFormInputWithHelper<UpdateRecruiterProfileFormShape>
+                        formKey='lastName'
+                        value={values.lastName}
+                        key={'lastName'}
+                        label='Apellido'
+                        onBlur={() => handleTextInputBlur('lastName')}
+                        onFocus={() => setFieldTouched('lastName', true)}
+                        onChangeText={(e) => {
+                          handleInputValue('lastName', e);
+                        }}
+                        errorCondition={
+                          Boolean(touched.lastName && errors.lastName) || false
+                        }
+                        errorMessage={errors.lastName ?? ''}
+                      ></AppFormInputWithHelper>
+                    </View>
+                  </View>
                 </View>
+              </KeyboardAwareScrollView>
+              <View
+                style={{
+                  marginTop: 'auto',
+                  flex: 1,
+                  display: 'flex',
+                }}
+              >
+                <AppGenericSubmitBtn
+                  {...{
+                    loadingPostIndicator,
+                    dirty,
+                    isValid,
+                    handleSubmit,
+                  }}
+                  submitTextBtn={'Actualizar Perfil'}
+                ></AppGenericSubmitBtn>
               </View>
-            </>
+            </View>
           );
         }}
       </AppForm>
