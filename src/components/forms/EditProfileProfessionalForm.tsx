@@ -33,6 +33,8 @@ import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AppChipList from '@ui/AppChipList';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import AppSegmentedButtons from '@components/AppSegmentedButtons';
+import { ShiftTime } from 'src/types/dbTypes/IJobOffer';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFormShape> =
   Yup.object({
@@ -292,6 +294,31 @@ const EditProfileProfessionalForm = ({
                             backgroundColor: theme.colors.primary,
                           }}
                         ></MultiSlider>
+                      </View> */}
+
+                      {/* <View style={{ ...utilityStyles.inputsContainer }}>
+                        <AppSegmentedButtons
+                        value={ShiftTime.PART_TIME}
+                          // value={values.shiftTime}
+                          // defaultValue={values.shiftTime}
+                          values={[
+                            {
+                              value: ShiftTime.PART_TIME,
+                              label: ShiftTime.PART_TIME,
+                            },
+                            {
+                              value: ShiftTime.FULL_TIME,
+                              label: ShiftTime.FULL_TIME,
+                            },
+                            {
+                              value: ShiftTime.CONTRACTOR,
+                              label: ShiftTime.CONTRACTOR,
+                            },
+                          ]}
+                          handleChange={(val: ShiftTime) => {
+                            // handleInputValue('shiftTime', val);
+                          }}
+                        ></AppSegmentedButtons>
                       </View> */}
                     </View>
                   </View>
