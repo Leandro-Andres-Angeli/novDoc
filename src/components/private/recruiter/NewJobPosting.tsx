@@ -8,8 +8,6 @@ import { Text } from 'react-native-paper';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import AppLoading from '@ui/AppLoading';
 
-import AppLocationSelected from '@ui/AppLocationSelected';
-
 import {
   NavigationProp,
   ParamListBase,
@@ -26,7 +24,7 @@ import { IJobPosting } from 'src/types/dbTypes/IJobOffer';
 import { RecruiterContext } from 'src/appContext/recruiterContext/RecruiterContext';
 import { Timestamp } from 'firebase/firestore';
 
-const NewJobOffer = () => {
+const NewJobPosting = () => {
   const {
     authState: { user },
     loading: loadingUser,
@@ -52,7 +50,7 @@ const NewJobOffer = () => {
 
   async function handleSubmit(
     values: IJobPosting,
-    helpers: FormikHelpers<any>
+    helpers: FormikHelpers<any>,
   ) {
     setLoading(true);
 
@@ -94,4 +92,4 @@ const NewJobOffer = () => {
   );
 };
 
-export default NewJobOffer;
+export default NewJobPosting;

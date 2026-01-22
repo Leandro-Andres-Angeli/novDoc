@@ -30,8 +30,9 @@ import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 import { IProfessional } from 'src/types/authContextTypes/authContextTypes';
 import { ISkill, languagesList, skillsLists } from 'src/types/dbTypes/ISkills';
 import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
-import styled from 'styled-components/native';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AppChipList from '@ui/AppChipList';
+import { CustomTheme } from 'src/providers/PublicProviders';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFormShape> =
   Yup.object({
@@ -67,7 +68,7 @@ const EditProfileProfessionalForm = ({
   UpdateProfessionalProfileFormShape,
   IProfessional
 >) => {
-  const theme = useTheme();
+  const theme = useTheme<CustomTheme>();
   const navigation = useNavigation();
 
   const { isVisible } = useKeyboardState();
@@ -263,6 +264,35 @@ const EditProfileProfessionalForm = ({
                           </AppChipList>
                         )}
                       </View>
+                      {/* <View style={utilityStyles.inputsContainer}>
+                        <Text variant='titleLarge'>
+                          Cual es tu expectativa salarial ?{' '}
+                        </Text>
+                        <MultiSlider
+                          step={50}
+                          values={[20, 200]}
+                          sliderLength={280}
+                          onValuesChange={(e) => {
+                            console.log('changing ', e);
+                            console.log('changing ');
+                          }}
+                          min={0}
+                          max={10}
+                          valuePrefix='test'
+                          valueSuffix='test'
+                          // snapped
+                          // You can use RNP theme colors for customization
+                          selectedStyle={{
+                            backgroundColor: theme.colors.primary,
+                          }}
+                          unselectedStyle={{
+                            backgroundColor: theme.colors.surface,
+                          }}
+                          markerStyle={{
+                            backgroundColor: theme.colors.primary,
+                          }}
+                        ></MultiSlider>
+                      </View> */}
                     </View>
                   </View>
                 </KeyboardAwareScrollView>
