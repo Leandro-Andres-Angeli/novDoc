@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import AppForm from '@components/forms/AppForm';
 
 import * as Yup from 'yup';
-import { Text, useTheme } from 'react-native-paper';
+import { Chip, Text, useTheme } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 
 import { Role } from 'src/types/authContextTypes/userRole';
@@ -31,6 +31,7 @@ import { IProfessional } from 'src/types/authContextTypes/authContextTypes';
 import { ISkill, languagesList, skillsLists } from 'src/types/dbTypes/ISkills';
 import { AppReactNativePaperSelectMultiple } from '@ui/AppReactNativePaperSelect';
 import styled from 'styled-components/native';
+import AppChipList from '@ui/AppChipList';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateProfessionalProfileFormShape> =
   Yup.object({
@@ -215,6 +216,14 @@ const EditProfileProfessionalForm = ({
                             errorMessage={errors?.skills?.toString() ?? ''}
                           ></InputHelper>
                         </AppReactNativePaperSelectMultiple>
+
+                        {values?.skills.length > 0 && (
+                          <AppChipList>
+                            {values.skills.map((skill) => (
+                              <Chip key={skill.name}>{skill.name}</Chip>
+                            ))}
+                          </AppChipList>
+                        )}
                       </View>
                       <View style={{ gap: 8 }}>
                         <Text variant='titleLarge'>Que idiomas dominas ? </Text>
@@ -245,6 +254,14 @@ const EditProfileProfessionalForm = ({
                             errorMessage={errors?.languages?.toString() ?? ''}
                           ></InputHelper>
                         </AppReactNativePaperSelectMultiple>
+
+                        {values?.languages.length > 0 && (
+                          <AppChipList>
+                            {values.languages.map((language) => (
+                              <Chip key={language.name}>{language.name}</Chip>
+                            ))}
+                          </AppChipList>
+                        )}
                       </View>
                     </View>
                   </View>
