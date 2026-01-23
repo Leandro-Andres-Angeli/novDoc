@@ -6,16 +6,18 @@ import useOpenElement from 'src/hooks/useOpenElement';
 import utilityStyles from 'src/styles/utilityStyles';
 import { FirebaseErrorResponse } from 'src/types/firebaseResponse/firebaseResponses';
 
-interface ConfirmSignOutProps {
-  handleConfirm: () => Promise<void | FirebaseErrorResponse>;
+interface AppConfirmModalProps {
+  handleConfirm: () => Promise<void | FirebaseErrorResponse> | void;
   handleCancel: () => void;
   text2?: string;
+  text1?: string;
 }
-const ConfirmSignOut = ({
+const AppConfirmModal = ({
   handleCancel,
   handleConfirm,
+  text1 = 'Confirmar Cierre de Sesión',
   text2 = '¿Estás seguro de que quieres cerrar sesión?',
-}: ConfirmSignOutProps) => {
+}: AppConfirmModalProps) => {
   return (
     <>
       <View
@@ -25,7 +27,7 @@ const ConfirmSignOut = ({
         }}
       >
         <Text variant='titleMedium' style={styles.title}>
-          Confirmar Cierre de Sesión
+          {text1}
         </Text>
 
         <Text variant='bodyMedium' style={styles.subtitle}>
@@ -100,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfirmSignOut;
+export default AppConfirmModal;

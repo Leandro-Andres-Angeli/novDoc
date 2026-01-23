@@ -21,10 +21,10 @@ const useSubscribeToLoggedUserUpdate = () => {
 
       function ({ docs }) {
         docs.forEach((doc) => {
-          console.log('UPDATING USER DATA');
-          console.log('UPDATING USER DATA');
-          console.log('UPDATING USER DATA');
-          console.log('UPDATING USER DATA');
+          // console.log('UPDATING USER DATA');
+          // console.log('UPDATING USER DATA');
+          // console.log('UPDATING USER DATA');
+          // console.log('UPDATING USER DATA');
           updateUserData(doc.data());
         });
       },

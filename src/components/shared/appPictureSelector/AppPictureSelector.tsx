@@ -1,9 +1,17 @@
 import { View, StyleSheet } from 'react-native';
 import React, { PropsWithChildren } from 'react';
 import { Button } from 'react-native-paper';
+import AppCameraPictureSelector from './AppCameraPictureSelector';
 
-interface AppPictureSelectorProps extends PropsWithChildren {}
-const AppPictureSelector = (props: AppPictureSelectorProps) => {
+interface AppPictureSelectorProps extends PropsWithChildren {
+  handleElementVisibility: (val?: boolean | undefined) => void;
+  handleCameraPictureSelection: () => Promise<void>;
+}
+const AppPictureSelector = ({
+  handleCameraPictureSelection,
+  handleElementVisibility,
+  children,
+}: AppPictureSelectorProps) => {
   return (
     <View style={localStyles.modalContainer}>
       <View style={localStyles.optionsContainer}>
@@ -17,19 +25,14 @@ const AppPictureSelector = (props: AppPictureSelectorProps) => {
         >
           Subir foto desde galería
         </Button>
-
-        <Button
-          mode='text'
-          //   onPress={handleTakePhoto}
+        <AppCameraPictureSelector
+          {...{ handleCameraPictureSelection }}
+          handleElementVisibility={handleElementVisibility}
           style={localStyles.optionButton}
           contentStyle={localStyles.optionButtonContent}
           labelStyle={localStyles.optionButtonLabel}
-          icon='camera-outline'
-        >
-          Tomar foto con cámara
-        </Button>
-
-        {props.children}
+        ></AppCameraPictureSelector>
+        {children}
       </View>
     </View>
   );

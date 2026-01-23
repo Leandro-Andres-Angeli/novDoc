@@ -6,7 +6,7 @@ import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { IconButton } from 'react-native-paper';
 import PasswordUpdateScreen from './PasswordUpdateScreen';
 import AppModal from '@ui/AppModal';
-import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
+import AppConfirmModal from '@components/private/recruiter/AppConfirmModal';
 
 import EditProfileScreen from './EditProfileScreen';
 import { NavigatorTypeBagBase, TypedNavigator } from '@react-navigation/native';
@@ -95,10 +95,10 @@ const AppProfileDrawer = (props: AppProfileDrawerProps) => {
         ></Drawer.Screen>
       </Drawer.Navigator>
       <AppModal visible={elementVisible} elementVisible={elementVisible}>
-        <ConfirmSignOut
+        <AppConfirmModal
           handleConfirm={logout}
           handleCancel={() => handleElementVisibility(false)}
-        ></ConfirmSignOut>
+        ></AppConfirmModal>
       </AppModal>
     </>
   );

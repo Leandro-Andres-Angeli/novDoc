@@ -6,18 +6,28 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Card, IconButton, Text, useTheme } from 'react-native-paper';
 
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import AppPictureSelector from './AppPictureSelector';
 import utilityStyles from 'src/styles/utilityStyles';
 
 import AppCardWrapper from '@ui/AppCardWrapper';
 import RBSheetType from 'RBSheetType';
 import AppAvatar from '../../ui/AppAvatar';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import AppPictureSelector from './appPictureSelector/AppPictureSelector';
+import useOpenElement from 'src/hooks/useOpenElement';
+import AppModal from '@ui/AppModal';
+import AppConfirmModal from '@components/private/recruiter/AppConfirmModal';
+import {
+  CameraCapturedPicture,
+  CameraType,
+  CameraView,
+  useCameraPermissions,
+} from 'expo-camera';
+import { Linking } from 'react-native';
 
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
@@ -30,9 +40,52 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   const theme = useTheme<CustomTheme>();
   // const { elementVisible, handleElementVisibility } = useOpenElement();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
+  const { elementVisible, handleElementVisibility } = useOpenElement();
+  const [permission, requestPermission] = useCameraPermissions();
+  const [facing, setFacing] = useState<CameraType>('back');
+  const [photo, setPhoto] = useState<CameraCapturedPicture>();
+  const ref = useRef<CameraView>(null);
+  const handleTakePictureFromCamera = async () => {
+    const photo = await ref.current?.takePictureAsync();
+    if (photo) {
+      setPhoto(photo);
+    }
+  };
 
+  const handleCameraPictureSelection = async () => {
+    console.log('requesting camera access');
+    console.log(permission);
+    if (!permission) {
+      console.log('NOT PERMISSION');
+    }
+    if (!permission?.granted && permission?.canAskAgain) {
+      await requestPermission();
+    }
+    if (!permission?.canAskAgain) {
+      console.log("can't ask again");
+      refRBSheet.current.close();
+      setTimeout(() => {
+        handleElementVisibility(true);
+      }, 1000);
+
+      return;
+    }
+    if (permission?.granted) {
+      console.log('jereeeee');
+      await handleTakePictureFromCamera();
+    }
+  };
   return (
     <>
+      <Text>PHOTO{JSON.stringify(photo)}</Text>
+      <CameraView
+        style={{ width: 200, height: 300 }}
+        ref={ref}
+        mode={'picture'}
+        facing={facing}
+        mute={false}
+        responsiveOrientationWhenOrientationLocked
+      />
       <AppCardWrapper styles={{ ...StyleSheet.flatten(style) }}>
         <Card.Content
           style={[
@@ -69,6 +122,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
           </View>
         </Card.Content>
       </AppCardWrapper>
+
       <RBSheet
         draggable={true}
         customStyles={{
@@ -78,6 +132,9 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
             marginRight: 'auto',
             borderTopStartRadius: 10,
             borderTopEndRadius: 10,
+          },
+          wrapper: {
+            display: 'flex',
           },
           draggableIcon: {
             top: -5,
@@ -91,9 +148,12 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
             position: 'absolute',
             width: '100%',
             top: 5,
+            zIndex: -2,
           }}
         >
-          <AppPictureSelector>
+          <AppPictureSelector
+            {...{ handleElementVisibility, handleCameraPictureSelection }}
+          >
             <Button
               mode='contained'
               //   onPress={hideModal}
@@ -106,6 +166,26 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
           </AppPictureSelector>
         </View>
       </RBSheet>
+      <AppModal
+        style={{
+          height: deviceHeight,
+
+          top: 0,
+          left: 0,
+        }}
+        visible={elementVisible}
+        elementVisible={elementVisible}
+      >
+        <AppConfirmModal
+          text2='Debe conceder acceso a cámara para realizar esta acción'
+          text1='Se requiere permiso de cámara'
+          handleConfirm={Linking.openSettings}
+          handleCancel={() => {
+            refRBSheet.current.close();
+            handleElementVisibility(false);
+          }}
+        ></AppConfirmModal>
+      </AppModal>
     </>
   );
 };

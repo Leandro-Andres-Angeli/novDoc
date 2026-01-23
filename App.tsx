@@ -7,6 +7,8 @@ import MainNavigator from './src/navigators/MainNavigator';
 import * as SplashScreen from 'expo-splash-screen';
 
 import PublicProviders from 'src/providers/PublicProviders';
+import useSubscribeToAppStateChange from 'src/hooks/useSubscribeToAppStateChange';
+import AppStateProvider from 'src/appContext/appStateContext/AppStateContext';
 
 SplashScreen.preventAutoHideAsync();
 export default function App() {
@@ -15,12 +17,15 @@ export default function App() {
       SplashScreen.hideAsync();
     }, 2000);
   }, []);
+
   return (
-    <PublicProviders>
-      <>
-        <MainNavigator></MainNavigator>
-        <ToastManager></ToastManager>
-      </>
-    </PublicProviders>
+    <AppStateProvider>
+      <PublicProviders>
+        <>
+          <MainNavigator></MainNavigator>
+          <ToastManager></ToastManager>
+        </>
+      </PublicProviders>
+    </AppStateProvider>
   );
 }

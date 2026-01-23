@@ -14,7 +14,7 @@ import { Toast } from 'toastify-react-native';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
-import ConfirmSignOut from '@components/private/recruiter/ConfirmSignOut';
+import AppConfirmModal from '@components/private/recruiter/AppConfirmModal';
 export interface UpdatePasswordForm {
   password: string;
   password2: string;
@@ -26,7 +26,7 @@ const formValidationSchema = Yup.object({
   password2: Yup.string()
     .oneOf(
       [Yup.ref('password'), ''],
-      'confirmar contraseña y contraseña deben ser iguales'
+      'confirmar contraseña y contraseña deben ser iguales',
     )
     .required('campo obligatorio'),
 });
@@ -161,11 +161,11 @@ const UpdatePasswordForm = () => {
         }}
       </AppForm>
       <AppModal visible={elementVisible} elementVisible={elementVisible}>
-        <ConfirmSignOut
+        <AppConfirmModal
           text2='¿Desea cerrar sesión e ingresar nuevamente?'
           handleConfirm={logout}
           handleCancel={() => handleElementVisibility(false)}
-        ></ConfirmSignOut>
+        ></AppConfirmModal>
       </AppModal>
     </>
   );
