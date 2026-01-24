@@ -8,6 +8,7 @@ import {
   UserTypes,
 } from './authContextTypes/authContextTypes';
 import { IJobPosting } from './dbTypes/IJobOffer';
+import { PropsWithChildren } from 'react';
 
 interface GenericFormProps<T, K = T> {
   handleSubmit: (values: T, helpers: FormikHelpers<any>) => Promise<void>;
@@ -26,6 +27,7 @@ export interface JobPostingFormProps<
   valuesToEdit?: K & { id: string };
   mode?: FormMode;
 }
-export interface EditProfileFormProps<T, K, L> extends GenericFormProps<T, K> {
+export interface EditProfileFormProps<T, K, L>
+  extends GenericFormProps<T, K>, PropsWithChildren {
   user: L;
 }

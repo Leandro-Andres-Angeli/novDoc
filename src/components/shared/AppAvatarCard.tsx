@@ -51,10 +51,13 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   //  const [permission, requestPermission] = useCameraPermissions();
   // const [facing, setFacing] = useState<CameraType>('back');
   const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    user?.avatarUrl ?? null,
+  );
 
-  const handleResetPhoto = () => {
-    // user?.avatarUrl ?  setPhoto(  user.avatarUrl ) :  null
-  };
+  // const handleResetPhoto = () => {
+  //     user?.avatarUrl ?  setPhoto(  user.avatarUrl ) :  null
+  // };
   // const ref = useRef<CameraView>(null);
   const handleTakePictureFromCamera = async () => {
     try {
@@ -86,47 +89,8 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
     }
   };
 
-  const handleCameraPictureSelection = async () => {
-    try {
-      console.log('requesting camera access');
-      let permission = await ImagePicker.requestCameraPermissionsAsync();
-      console.log(permission);
-
-      if (!permission) {
-        console.log('NOT PERMISSION');
-      }
-      if (!permission?.granted && permission?.canAskAgain) {
-        permission = await ImagePicker.requestCameraPermissionsAsync();
-      }
-      if (!permission?.canAskAgain) {
-        console.log("can't ask again");
-        refRBSheet.current.close();
-        setTimeout(() => {
-          handleElementVisibility(true);
-        }, 1000);
-
-        return;
-      }
-      if (permission?.granted) {
-        console.log('jereeeee');
-        await handleTakePictureFromCamera();
-      }
-    } catch (error) {
-      console.log('error requesting permissions');
-    }
-  };
   return (
     <>
-      {/* <Text>PHOTO{JSON.stringify(photo)}</Text> */}
-      <Text>PHOTO{JSON.stringify(photo?.uri)}</Text>
-      {/* <CameraView
-        style={{ width: 200, height: 300 }}
-        ref={ref}
-        mode={'picture'}
-        facing={facing}
-        mute={false}
-        responsiveOrientationWhenOrientationLocked
-      /> */}
       <AppCardWrapper styles={{ ...StyleSheet.flatten(style) }}>
         <Card.Content
           style={[
@@ -138,22 +102,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
             },
           ]}
         >
-          <AppAvatar avatarUrl={user?.avatarUrl ?? photo?.uri ?? null}>
-            <IconButton
-              onPress={() => {
-                if (refRBSheet.current) {
-                  refRBSheet.current.open();
-                }
-              }}
-              icon='pencil'
-              size={theme.fonts.iconFontSize}
-              style={{
-                ...localStyles.editButton,
-                backgroundColor: theme.colors.onPrimary,
-              }}
-              iconColor={theme.colors.primary}
-            />
-          </AppAvatar>
+          <AppAvatar avatarUrl={user?.avatarUrl ?? null}></AppAvatar>
 
           <View style={localStyles.headerTextContainer}>
             <Text variant='titleMedium'>¡Hola, {fullName}!</Text>
@@ -163,73 +112,6 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
           </View>
         </Card.Content>
       </AppCardWrapper>
-
-      <RBSheet
-        draggable={true}
-        customStyles={{
-          container: {
-            width: '94%',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            borderTopStartRadius: 10,
-            borderTopEndRadius: 10,
-          },
-          wrapper: {
-            display: 'flex',
-          },
-          draggableIcon: {
-            top: -5,
-            height: 5,
-          },
-        }}
-        ref={refRBSheet}
-      >
-        <View
-          style={{
-            position: 'absolute',
-            width: '100%',
-            top: 5,
-            zIndex: -2,
-          }}
-        >
-          <AppPictureSelector
-            {...{ handleElementVisibility, handleCameraPictureSelection }}
-          >
-            <Button
-              onPress={() => {}}
-              style={[localStyles.optionButton, { backgroundColor: 'white' }]}
-              contentStyle={localStyles.optionButtonContent}
-              labelStyle={localStyles.optionButtonLabel}
-              icon='close-outline'
-
-              // style={{ ...utilityStyles.muteButton, ...utilityStyles.btn }}
-              // textColor={utilityStyles.muteButtonColor.color}
-            >
-              Cancelar
-            </Button>
-          </AppPictureSelector>
-        </View>
-      </RBSheet>
-      <AppModal
-        style={{
-          height: deviceHeight,
-
-          top: 0,
-          left: 0,
-        }}
-        visible={elementVisible}
-        elementVisible={elementVisible}
-      >
-        <AppConfirmModal
-          text2='Debe conceder acceso a cámara para realizar esta acción'
-          text1='Se requiere permiso de cámara'
-          handleConfirm={Linking.openSettings}
-          handleCancel={() => {
-            refRBSheet.current.close();
-            handleElementVisibility(false);
-          }}
-        ></AppConfirmModal>
-      </AppModal>
     </>
   );
 };

@@ -13,8 +13,9 @@ export interface FormChildrenProps<T> extends FormikProps<T> {
   handleInputValue: <K extends keyof T>(key: K, value: T[K]) => void;
   handleTextInputBlur: (key: keyof T) => void;
   loadingPostIndicator?: boolean;
+  parentProps?: React.ReactNode;
   handleResetForm: (
-    values?: T | undefined
+    values?: T | undefined,
   ) => Promise<void> | Promise<FormikErrors<T>> | undefined;
 }
 export interface AppFormProps<T> extends FormikValues {
@@ -22,6 +23,7 @@ export interface AppFormProps<T> extends FormikValues {
   formFields: T;
   validationSchema?: Yup.Schema<T>;
   loadingPostIndicator?: boolean;
+  parentProps?: React.ReactNode;
   children: (props: FormChildrenProps<T>) => React.ReactNode;
   dinaymicParams?: Array<any>;
 }
@@ -30,7 +32,7 @@ function AppForm<T extends FormikValues>({
   formFields,
   validationSchema,
   loadingPostIndicator,
-
+  parentProps,
   children,
   dinaymicParams = [],
 }: AppFormProps<T>) {
@@ -64,6 +66,7 @@ function AppForm<T extends FormikValues>({
     handleInputValue,
     handleTextInputBlur,
     handleResetForm,
+    ...(parentProps && { parentProps }),
   } as FormChildrenProps<T>;
   return <>{children(allProps)}</>;
 }

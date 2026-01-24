@@ -23,6 +23,8 @@ import {
 } from 'src/types/FormProps';
 import AppGenericSubmitBtn from './AppGenericSubmitBtn';
 import { IRecruiter } from 'src/types/authContextTypes/authContextTypes';
+import AppAvatarCard from '../shared/AppAvatarCard';
+import AppAvatar from '@ui/AppAvatar';
 
 const editProfileValidationSchema: Yup.ObjectSchema<UpdateRecruiterProfileFormShape> =
   Yup.object({
@@ -45,6 +47,7 @@ const EditProfileRecruiterForm = ({
   user,
   loading,
   handleSubmit,
+  children,
 }: EditProfileFormProps<
   UpdateRecruiterProfileFormShape,
   UpdateRecruiterProfileFormShape,
@@ -70,6 +73,7 @@ const EditProfileRecruiterForm = ({
         loadingPostIndicator={loading}
         validationSchema={editProfileValidationSchema}
         key={user.id}
+        parentProps={children}
       >
         {(props) => {
           const {
@@ -85,6 +89,7 @@ const EditProfileRecruiterForm = ({
             handleResetForm,
             handleSubmit,
             loadingPostIndicator,
+            parentProps,
           } = props;
           useEffect(() => {
             const unsubscribe = navigation.addListener('focus', function () {
@@ -117,6 +122,11 @@ const EditProfileRecruiterForm = ({
                   }}
                 >
                   <View style={utilityStyles.contentContainer}>
+                    {props.parentProps && (
+                      <View style={utilityStyles.inputsContainer}>
+                        {props.parentProps}
+                      </View>
+                    )}
                     <View style={utilityStyles.inputsContainer}>
                       <AppFormInput
                         label='E-mail'

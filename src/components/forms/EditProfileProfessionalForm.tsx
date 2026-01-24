@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 import { useEffect } from 'react';
 import AppForm from '@components/forms/AppForm';
@@ -65,6 +65,7 @@ const EditProfileProfessionalForm = ({
   user,
   loading,
   handleSubmit,
+  children,
 }: EditProfileFormProps<
   UpdateProfessionalProfileFormShape,
   UpdateProfessionalProfileFormShape,
@@ -90,6 +91,7 @@ const EditProfileProfessionalForm = ({
         loadingPostIndicator={loading}
         validationSchema={editProfileValidationSchema}
         key={user.id}
+        parentProps={children}
       >
         {(props) => {
           const {
@@ -106,6 +108,7 @@ const EditProfileProfessionalForm = ({
             handleSubmit,
             setFieldValue,
             loadingPostIndicator,
+            parentProps,
           } = props;
           useEffect(() => {
             const unsubscribe = navigation.addListener('focus', function () {
@@ -142,6 +145,8 @@ const EditProfileProfessionalForm = ({
                     }}
                   >
                     <View style={utilityStyles.contentContainer}>
+                      {props.parentProps && props.parentProps}
+
                       <View style={utilityStyles.inputsContainer}>
                         <AppFormInput
                           label='E-mail'
