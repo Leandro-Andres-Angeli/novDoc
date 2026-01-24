@@ -7,7 +7,7 @@ import {
   ViewStyle,
   ScrollView,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Button, Card, IconButton, Text, useTheme } from 'react-native-paper';
 
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -32,6 +32,7 @@ import { Linking } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthContext } from 'src/appContext/authContext/AuthContext';
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
@@ -41,12 +42,18 @@ interface AppAvatarCardProps {
 
 const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   const theme = useTheme<CustomTheme>();
+  const {
+    authState: { user },
+  } = useContext(AuthContext);
   // const { elementVisible, handleElementVisibility } = useOpenElement();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
   const { elementVisible, handleElementVisibility } = useOpenElement();
   //  const [permission, requestPermission] = useCameraPermissions();
   // const [facing, setFacing] = useState<CameraType>('back');
-  const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>();
+  const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const handleResetPhoto = () => {
+    // user?.avatarUrl ?  setPhoto(  user.avatarUrl ) :  null
+  };
   // const ref = useRef<CameraView>(null);
   const handleTakePictureFromCamera = async () => {
     try {
@@ -79,34 +86,38 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   };
 
   const handleCameraPictureSelection = async () => {
-    console.log('requesting camera access');
-    let permission = await ImagePicker.requestCameraPermissionsAsync();
-    console.log(permission);
+    try {
+      console.log('requesting camera access');
+      let permission = await ImagePicker.requestCameraPermissionsAsync();
+      console.log(permission);
 
-    if (!permission) {
-      console.log('NOT PERMISSION');
-    }
-    if (!permission?.granted && permission?.canAskAgain) {
-      permission = await ImagePicker.requestCameraPermissionsAsync();
-    }
-    if (!permission?.canAskAgain) {
-      console.log("can't ask again");
-      refRBSheet.current.close();
-      setTimeout(() => {
-        handleElementVisibility(true);
-      }, 1000);
+      if (!permission) {
+        console.log('NOT PERMISSION');
+      }
+      if (!permission?.granted && permission?.canAskAgain) {
+        permission = await ImagePicker.requestCameraPermissionsAsync();
+      }
+      if (!permission?.canAskAgain) {
+        console.log("can't ask again");
+        refRBSheet.current.close();
+        setTimeout(() => {
+          handleElementVisibility(true);
+        }, 1000);
 
-      return;
-    }
-    if (permission?.granted) {
-      console.log('jereeeee');
-      await handleTakePictureFromCamera();
+        return;
+      }
+      if (permission?.granted) {
+        console.log('jereeeee');
+        await handleTakePictureFromCamera();
+      }
+    } catch (error) {
+      console.log('error requesting permissions');
     }
   };
   return (
-    <ScrollView>
+    <>
       {/* <Text>PHOTO{JSON.stringify(photo)}</Text> */}
-      <Text>PHOTO{JSON.stringify(photo)}</Text>
+      <Text>PHOTO{JSON.stringify(photo?.uri)}</Text>
       {/* <CameraView
         style={{ width: 200, height: 300 }}
         ref={ref}
@@ -126,7 +137,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
             },
           ]}
         >
-          <AppAvatar>
+          <AppAvatar avatarUrl={user?.avatarUrl ?? photo?.uri ?? null}>
             <IconButton
               onPress={() => {
                 if (refRBSheet.current) {
@@ -184,11 +195,14 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
             {...{ handleElementVisibility, handleCameraPictureSelection }}
           >
             <Button
-              mode='contained'
-              //   onPress={hideModal}
+              onPress={() => {}}
+              style={[localStyles.optionButton, { backgroundColor: 'white' }]}
+              contentStyle={localStyles.optionButtonContent}
+              labelStyle={localStyles.optionButtonLabel}
+              icon='close-outline'
 
-              style={{ ...utilityStyles.muteButton, ...utilityStyles.btn }}
-              textColor={utilityStyles.muteButtonColor.color}
+              // style={{ ...utilityStyles.muteButton, ...utilityStyles.btn }}
+              // textColor={utilityStyles.muteButtonColor.color}
             >
               Cancelar
             </Button>
@@ -215,7 +229,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
           }}
         ></AppConfirmModal>
       </AppModal>
-    </ScrollView>
+    </>
   );
 };
 const localStyles = StyleSheet.create({
@@ -268,6 +282,22 @@ const localStyles = StyleSheet.create({
   },
   subGreeting: {
     fontSize: 16,
+  },
+  optionButton: {
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  optionButtonContent: {
+    paddingVertical: 12,
+
+    justifyContent: 'space-between',
+  },
+  optionButtonLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#2C2C2C',
+    flex: 1,
+    textAlign: 'left',
   },
 });
 
