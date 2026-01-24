@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Role } from 'src/types/authContextTypes/userRole';
 
@@ -21,6 +21,7 @@ import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import useOpenElement from 'src/hooks/useOpenElement';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 const EditProfileForm = ({
   user,
   loading,
@@ -158,6 +159,22 @@ const EditProfileForm = ({
       console.log('error requesting permissions');
     }
   };
+  const navigation = useNavigation();
+  useEffect(() => {
+    const navigationSubscription = navigation.addListener('blur', function () {
+      setPhoto(null);
+    });
+
+    return navigationSubscription;
+  }, []);
+
+  // useFocusEffect(() => {
+  //   return function () {
+  //     console.log('args', arguments);
+  //     console.log('UNMOUNTING');
+  //     setPhoto(null);
+  //   };
+  // });
 
   switch (user.role) {
     case Role.PROFESSIONAL:
