@@ -51,6 +51,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   //  const [permission, requestPermission] = useCameraPermissions();
   // const [facing, setFacing] = useState<CameraType>('back');
   const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
+
   const handleResetPhoto = () => {
     // user?.avatarUrl ?  setPhoto(  user.avatarUrl ) :  null
   };
