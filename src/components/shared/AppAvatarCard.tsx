@@ -5,6 +5,7 @@ import {
   Dimensions,
   StyleProp,
   ViewStyle,
+  ScrollView,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { Button, Card, IconButton, Text, useTheme } from 'react-native-paper';
@@ -21,14 +22,16 @@ import AppPictureSelector from './appPictureSelector/AppPictureSelector';
 import useOpenElement from 'src/hooks/useOpenElement';
 import AppModal from '@ui/AppModal';
 import AppConfirmModal from '@components/private/recruiter/AppConfirmModal';
-import {
-  CameraCapturedPicture,
-  CameraType,
-  CameraView,
-  useCameraPermissions,
-} from 'expo-camera';
+// import {
+//   CameraCapturedPicture,
+//   CameraType,
+//   CameraView,
+//   useCameraPermissions,
+// } from 'expo-camera';
 import { Linking } from 'react-native';
-
+import * as ImagePicker from 'expo-image-picker';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 const deviceHeight = Dimensions.get('window').height;
 interface AppAvatarCardProps {
   fullName: string;
@@ -41,25 +44,50 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
   // const { elementVisible, handleElementVisibility } = useOpenElement();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
   const { elementVisible, handleElementVisibility } = useOpenElement();
-  const [permission, requestPermission] = useCameraPermissions();
-  const [facing, setFacing] = useState<CameraType>('back');
-  const [photo, setPhoto] = useState<CameraCapturedPicture>();
-  const ref = useRef<CameraView>(null);
+  //  const [permission, requestPermission] = useCameraPermissions();
+  // const [facing, setFacing] = useState<CameraType>('back');
+  const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>();
+  // const ref = useRef<CameraView>(null);
   const handleTakePictureFromCamera = async () => {
-    const photo = await ref.current?.takePictureAsync();
-    if (photo) {
-      setPhoto(photo);
+    try {
+      const photoResult = await ImagePicker.launchCameraAsync({
+        base64: true,
+        allowsEditing: true,
+        quality: 1,
+        mediaTypes: ['images'],
+        cameraType: ImagePicker.CameraType.front,
+      });
+      /* const photoResult = await ImagePicker.launchImageLibraryAsync({
+        base64: true,
+        allowsEditing: true,
+        quality: 1,
+        mediaTypes: ['images'],
+        cameraType: ImagePicker.CameraType.front,
+      }); */
+      if (photoResult.canceled) {
+        return;
+      }
+      const {
+        assets: [photo],
+      } = photoResult;
+      setPhoto({ ...photo, assetId: uuidv4() });
+    } catch (error) {
+      console.log('ERROR TAKING PICTURE', error);
+    } finally {
+      refRBSheet.current.close();
     }
   };
 
   const handleCameraPictureSelection = async () => {
     console.log('requesting camera access');
+    let permission = await ImagePicker.requestCameraPermissionsAsync();
     console.log(permission);
+
     if (!permission) {
       console.log('NOT PERMISSION');
     }
     if (!permission?.granted && permission?.canAskAgain) {
-      await requestPermission();
+      permission = await ImagePicker.requestCameraPermissionsAsync();
     }
     if (!permission?.canAskAgain) {
       console.log("can't ask again");
@@ -76,16 +104,17 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
     }
   };
   return (
-    <>
+    <ScrollView>
+      {/* <Text>PHOTO{JSON.stringify(photo)}</Text> */}
       <Text>PHOTO{JSON.stringify(photo)}</Text>
-      <CameraView
+      {/* <CameraView
         style={{ width: 200, height: 300 }}
         ref={ref}
         mode={'picture'}
         facing={facing}
         mute={false}
         responsiveOrientationWhenOrientationLocked
-      />
+      /> */}
       <AppCardWrapper styles={{ ...StyleSheet.flatten(style) }}>
         <Card.Content
           style={[
@@ -186,7 +215,7 @@ const AppAvatarCard = ({ fullName, avatarPic, style }: AppAvatarCardProps) => {
           }}
         ></AppConfirmModal>
       </AppModal>
-    </>
+    </ScrollView>
   );
 };
 const localStyles = StyleSheet.create({

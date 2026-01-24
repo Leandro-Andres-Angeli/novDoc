@@ -38,6 +38,14 @@
         }
       ],
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+        }
+      ],
+
+      [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
@@ -50,9 +58,7 @@
           "cameraPermission": "Permitir a  $(PRODUCT_NAME) acceder a la cámara ?"
         }
       ],
-      [
-        "react-native-localize"
-      ],
+      ["react-native-localize"],
       "expo-localization"
     ],
     "web": {

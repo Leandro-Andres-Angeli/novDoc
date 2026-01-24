@@ -23,6 +23,7 @@
     "expo": "~54.0.23",
     "expo-blur": "~15.0.7",
     "expo-camera": "~17.0.10",
+    "expo-image-picker": "~17.0.10",
     "expo-linear-gradient": "~15.0.8",
     "expo-localization": "~17.0.7",
     "expo-location": "~19.0.7",
@@ -37,6 +38,7 @@
     "react-dom": "^19.1.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
+    "react-native-get-random-values": "^2.0.0",
     "react-native-keyboard-controller": "1.18.5",
     "react-native-localize": "^3.6.0",
     "react-native-logs": "^5.5.0",
@@ -53,6 +55,7 @@
     "react-native-worklets": "0.5.1",
     "styled-components": "^6.1.11",
     "toastify-react-native": "^7.2.3",
+    "uuid": "^13.0.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
