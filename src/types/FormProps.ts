@@ -9,6 +9,7 @@ import {
 } from './authContextTypes/authContextTypes';
 import { IJobPosting } from './dbTypes/IJobOffer';
 import { PropsWithChildren } from 'react';
+import * as ImagePicker from 'expo-image-picker';
 
 interface GenericFormProps<T, K = T> {
   handleSubmit: (values: T, helpers: FormikHelpers<any>) => Promise<void>;
@@ -30,4 +31,5 @@ export interface JobPostingFormProps<
 export interface EditProfileFormProps<T, K, L>
   extends GenericFormProps<T, K>, PropsWithChildren {
   user: L;
+  photo: ImagePicker.ImagePickerAsset | null;
 }

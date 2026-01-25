@@ -1,13 +1,13 @@
 import { genericConverter } from '@utils/converters/firebaseConverters';
-import { FirebaseError } from 'firebase/app';
+
 import { db } from 'firebase/config';
-import { FirebaseResponseJobPosting } from '../../types/firebaseResponse/firebaseResponses';
+//CAREFUL THIS CHANGE MIGHT BREAK SOMETHING
+// import { FirebaseResponseJobPosting } from '../../types/firebaseResponse/firebaseResponses';
+//CAREFUL THIS CHANGE MIGHT BREAK SOMETHING
 import {
   addDoc,
   collection,
   doc,
-  DocumentData,
-  DocumentReference,
   getDocs,
   limit,
   orderBy,
@@ -24,13 +24,14 @@ import {
 import {
   FirebaseErrorResponse,
   FirebaseResponse,
+  FirebaseResponseData,
 } from 'src/types/firebaseResponse/firebaseResponses';
 const jobsOfferCollection = collection(db, 'jobPostings').withConverter(
-  genericConverter<IJobPosting>()
+  genericConverter<IJobPosting>(),
 );
 export const createjobPosting = async (
-  jobPosting: IJobPosting
-): Promise<FirebaseResponseJobPosting | FirebaseErrorResponse> => {
+  jobPosting: IJobPosting,
+): Promise<FirebaseResponseData<IJobPostingDB> | FirebaseErrorResponse> => {
   try {
     const savedOffer = await addDoc(jobsOfferCollection, jobPosting);
     if (savedOffer) {
@@ -50,14 +51,14 @@ export const createjobPosting = async (
 };
 export const updatejobPosting = async (
   idToUpdate: string,
-  jobPostingUpdate: Partial<IJobPosting>
+  jobPostingUpdate: Partial<IJobPosting>,
 ): Promise<
-  | FirebaseResponseJobPosting<Partial<IJobPostingDB> & { id: string }>
+  | FirebaseResponseData<Partial<IJobPostingDB> & { id: string }>
   | FirebaseErrorResponse
 > => {
   try {
     const docRef = doc(db, 'jobPostings', idToUpdate).withConverter(
-      genericConverter<IJobPosting>()
+      genericConverter<IJobPosting>(),
     );
 
     await updateDoc(docRef, { ...jobPostingUpdate });
@@ -75,7 +76,7 @@ export const updatejobPosting = async (
 };
 
 export const getJobPostings = async (
-  jobPostingStatusParam: jobPostingStatus = jobPostingStatus.ACTIVE
+  jobPostingStatusParam: jobPostingStatus = jobPostingStatus.ACTIVE,
 ) => {
   const PAGE_SIZE = 5;
   try {
@@ -86,7 +87,7 @@ export const getJobPostings = async (
 
       orderBy('createdAt', 'desc'),
 
-      limit(PAGE_SIZE)
+      limit(PAGE_SIZE),
     );
     const querySnapshot = await getDocs(q);
     const collectionRes = querySnapshot.docs.map<IJobPostingDB>((el) => ({

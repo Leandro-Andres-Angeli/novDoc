@@ -12,7 +12,12 @@ export interface FirebaseResponse {
   success: true;
   message: string;
 }
-export interface FirebaseResponseJobPosting<T = IJobPostingDB>
-  extends FirebaseResponse {
+export interface FirebaseResponseJobPosting<
+  T = IJobPostingDB,
+> extends FirebaseResponse {
+  data: T;
+}
+
+export interface FirebaseResponseData<T> extends FirebaseResponse {
   data: T;
 }

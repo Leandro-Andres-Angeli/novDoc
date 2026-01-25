@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { Role } from 'src/types/authContextTypes/userRole';
 
@@ -10,7 +10,7 @@ import {
 import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
 import EditProfileProfessionalForm from './EditProfileProfessionalForm';
 import EditProfileRecruiterForm from './EditProfileRecruiterForm';
-import { updateProfile } from '../../services/profile/profile.service';
+
 import AppAvatar from '@ui/AppAvatar';
 import { IconButton, Text, useTheme } from 'react-native-paper';
 import RBSheetType from 'RBSheetType';
@@ -21,33 +21,58 @@ import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import useOpenElement from 'src/hooks/useOpenElement';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-const EditProfileForm = ({
-  user,
-  loading,
-  handleSubmit,
-}: {
-  user: UserTypes;
-  loading: boolean;
-  handleSubmit: (
-    values:
-      | UpdateRecruiterProfileFormShape
-      | UpdateProfessionalProfileFormShape,
-  ) => Promise<void>;
-}) => {
+import { useNavigation } from '@react-navigation/native';
+import { updateProfile } from 'src/services/profile/profile.service';
+import { Toast } from 'toastify-react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ProfilePhotoContext } from 'src/appContext/photoContext/ProfilePhotoContext';
+
+type NavigatorWithProfileStackRoute = {
+  PROFILE_STACK: {};
+};
+const EditProfileForm = ({ user }: { user: UserTypes }) => {
   if (!user) {
     return <></>;
   }
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async (
+    values:
+      | UpdateRecruiterProfileFormShape
+      | UpdateProfessionalProfileFormShape,
+  ) => {
+    setLoading(true);
+    try {
+      const updatedProfileOp = await updateProfile(user.id, values);
+      if (updatedProfileOp.success) {
+        Toast.show({
+          onHide() {
+            if (values.role === Role.RECRUITER) {
+              navigation.navigate('PROFILE_STACK', {});
+              return;
+            }
+            navigation.getParent()?.navigate('SWIPE', {});
+          },
+          text1: updatedProfileOp.message,
+          visibilityTime: 700,
+          autoHide: true,
+        });
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+  const { photo, resetPhoto, handleSetPhoto } = useContext(ProfilePhotoContext);
   const theme = useTheme<CustomTheme>();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
-  const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
+
   const { elementVisible, handleElementVisibility } = useOpenElement();
   const handleCancel = () => {
     if (refRBSheet.current) {
       refRBSheet.current.close();
     }
-    setPhoto(null);
-    // handleElementVisibility(false);
+
+    resetPhoto();
   };
   const updateProfilePic = (
     <View
@@ -120,7 +145,8 @@ const EditProfileForm = ({
       const {
         assets: [photo],
       } = photoResult;
-      setPhoto({ ...photo, assetId: uuidv4() });
+
+      handleSetPhoto({ ...photo, assetId: uuidv4() });
     } catch (error) {
       console.log('ERROR TAKING PICTURE', error);
     } finally {
@@ -159,28 +185,24 @@ const EditProfileForm = ({
       console.log('error requesting permissions');
     }
   };
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<NavigatorWithProfileStackRoute>>();
+
   useEffect(() => {
     const navigationSubscription = navigation.addListener('blur', function () {
-      setPhoto(null);
+      resetPhoto();
     });
 
     return navigationSubscription;
   }, []);
 
-  // useFocusEffect(() => {
-  //   return function () {
-  //     console.log('args', arguments);
-  //     console.log('UNMOUNTING');
-  //     setPhoto(null);
-  //   };
-  // });
-
   switch (user.role) {
     case Role.PROFESSIONAL:
       return (
         <>
-          <EditProfileProfessionalForm {...{ user, handleSubmit, loading }}>
+          <EditProfileProfessionalForm
+            {...{ user, handleSubmit, loading, photo }}
+          >
             {updateProfilePic}
           </EditProfileProfessionalForm>
           <AppSelectPictureMenu
@@ -196,7 +218,7 @@ const EditProfileForm = ({
     case Role.RECRUITER:
       return (
         <>
-          <EditProfileRecruiterForm {...{ user, handleSubmit, loading }}>
+          <EditProfileRecruiterForm {...{ user, handleSubmit, loading, photo }}>
             {updateProfilePic}
           </EditProfileRecruiterForm>
           <AppSelectPictureMenu

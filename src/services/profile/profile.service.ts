@@ -1,8 +1,6 @@
 import { db } from 'firebase/config';
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -18,7 +16,7 @@ import {
 const usersCollection = collection(db, 'users');
 export const updateProfile = async (
   idToUpdate: string,
-  updatedUser: Partial<UserTypes>
+  updatedUser: Partial<UserTypes>,
 ): Promise<FirebaseResponse | FirebaseErrorResponse> => {
   try {
     // const docRef = await doc(db, 'users', 'id', idToUpdate);
