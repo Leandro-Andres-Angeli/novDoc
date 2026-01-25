@@ -20,12 +20,14 @@ import { View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-import useOpenElement from 'src/hooks/useOpenElement';
+
 import { useNavigation } from '@react-navigation/native';
 import { updateProfile } from 'src/services/profile/profile.service';
 import { Toast } from 'toastify-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProfilePhotoContext } from 'src/appContext/photoContext/ProfilePhotoContext';
+import { uploadFile } from 'src/services/shared/imageUpload/imageUpload.service';
+import { Error } from '../../hooks/useGetJobPostings';
 
 type NavigatorWithProfileStackRoute = {
   PROFILE_STACK: {};
@@ -35,6 +37,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
     return <></>;
   }
   const [loading, setLoading] = useState(false);
+  const { photo, resetPhoto, handleSetPhoto } = useContext(ProfilePhotoContext);
   const handleSubmit = async (
     values:
       | UpdateRecruiterProfileFormShape
@@ -42,7 +45,23 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
   ) => {
     setLoading(true);
     try {
-      const updatedProfileOp = await updateProfile(user.id, values);
+      let avatarUrl = user.avatarUrl ?? '';
+      if (photo) {
+        try {
+          const uploadPicture = await uploadFile(photo);
+          if (!uploadPicture.success) {
+            Toast.error(uploadPicture.message);
+            return;
+          }
+          avatarUrl = uploadPicture.data.url;
+        } catch (err) {
+          Toast.error('Unknown error');
+        }
+      }
+      const updatedProfileOp = await updateProfile(user.id, {
+        ...values,
+        avatarUrl,
+      });
       if (updatedProfileOp.success) {
         Toast.show({
           onHide() {
@@ -62,12 +81,12 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
       setLoading(false);
     }
   };
-  const { photo, resetPhoto, handleSetPhoto } = useContext(ProfilePhotoContext);
+
   const theme = useTheme<CustomTheme>();
   const refRBSheet = useRef<RBSheetType>({} as RBSheetType);
 
-  const { elementVisible, handleElementVisibility } = useOpenElement();
   const handleCancel = () => {
+    console.log('here here');
     if (refRBSheet.current) {
       refRBSheet.current.close();
     }
@@ -171,9 +190,6 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
       if (!permission?.canAskAgain) {
         console.log("can't ask again");
         refRBSheet.current.close();
-        setTimeout(() => {
-          handleElementVisibility(true);
-        }, 1000);
 
         return;
       }
