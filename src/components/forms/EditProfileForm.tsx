@@ -146,7 +146,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
     try {
       const photoResult = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        quality: 1,
+        quality: 0.5,
         mediaTypes: ['images'],
         cameraType: ImagePicker.CameraType.front,
       });
@@ -171,7 +171,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
     try {
       const photoResult = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        quality: 1,
+        quality: 5,
         mediaTypes: ['images'],
       });
 
