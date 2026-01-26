@@ -27,7 +27,7 @@ const AppDrawerUserProfile = () => {
         marginBottom: 10,
       }}
     >
-      <AppAvatar></AppAvatar>
+      <AppAvatar avatarUrl={user?.avatarUrl ?? null}></AppAvatar>
       <View style={{ marginTop: 5 }}>
         <Text
           variant='titleMedium'
