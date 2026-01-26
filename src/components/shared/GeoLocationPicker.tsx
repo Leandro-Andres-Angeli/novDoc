@@ -5,8 +5,11 @@ import { IconButton, useTheme } from 'react-native-paper';
 import * as Location from 'expo-location';
 import { Toast } from 'toastify-react-native';
 
-import { MapLocation } from 'src/types/dbTypes/IJobPosting';
 import useGetLocationFromCoords from 'src/hooks/useGetLocationFromCoords';
+import { MapLocation } from 'src/types/dbTypes/IJobOffer';
+import navigateToSettings, {
+  navigateToSettingsAlert,
+} from '@utils/navigateToSettings';
 interface GeoLocationPickerProps {
   handleSelectProvince: (val: MapLocation) => void;
   handleSelectCity: (val: MapLocation) => void;
@@ -19,32 +22,26 @@ const GeoLocationPicker = ({
 }: GeoLocationPickerProps) => {
   const theme = useTheme();
   const { getLocationFromCoords } = useGetLocationFromCoords();
-  const navigateToSettings = () => {
-    if (Platform.OS === 'ios') {
-      Linking.openURL('app-settings:');
-    }
-    if (Platform.OS === 'android') {
-      Linking.openSettings();
-    }
-  };
+
   const handleGetGeoLocation = async () => {
     try {
       const { canAskAgain, status, granted } =
         await Location.requestForegroundPermissionsAsync();
 
       if (!canAskAgain) {
-        Alert.alert('Autorizar permisos de ubicación', '', [
-          {
-            text: 'Cancelar',
-            onPress: () => {},
-            style: 'cancel',
-          },
-          {
-            text: 'Ok',
-            onPress: navigateToSettings,
-            style: 'default',
-          },
-        ]);
+        navigateToSettingsAlert('Autorizar permisos de ubicación');
+        // Alert.alert('Autorizar permisos de ubicación', '', [
+        //   {
+        //     text: 'Cancelar',
+        //     onPress: () => {},
+        //     style: 'cancel',
+        //   },
+        //   {
+        //     text: 'Ok',
+        //     onPress: navigateToSettings,
+        //     style: 'default',
+        //   },
+        // ]);
         return;
         // await Location.requestForegroundPermissionsAsync();
       }
@@ -56,7 +53,7 @@ const GeoLocationPicker = ({
           timeInterval: 500,
         });
         const [reversedGeo] = await Location.reverseGeocodeAsync(
-          position.coords
+          position.coords,
         );
 
         const { country } = reversedGeo;
@@ -66,7 +63,7 @@ const GeoLocationPicker = ({
 
         const locationFromCoords = await getLocationFromCoords(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
         if (!locationFromCoords) {
           throw Error('Error getting reversed geo');

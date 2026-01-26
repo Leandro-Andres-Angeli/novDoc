@@ -27,6 +27,7 @@ import { Toast } from 'toastify-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProfilePhotoContext } from 'src/appContext/photoContext/ProfilePhotoContext';
 import { uploadFile } from 'src/services/shared/imageUpload/imageUpload.service';
+import { navigateToSettingsAlert } from '@utils/navigateToSettings';
 
 type NavigatorWithProfileStackRoute = {
   PROFILE_STACK: {};
@@ -149,13 +150,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
         mediaTypes: ['images'],
         cameraType: ImagePicker.CameraType.front,
       });
-      /* const photoResult = await ImagePicker.launchImageLibraryAsync({
-        base64: true,
-        allowsEditing: true,
-        quality: 1,
-        mediaTypes: ['images'],
-        cameraType: ImagePicker.CameraType.front,
-      }); */
+
       if (photoResult.canceled) {
         return;
       }
@@ -206,17 +201,19 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
       if (!permission) {
         console.log('NOT PERMISSION');
       }
-      if (!permission?.granted && permission?.canAskAgain) {
-        permission = await ImagePicker.requestCameraPermissionsAsync();
-      }
-      if (!permission?.canAskAgain) {
-        console.log("can't ask again");
-        refRBSheet.current.close();
+      if (permission.status === ImagePicker.PermissionStatus.DENIED) {
+        if (permission.canAskAgain) {
+          permission = await ImagePicker.requestCameraPermissionsAsync();
+        } else {
+          console.log("can't ask again");
+          refRBSheet.current.close();
+          navigateToSettingsAlert('Autorizar permisos de camara');
 
-        return;
+          return;
+        }
       }
+
       if (permission?.granted) {
-        console.log('jereeeee');
         await handleTakePictureFromCamera();
       }
     } catch (error) {
@@ -232,17 +229,28 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
       if (!permission) {
         console.log('NOT PERMISSION');
       }
-      if (!permission?.granted && permission?.canAskAgain) {
+
+      if (permission.status === ImagePicker.PermissionStatus.DENIED) {
+        if (permission.canAskAgain) {
+          permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        } else {
+          console.log("can't ask again");
+          refRBSheet.current.close();
+          navigateToSettingsAlert('Autorizar permisos de camara');
+        }
+        return;
+      }
+      if (!permission?.granted) {
         permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
       }
       if (!permission?.canAskAgain) {
         console.log("can't ask again");
         refRBSheet.current.close();
+        navigateToSettingsAlert('Autorizar acceso a galería');
 
         return;
       }
       if (permission?.granted) {
-        console.log('jereeeee');
         await handleGetPictureFromGallery();
       }
     } catch (error) {
