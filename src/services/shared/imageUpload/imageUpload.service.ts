@@ -18,19 +18,7 @@ export const uploadFile = async (
   photo: ImagePicker.ImagePickerAsset,
 ): Promise<FirebaseResponseData<{ url: string }> | FirebaseErrorResponse> => {
   try {
-    console.log('PHOTOOO');
-    console.log('PHOTOOO NAME', photo.fileName);
     const newImgRef = ref(profileImagesRef, `${photo.fileName}`);
-    if (!photo.base64) {
-      throw Error('Error getting 64base from file');
-    }
-
-    // const uploadData = await uploadString(
-    //   newImgRef,
-    //   photo.uri.replace('file://', ''),
-    //   'base64',
-    // );
-
     const blobFromUri = await uriToBlob(photo.uri);
     let uploadData: UploadResult | null = null;
     if (blobFromUri) {

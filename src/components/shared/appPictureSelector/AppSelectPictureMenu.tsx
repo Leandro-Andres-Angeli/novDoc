@@ -15,13 +15,13 @@ const deviceHeight = Dimensions.get('window').height;
 interface AppSelectorPictureMenuProps {
   refRBSheet: React.RefObject<RBSheetType>;
   handleCancel: () => void;
-  handleTakePictureFromCamera: () => Promise<void>;
+  handleGalleryPictureSelection: () => Promise<void>;
   handleCameraPictureSelection: () => Promise<void>;
 }
 const AppSelectPictureMenu = ({
   refRBSheet,
   handleCancel,
-  handleTakePictureFromCamera,
+  handleGalleryPictureSelection,
   handleCameraPictureSelection,
 }: AppSelectorPictureMenuProps) => {
   const { elementVisible, handleElementVisibility } = useOpenElement();
@@ -58,7 +58,11 @@ const AppSelectPictureMenu = ({
           }}
         >
           <AppPictureSelector
-            {...{ handleElementVisibility, handleCameraPictureSelection }}
+            {...{
+              handleElementVisibility,
+              handleCameraPictureSelection,
+              handleGalleryPictureSelection,
+            }}
           >
             <Button
               onPress={handleCancel}

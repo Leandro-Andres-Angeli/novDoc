@@ -1,4 +1,3 @@
-import { RNFetchBlob } from 'rn-fetch-blob';
 const uriToBlob = async (uri: string) => {
   try {
     const response = await fetch(uri);

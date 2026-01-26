@@ -27,7 +27,6 @@ import { Toast } from 'toastify-react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProfilePhotoContext } from 'src/appContext/photoContext/ProfilePhotoContext';
 import { uploadFile } from 'src/services/shared/imageUpload/imageUpload.service';
-import { Error } from '../../hooks/useGetJobPostings';
 
 type NavigatorWithProfileStackRoute = {
   PROFILE_STACK: {};
@@ -104,7 +103,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
     >
       <Text>{JSON.stringify(photo?.uri)}</Text>
       <AppAvatar
-        avatarUrl={user.avatarUrl ?? photo?.uri ?? null}
+        avatarUrl={photo?.uri ?? user.avatarUrl ?? null}
         styles={{ position: 'relative' }}
         size={80}
       >
@@ -145,7 +144,6 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
   const handleTakePictureFromCamera = async () => {
     try {
       const photoResult = await ImagePicker.launchCameraAsync({
-        base64: true,
         allowsEditing: true,
         quality: 1,
         mediaTypes: ['images'],
@@ -158,6 +156,30 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
         mediaTypes: ['images'],
         cameraType: ImagePicker.CameraType.front,
       }); */
+      if (photoResult.canceled) {
+        return;
+      }
+      const {
+        assets: [photo],
+      } = photoResult;
+
+      handleSetPhoto({ ...photo, assetId: uuidv4() });
+    } catch (error) {
+      console.log('ERROR TAKING PICTURE', error);
+    } finally {
+      if (refRBSheet) {
+        refRBSheet.current.close();
+      }
+    }
+  };
+  const handleGetPictureFromGallery = async () => {
+    try {
+      const photoResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+        mediaTypes: ['images'],
+      });
+
       if (photoResult.canceled) {
         return;
       }
@@ -201,6 +223,32 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
       console.log('error requesting permissions');
     }
   };
+  const handleGalleryPictureSelection = async () => {
+    try {
+      console.log('requesting camera access');
+      let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      console.log(permission);
+
+      if (!permission) {
+        console.log('NOT PERMISSION');
+      }
+      if (!permission?.granted && permission?.canAskAgain) {
+        permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      }
+      if (!permission?.canAskAgain) {
+        console.log("can't ask again");
+        refRBSheet.current.close();
+
+        return;
+      }
+      if (permission?.granted) {
+        console.log('jereeeee');
+        await handleGetPictureFromGallery();
+      }
+    } catch (error) {
+      console.log('error requesting permissions');
+    }
+  };
   const navigation =
     useNavigation<NativeStackNavigationProp<NavigatorWithProfileStackRoute>>();
 
@@ -226,7 +274,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
               refRBSheet,
               handleCancel,
               handleCameraPictureSelection,
-              handleTakePictureFromCamera,
+              handleGalleryPictureSelection,
             }}
           ></AppSelectPictureMenu>
         </>
@@ -242,7 +290,7 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
               refRBSheet,
               handleCancel,
               handleCameraPictureSelection,
-              handleTakePictureFromCamera,
+              handleGalleryPictureSelection,
             }}
           ></AppSelectPictureMenu>
         </>

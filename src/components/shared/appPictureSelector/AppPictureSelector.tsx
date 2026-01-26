@@ -6,16 +6,18 @@ import AppCameraPictureSelector from './AppCameraPictureSelector';
 interface AppPictureSelectorProps extends PropsWithChildren {
   handleElementVisibility: (val?: boolean | undefined) => void;
   handleCameraPictureSelection: () => Promise<void>;
+  handleGalleryPictureSelection: () => Promise<void>;
 }
 const AppPictureSelector = ({
   handleCameraPictureSelection,
-  handleElementVisibility,
+  handleGalleryPictureSelection,
+
   children,
 }: AppPictureSelectorProps) => {
   return (
     <View style={localStyles.modalContainer}>
       <View style={localStyles.optionsContainer}>
-        <Button
+        {/* <Button
           mode='text'
           //   onPress={handleUploadFromGallery}
           style={localStyles.optionButton}
@@ -24,13 +26,22 @@ const AppPictureSelector = ({
           icon='image-outline'
         >
           Subir foto desde galería
-        </Button>
+        </Button> */}
         <AppCameraPictureSelector
-          {...{ handleCameraPictureSelection }}
-          handleElementVisibility={handleElementVisibility}
+          handlePictureSelection={handleGalleryPictureSelection}
+          // handleElementVisibility={handleElementVisibility}
           style={localStyles.optionButton}
           contentStyle={localStyles.optionButtonContent}
           labelStyle={localStyles.optionButtonLabel}
+          btnText='Subir foto desde galería'
+        ></AppCameraPictureSelector>
+        <AppCameraPictureSelector
+          handlePictureSelection={handleCameraPictureSelection}
+          // handleElementVisibility={handleElementVisibility}
+          style={localStyles.optionButton}
+          contentStyle={localStyles.optionButtonContent}
+          labelStyle={localStyles.optionButtonLabel}
+          btnText='Tomar foto con cámara'
         ></AppCameraPictureSelector>
         {children}
       </View>

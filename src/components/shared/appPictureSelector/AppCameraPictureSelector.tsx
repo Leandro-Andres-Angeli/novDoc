@@ -7,8 +7,8 @@ import AppConfirmModal from '@components/private/recruiter/AppConfirmModal';
 import useOpenElement from 'src/hooks/useOpenElement';
 
 interface AppCameraPictureSelectorProps extends Omit<ButtonProps, 'children'> {
-  handleElementVisibility: (val?: boolean | undefined) => void;
-  handleCameraPictureSelection: () => Promise<void>;
+  handlePictureSelection: () => Promise<void>;
+  btnText: string;
 }
 
 const AppCameraPictureSelector = (props: AppCameraPictureSelectorProps) => {
@@ -19,9 +19,9 @@ const AppCameraPictureSelector = (props: AppCameraPictureSelectorProps) => {
         //   onPress={handleTakePhoto}
         {...props}
         icon='camera-outline'
-        onPress={props.handleCameraPictureSelection}
+        onPress={props.handlePictureSelection}
       >
-        Tomar foto con cámara
+        {props.btnText}
       </Button>
     </>
   );
