@@ -41,11 +41,7 @@ const SwipeRecruiter = () => {
   if (checkIsLoadingData()) {
     return <AppLoading></AppLoading>;
   }
-  // return (
-  //   <View>
-  //     <Text>{JSON.stringify(jobPostings)}</Text>
-  //   </View>
-  // );
+
   if (!checkIsLoadingData() && true) {
     //HARDCODING NO CANDIDATES FOR JOB POSTINGS
     return <NoCandidates></NoCandidates>;

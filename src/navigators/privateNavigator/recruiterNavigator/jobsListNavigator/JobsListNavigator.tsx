@@ -5,10 +5,8 @@ import {
 } from '@react-navigation/native-stack';
 
 import JobOffersList from 'src/screens/private/recruiter/JobOffersList';
-import JobsListTabNavigator, {
-  JobsListTabNavigatorRootParams,
-} from '../JobsListTabNavigator';
-import { useRoute } from '@react-navigation/native';
+import { JobsListTabNavigatorRootParams } from '../JobsListTabNavigator';
+
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { IJobPostingDB, jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 
@@ -25,8 +23,7 @@ export type JobListNavigatorRootParams = {
   };
 };
 const Stack = createNativeStackNavigator<JobListNavigatorRootParams>();
-interface JobsListTabNavigatorProps
-  extends DrawerScreenProps<JobsListTabNavigatorRootParams> {}
+interface JobsListTabNavigatorProps extends DrawerScreenProps<JobsListTabNavigatorRootParams> {}
 const JobsListNavigator = (props: JobsListTabNavigatorProps) => {
   // const route = useRoute();
 
