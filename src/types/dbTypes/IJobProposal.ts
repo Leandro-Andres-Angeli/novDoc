@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-enum IJobApplicationStatus {
+export enum IJobApplicationStatus {
   APPLIED = 'postulado',
   VIEWED = 'visto',
   MATCH = 'match',
