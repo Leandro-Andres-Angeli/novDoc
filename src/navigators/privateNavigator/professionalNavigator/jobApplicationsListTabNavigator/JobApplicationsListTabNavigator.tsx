@@ -35,15 +35,19 @@ const JobApplicationsListTabNavigator = () => {
           borderRadius: utilityStyles.btnBorderRadius.borderRadius,
 
           backgroundColor: theme.colors.background,
+          // backgroundColor: 'red',
         },
-
-        tabBarItemStyle: {},
+        tabBarLabelStyle: { textTransform: 'capitalize', fontSize: 12 },
+        tabBarItemStyle: {
+          paddingHorizontal: 0,
+        },
 
         tabBarIndicatorStyle: {},
         tabBarIndicatorContainerStyle: {
           transform: [{ scaleX: 0.97 }],
           overflow: 'hidden',
         },
+
         sceneStyle: {
           backgroundColor: theme.colors.primaryDynamicOpacity(0.01),
         },
@@ -51,10 +55,29 @@ const JobApplicationsListTabNavigator = () => {
       initialRouteName={JOBS_APPLICATIONS_LIST_TABS_ROUTES.match}
     >
       <Tab.Screen
+        name={IJobApplicationStatus.APPLIED}
+        options={{ title: `${IJobApplicationStatus.APPLIED}` }}
+        component={JobApplicationsListNavigator}
+        initialParams={{ jobApplicationStatus: IJobApplicationStatus.APPLIED }}
+      ></Tab.Screen>
+
+      <Tab.Screen
+        name={IJobApplicationStatus.VIEWED}
+        options={{ title: `${IJobApplicationStatus.VIEWED}` }}
+        component={JobApplicationsListNavigator}
+        initialParams={{ jobApplicationStatus: IJobApplicationStatus.VIEWED }}
+      ></Tab.Screen>
+      <Tab.Screen
         name={IJobApplicationStatus.MATCH}
         options={{ title: `${IJobApplicationStatus.MATCH}` }}
         component={JobApplicationsListNavigator}
         initialParams={{ jobApplicationStatus: IJobApplicationStatus.MATCH }}
+      ></Tab.Screen>
+      <Tab.Screen
+        name={IJobApplicationStatus.REJECTED}
+        options={{ title: `${IJobApplicationStatus.REJECTED}` }}
+        component={JobApplicationsListNavigator}
+        initialParams={{ jobApplicationStatus: IJobApplicationStatus.REJECTED }}
       ></Tab.Screen>
     </Tab.Navigator>
   );

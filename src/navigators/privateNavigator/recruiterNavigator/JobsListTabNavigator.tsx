@@ -37,7 +37,7 @@ const JobsListTabNavigator = () => {
         tabBarItemStyle: {
           // width: 'auto',
         },
-
+        tabBarLabelStyle: { textTransform: 'capitalize', fontSize: 14 },
         tabBarIndicatorStyle: {},
         tabBarIndicatorContainerStyle: {
           transform: [{ scaleX: 0.97 }],
