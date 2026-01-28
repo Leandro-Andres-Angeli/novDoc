@@ -91,6 +91,21 @@ const utilityStyles = StyleSheet.create({
   btn: {
     paddingVertical: 8,
   },
+  descriptionText: {
+    textAlign: 'center',
+    color: '#666666',
+    // color: '#666666',
+    marginBottom: 24,
+    lineHeight: 22,
+    paddingHorizontal: 8,
+  },
+  mainTitle: {
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#1a1a1a',
+    marginBottom: 16,
+    lineHeight: 28,
+  },
 });
 
 export default utilityStyles;

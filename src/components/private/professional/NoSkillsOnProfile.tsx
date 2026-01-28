@@ -17,6 +17,10 @@ import {
 } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import utilityStyles from 'src/styles/utilityStyles';
 const iconPosition = (top = 20, left = 10, opacity = 0.8): ViewStyle => ({
   top,
   left,
@@ -25,6 +29,8 @@ const iconPosition = (top = 20, left = 10, opacity = 0.8): ViewStyle => ({
 export default function NoSkillsOnProfile() {
   const theme = useTheme<CustomTheme>();
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<{ PROFILE: {} }>>();
   return (
     <LinearGradient
       colors={[
@@ -86,12 +92,12 @@ export default function NoSkillsOnProfile() {
         </View>
 
         {/* Main Title */}
-        <Text variant='headlineSmall' style={styles.mainTitle}>
+        <Text variant='headlineSmall' style={utilityStyles.mainTitle}>
           ¡Tu próximo gran paso{'\n'}empieza aquí!
         </Text>
 
         {/* Description */}
-        <Text variant='bodyMedium' style={styles.description}>
+        <Text variant='bodyMedium' style={utilityStyles.descriptionText}>
           Para mostrarte las mejores coincidencias y conectar con oportunidades
           que realmente te apasionen, necesitamos conocer tu perfil técnico.
         </Text>
@@ -126,7 +132,7 @@ export default function NoSkillsOnProfile() {
           {/* CTA Button */}
           <Button
             mode='contained'
-            onPress={() => console.log('Complete skills pressed')}
+            onPress={() => navigation.navigate('PROFILE', {})}
             style={styles.ctaButton}
             contentStyle={styles.ctaButtonContent}
             labelStyle={styles.ctaButtonLabel}
@@ -174,6 +180,7 @@ const styles = StyleSheet.create<{
     height: 120,
     borderRadius: 60,
     backgroundColor: '#FFFFFF',
+
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
@@ -191,20 +198,7 @@ const styles = StyleSheet.create<{
   blueCircle: {
     backgroundColor: '#5C6BC0',
   },
-  mainTitle: {
-    fontWeight: '700',
-    textAlign: 'center',
-    color: '#1a1a1a',
-    marginBottom: 16,
-    lineHeight: 28,
-  },
-  description: {
-    textAlign: 'center',
-    color: '#666666',
-    marginBottom: 24,
-    lineHeight: 22,
-    paddingHorizontal: 8,
-  },
+
   featureList: {
     width: '100%',
     marginBottom: 32,

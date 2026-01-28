@@ -1,10 +1,8 @@
 import { View, Text } from 'react-native';
-import React, { useContext } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import utilityStyles from 'src/styles/utilityStyles';
-import { AuthContext } from 'src/appContext/authContext/AuthContext';
-import { Button, Icon, useTheme } from 'react-native-paper';
+import { Icon, useTheme } from 'react-native-paper';
 import PROFESSIONAL_NAVIGATOR_ROUTES from './PROFESSIONAL_NAVIGATOR_ROUTES';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomTheme } from 'src/providers/PublicProviders';
@@ -12,22 +10,14 @@ import materialBottomTabBar from '@utils/materialBottomTabBar/materialBottomTabB
 import AppHeaderWithSettingsLink from '@components/shared/AppHeaderWithSettingsLink';
 import SwipeProfessional from 'src/screens/private/professional/SwipeProfessional';
 import ProfessionalProfileDrawer from 'src/screens/private/professional/ProfessionalProfileDrawer';
+import NoResultsForSkills from '@components/private/professional/NoResultsForSkills';
 
 const Stack = createNativeStackNavigator();
 const FavoritesPlaceHolder = () => (
-  <View>
-    <Text>Favorites Placeholder</Text>
-  </View>
-);
-const ProfileDrawerPlaceHolder = () => (
-  <View>
-    <Text>ProfileDrawer Placeholder</Text>
-  </View>
-);
-const Onboarding = () => (
-  <View style={{ ...utilityStyles.flex }}>
-    <Text>Professional</Text>
-  </View>
+  <NoResultsForSkills></NoResultsForSkills>
+  // <View>
+  //   <Text>Favorites Placeholder</Text>
+  // </View>
 );
 
 export type ProfessionalNavigatorRootParams = {
@@ -38,10 +28,6 @@ export type ProfessionalNavigatorRootParams = {
 };
 const Tab = createBottomTabNavigator<ProfessionalNavigatorRootParams>();
 const ProfessionalNavigator = () => {
-  const {
-    authState: { user },
-    logout,
-  } = useContext(AuthContext);
   const theme = useTheme<CustomTheme>();
   return (
     <>

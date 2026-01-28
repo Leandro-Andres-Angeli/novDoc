@@ -29,7 +29,7 @@ import { ProfilePhotoContext } from 'src/appContext/photoContext/ProfilePhotoCon
 import { uploadFile } from 'src/services/shared/imageUpload/imageUpload.service';
 import { navigateToSettingsAlert } from '@utils/navigateToSettings';
 
-type NavigatorWithProfileStackRoute = {
+export type NavigatorWithProfileStackRoute = {
   PROFILE_STACK: {};
 };
 const EditProfileForm = ({ user }: { user: UserTypes }) => {
