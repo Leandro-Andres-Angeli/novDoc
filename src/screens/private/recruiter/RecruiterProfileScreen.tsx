@@ -1,6 +1,6 @@
 import React from 'react';
 
-import JobsListTabNavigator from '../../../navigators/privateNavigator/recruiterNavigator/JobsListTabNavigator';
+import JobsListTabNavigator from '../../../navigators/privateNavigator/recruiterNavigator/jobListTabNavigator/JobsListTabNavigator';
 
 import AppProfileScreen from '../shared/AppProfileScreen';
 

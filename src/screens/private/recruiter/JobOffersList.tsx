@@ -9,7 +9,7 @@ import JobPostingCard from '@components/jobPostingCard/JobPostingCard';
 import ProfileProfileJobPostingEmptyState from '@components/private/recruiter/ProfileJobPostingEmptyState';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { JobListNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/jobsListNavigator/JobsListNavigator';
+import { JobListNavigatorRootParams } from 'src/navigators/privateNavigator/recruiterNavigator/jobListTabNavigator/jobsListNavigator/JobsListNavigator';
 
 import AppLoading from '@ui/AppLoading';
 import { Text } from 'react-native-paper';
@@ -17,11 +17,10 @@ import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { isEmptyArray } from 'formik';
 
-interface jobPostingsListProps
-  extends NativeStackScreenProps<
-    JobListNavigatorRootParams,
-    'JOB_POSTING_LIST'
-  > {}
+interface jobPostingsListProps extends NativeStackScreenProps<
+  JobListNavigatorRootParams,
+  'JOB_POSTING_LIST'
+> {}
 const JobPostingsList = ({ route }: jobPostingsListProps) => {
   const { params } = route;
 
@@ -41,7 +40,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
   >();
   const jobPostingStatusLoading = loading[jobPostingStatus];
   const jobPostingsByStatus = jobPostings.filter(
-    (el) => el.status === jobPostingStatus
+    (el) => el.status === jobPostingStatus,
   );
   const error = errors[jobPostingStatus];
   const [refreshing, setRefreshing] = useState(false);
