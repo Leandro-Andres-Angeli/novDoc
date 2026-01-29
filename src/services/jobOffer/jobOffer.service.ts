@@ -3,6 +3,10 @@ import { genericConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
 //CAREFUL THIS CHANGE MIGHT BREAK SOMETHING
 // import { FirebaseResponseJobPosting } from '../../types/firebaseResponse/firebaseResponses';
+import {
+  QueryFieldFilterConstraint,
+  QueryOrderByConstraint,
+} from 'firebase/firestore';
 //CAREFUL THIS CHANGE MIGHT BREAK SOMETHING
 import {
   addDoc,
@@ -76,16 +80,17 @@ export const updatejobPosting = async (
 };
 
 export const getJobPostings = async (
-  jobPostingStatusParam: jobPostingStatus = jobPostingStatus.ACTIVE,
+  queryArray: (QueryFieldFilterConstraint | QueryOrderByConstraint)[],
 ) => {
   const PAGE_SIZE = 5;
   try {
     const q = query(
       jobsOfferCollection,
-      where('status', '==', jobPostingStatusParam),
-      orderBy('updatedAt', 'desc'),
+      ...queryArray,
+      // where('status', '==', jobPostingStatusParam),
+      // orderBy('updatedAt', 'desc'),
 
-      orderBy('createdAt', 'desc'),
+      // orderBy('createdAt', 'desc'),
 
       limit(PAGE_SIZE),
     );

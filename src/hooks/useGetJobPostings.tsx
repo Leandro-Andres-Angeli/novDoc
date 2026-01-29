@@ -27,9 +27,15 @@ import {
 import { genericConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
 import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
+import queryByUserRole, {
+  queryGeneratorRecruiter,
+} from '@utils/queryGenerator';
+import useQueryGenerator from './useQueryGenerator';
+import { isProfessional, isRecruiter } from '@utils/checkUserType';
+import { Role } from 'src/types/authContextTypes/userRole';
 
 const jobPostingCollection = collection(db, 'jobPostings').withConverter(
-  genericConverter<IJobPostingDB>()
+  genericConverter<IJobPostingDB>(),
 );
 export type Error = {
   error: boolean;
@@ -40,6 +46,7 @@ export type jobPostingsArr = Array<IJobPostingDB>;
 interface useGetJobPostingsProps {
   user: UserTypes;
 }
+
 export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   const [jobPostings, setJobPostings] = useState<jobPostingsArr>([]);
   // Track loading state per status
@@ -50,7 +57,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   });
   const checkIsLoadingData = useCallback(
     () => loading.activa || loading.cerrada || loading.pausada,
-    [loading]
+    [loading],
   );
   // Track if there are more items to load
   const [hasMore, setHasMore] = useState<
@@ -78,6 +85,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     setJobPostings((prev) => [newJob, ...prev]);
   }, []);
   const [hasJobPostings, setHasJobPostings] = useState(false);
+
   // Helper to manually UPDATE a specific job in the list
   const updateLocalJob = useCallback(
     (updatedJobData: Partial<IJobPosting> & { id: string }) => {
@@ -93,15 +101,15 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         return filteredList;
       });
     },
-    []
+    [],
   );
-
+  const { queryByUserRole } = useQueryGenerator(user);
   const checkJobPostingsByUsersLength = async () => {
     const q = query(
       jobPostingCollection,
       where('recruiter_id', '==', user.id),
       where('status', '==', jobPostingStatus.PAUSED),
-      limit(1)
+      limit(1),
     );
     const querySnapshot = await getDocs(q);
     setHasJobPostings(!querySnapshot.empty);
@@ -122,22 +130,21 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         ...prev,
         [jobsPostingStatusParam]: { error: false, message: null },
       }));
-      // Only listen for offers created in the last minute
+
+      const userQuery = queryByUserRole(
+        user.role === Role.RECRUITER ? jobsPostingStatusParam : undefined,
+      );
 
       try {
-        console.log('FETCHINNGGG JOBPOSTINGS ');
         // setJobPostings((prev) => [...prev]);
         let q: Query<IJobPostingDB, DocumentData> = query(
           jobPostingCollection,
-          where('recruiter_id', '==', user.id),
-          where('status', '==', jobsPostingStatusParam),
-          // where('updatedAt', '<=', recentTimestamp),
-          orderBy('updatedAt', 'desc'),
 
+          ...userQuery,
           ...(lastDocRef.current[jobsPostingStatusParam] && !isRefresh
             ? [startAfter(lastDocRef.current[jobsPostingStatusParam])]
             : []),
-          limit(PAGE_SIZE + 1)
+          limit(PAGE_SIZE + 1),
         );
 
         const querySnapshot = await getDocs(q);
@@ -172,7 +179,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
 
             if (isRefresh) {
               const otherStatusJobs = prev.filter(
-                (job) => job.status !== jobsPostingStatusParam
+                (job) => job.status !== jobsPostingStatusParam,
               );
               return [...otherStatusJobs, ...collectionRes];
             }
@@ -181,7 +188,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
             // Filter out any new item that is ALREADY in the 'prev' list
             const uniqueNewItems = collectionRes.filter(
               (newItem) =>
-                !prev.some((existingItem) => existingItem.id === newItem.id)
+                !prev.some((existingItem) => existingItem.id === newItem.id),
             );
 
             return [...prev, ...uniqueNewItems];
@@ -205,7 +212,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         };
       }
     },
-    [user]
+    [user],
   );
 
   return {

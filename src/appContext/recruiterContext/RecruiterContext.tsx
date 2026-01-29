@@ -13,15 +13,14 @@ import useGetJobPostings, {
 } from 'src/hooks/useGetJobPostings';
 
 export interface RecruiterContextInterface {
-  // jobPostings: IJobPostingDB[];
   jobPostings: jobPostingsArr;
-  // loading: boolean;
+
   loading: Record<jobPostingStatus, boolean>;
-  // error: string;
+
   errors: Record<jobPostingStatus, Error>;
   loadJobPostings: (
     jobsPostingStatusParam: jobPostingStatus,
-    isRefresh?: boolean
+    isRefresh?: boolean,
   ) => Promise<void>;
   hasMore: Record<jobPostingStatus, 'initial' | boolean>;
   addLocalJob: (newJob: IJobPostingDB) => void;
@@ -29,7 +28,7 @@ export interface RecruiterContextInterface {
   checkJobPostingsByUsersLength: () => Promise<void>;
   hasJobPostings: boolean;
   updateLocalJob: (
-    updatedJobData: Partial<IJobPosting> & { id: string }
+    updatedJobData: Partial<IJobPosting> & { id: string },
   ) => void;
   lastDocRef: React.RefObject<
     Record<
@@ -39,11 +38,11 @@ export interface RecruiterContextInterface {
   >;
 }
 export const RecruiterContext = createContext<RecruiterContextInterface>(
-  {} as RecruiterContextInterface
+  {} as RecruiterContextInterface,
 );
 interface RecruiterContextProviderProps extends PropsWithChildren {}
 export const RecruiterContextProvider = (
-  props: RecruiterContextProviderProps
+  props: RecruiterContextProviderProps,
 ) => {
   const {
     authState: { user },
