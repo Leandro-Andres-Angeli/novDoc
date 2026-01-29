@@ -102,7 +102,6 @@ const EditProfileForm = ({ user }: { user: UserTypes }) => {
         marginVertical: 15,
       }}
     >
-      <Text>{JSON.stringify(photo?.uri)}</Text>
       <AppAvatar
         avatarUrl={photo?.uri ?? user.avatarUrl ?? null}
         styles={{ position: 'relative' }}

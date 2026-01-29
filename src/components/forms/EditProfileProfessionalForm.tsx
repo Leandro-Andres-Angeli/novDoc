@@ -82,7 +82,7 @@ const EditProfileProfessionalForm = ({
         ...utilityStyles.contentContainer,
         ...utilityStyles.flex,
         marginTop: 20,
-        marginBottom: 40,
+        marginBottom: 20,
       }}
     >
       <AppForm<UpdateProfessionalProfileFormShape>
