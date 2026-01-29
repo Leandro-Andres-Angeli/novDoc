@@ -23,7 +23,7 @@ const SwipeProfessional = () => {
   if (!user.skills || user.skills.length === 0) {
     return <NoSkillsOnProfile></NoSkillsOnProfile>;
   }
-  return <NoSkillsOnProfile></NoSkillsOnProfile>;
+
   //HARDCODING NO SETUP SKILLS FOR INQUIRING USER TO FILL HIS SKILLS
 
   //HARDCODING NO JOBPOSTINGS MATCHING SKILLSET

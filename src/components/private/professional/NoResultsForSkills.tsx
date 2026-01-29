@@ -136,8 +136,8 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 40,
+    paddingHorizontal: 22,
+    paddingVertical: 36,
     backgroundColor: '#FFFFFF',
   },
   iconContainer: {
