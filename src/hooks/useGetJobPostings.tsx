@@ -46,15 +46,31 @@ export type jobPostingsArr = Array<IJobPostingDB>;
 interface useGetJobPostingsProps {
   user: UserTypes;
 }
-
+const generateLoadingObjShape = (role: Role) => {
+  if (role === Role.PROFESSIONAL) {
+    return {
+      [jobPostingStatus.ACTIVE]: false,
+    };
+  }
+  return {
+    activa: false,
+    cerrada: false,
+    pausada: false,
+  };
+};
 export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   const [jobPostings, setJobPostings] = useState<jobPostingsArr>([]);
   // Track loading state per status
+  // const [loading, setLoading] = useState(generateLoadingObjShape(user.role));
   const [loading, setLoading] = useState<Record<jobPostingStatus, boolean>>({
     activa: false,
     cerrada: false,
     pausada: false,
   });
+  // const checkIsLoadingData = useCallback(
+  //   (key: keyof typeof loading) => loading[key],
+  //   [loading],
+  // );
   const checkIsLoadingData = useCallback(
     () => loading.activa || loading.cerrada || loading.pausada,
     [loading],

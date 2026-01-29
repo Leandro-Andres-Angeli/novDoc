@@ -11,6 +11,7 @@ import useGetJobPostings, {
   Error,
   jobPostingsArr,
 } from 'src/hooks/useGetJobPostings';
+import { isRecruiter } from '@utils/checkUserType';
 
 export interface RecruiterContextInterface {
   jobPostings: jobPostingsArr;
@@ -50,6 +51,9 @@ export const RecruiterContextProvider = (
 
   if (!user) {
     throw Error('user not found');
+  }
+  if (!isRecruiter(user)) {
+    throw Error('Wrong user');
   }
 
   const {
