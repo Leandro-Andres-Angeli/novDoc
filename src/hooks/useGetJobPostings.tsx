@@ -60,6 +60,7 @@ const generateLoadingObjShape = (role: Role) => {
 };
 export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   const [jobPostings, setJobPostings] = useState<jobPostingsArr>([]);
+
   // Track loading state per status
   // const [loading, setLoading] = useState(generateLoadingObjShape(user.role));
   const [loading, setLoading] = useState<Record<jobPostingStatus, boolean>>({
@@ -71,6 +72,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   //   (key: keyof typeof loading) => loading[key],
   //   [loading],
   // );
+
   const checkIsLoadingData = useCallback(
     () => loading.activa || loading.cerrada || loading.pausada,
     [loading],
