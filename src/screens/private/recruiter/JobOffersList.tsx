@@ -62,8 +62,6 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
 
   useEffect(() => {
     if (jobPostingsByStatus.length === 0 && !jobPostingStatusLoading) {
-      console.log('LOADINGGGGG');
-
       loadJobPostings(jobPostingStatus);
     }
   }, [user, jobPostingStatus]);

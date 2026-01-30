@@ -152,7 +152,6 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
       );
 
       try {
-        // setJobPostings((prev) => [...prev]);
         let q: Query<IJobPostingDB, DocumentData> = query(
           jobPostingCollection,
 

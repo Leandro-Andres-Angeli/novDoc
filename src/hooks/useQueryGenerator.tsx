@@ -29,8 +29,9 @@ const useQueryGenerator = (user: UserTypes) => {
       ];
     }
     if (isProfessional(user)) {
+      console.log('SKILLSSS', user.skills);
       return [
-        where('skills', 'array-contains-any', user.skills),
+        where('skills', 'array-contains-any', [...user.skills]),
         where('status', '==', jobsPostingStatusParam),
 
         orderBy('updatedAt', 'desc'),
