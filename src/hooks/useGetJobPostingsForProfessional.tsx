@@ -1,6 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-
-import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useRef, useState } from 'react';
 
 import {
   IJobPosting,
@@ -8,31 +6,20 @@ import {
   jobPostingStatus,
 } from 'src/types/dbTypes/IJobOffer';
 import {
-  and,
   collection,
   DocumentData,
-  DocumentSnapshot,
   getDocs,
   limit,
-  onSnapshot,
-  or,
-  orderBy,
   Query,
   query,
   QueryDocumentSnapshot,
   startAfter,
-  Timestamp,
-  where,
 } from 'firebase/firestore';
 import { genericConverter } from '@utils/converters/firebaseConverters';
 import { db } from 'firebase/config';
 import { UserTypes } from 'src/types/authContextTypes/authContextTypes';
-import queryByUserRole, {
-  queryGeneratorRecruiter,
-} from '@utils/queryGenerator';
+
 import useQueryGenerator from './useQueryGenerator';
-import { isProfessional, isRecruiter } from '@utils/checkUserType';
-import { Role } from 'src/types/authContextTypes/userRole';
 
 const jobPostingCollection = collection(db, 'jobPostings').withConverter(
   genericConverter<IJobPostingDB>(),
@@ -46,57 +33,25 @@ export type jobPostingsArr = Array<IJobPostingDB>;
 interface useGetJobPostingsProps {
   user: UserTypes;
 }
-const generateLoadingObjShape = (role: Role) => {
-  if (role === Role.PROFESSIONAL) {
-    return {
-      [jobPostingStatus.ACTIVE]: false,
-    };
-  }
-  return {
-    activa: false,
-    cerrada: false,
-    pausada: false,
-  };
-};
-export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
+
+export const useGetJobPostingsForProfessional = ({
+  user,
+}: useGetJobPostingsProps) => {
   const [jobPostings, setJobPostings] = useState<jobPostingsArr>([]);
 
-  // Track loading state per status
-  // const [loading, setLoading] = useState(generateLoadingObjShape(user.role));
-  const [loading, setLoading] = useState<Record<jobPostingStatus, boolean>>({
-    activa: false,
-    cerrada: false,
-    pausada: false,
-  });
-  // const checkIsLoadingData = useCallback(
-  //   (key: keyof typeof loading) => loading[key],
-  //   [loading],
-  // );
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const checkIsLoadingData = useCallback(
-    () => loading.activa || loading.cerrada || loading.pausada,
-    [loading],
-  );
+  const checkIsLoadingData = useCallback(() => {
+    return !!loading;
+  }, [loading]);
   // Track if there are more items to load
-  const [hasMore, setHasMore] = useState<
-    Record<jobPostingStatus, 'initial' | boolean>
-  >({
-    activa: 'initial',
-    cerrada: 'initial',
-    pausada: 'initial',
-  });
+  const [hasMore, setHasMore] = useState<'initial' | boolean>('initial');
   // Keep track of last document per status for pagination
-  const lastDocRef = useRef<Record<jobPostingStatus, DocumentSnapshot | null>>({
-    activa: null,
-    cerrada: null,
-    pausada: null,
-  });
+  const lastDocRef = useRef<
+    QueryDocumentSnapshot<IJobPostingDB, DocumentData> | undefined
+  >(undefined);
 
-  const [errors, setErrors] = useState<Record<jobPostingStatus, Error>>({
-    activa: { error: false, message: null },
-    cerrada: { error: false, message: null },
-    pausada: { error: false, message: null },
-  });
+  const [error, setError] = useState<Error>({ error: false, message: null });
   const PAGE_SIZE = 5;
   // Helper to manually PREPEND a new job to the list
   const addLocalJob = useCallback((newJob: IJobPostingDB) => {
@@ -123,19 +78,14 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   );
   const { queryByUserRole } = useQueryGenerator(user);
   const checkJobPostingsByUsersLength = async () => {
-    const q = query(
-      jobPostingCollection,
-      where('recruiter_id', '==', user.id),
-      where('status', '==', jobPostingStatus.PAUSED),
-      limit(1),
-    );
+    const q = query(jobPostingCollection, ...queryByUserRole(), limit(1));
     const querySnapshot = await getDocs(q);
     setHasJobPostings(!querySnapshot.empty);
     //  const collectionResponse = await
   };
   const loadJobPostings = useCallback(
-    async (jobsPostingStatusParam: jobPostingStatus, isRefresh = false) => {
-      let lastDocRefByStatus:
+    async (isRefresh = false, reset = false) => {
+      let lastDocRefResult:
         | QueryDocumentSnapshot<IJobPostingDB, DocumentData>
         | undefined;
       if (!user) {
@@ -143,23 +93,18 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         return;
       }
 
-      setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: true }));
-      setErrors((prev) => ({
-        ...prev,
-        [jobsPostingStatusParam]: { error: false, message: null },
-      }));
+      setLoading(true);
+      setError({ error: false, message: null });
 
-      const userQuery = queryByUserRole(
-        user.role === Role.RECRUITER ? jobsPostingStatusParam : undefined,
-      );
+      const userQuery = queryByUserRole();
 
       try {
         let q: Query<IJobPostingDB, DocumentData> = query(
           jobPostingCollection,
 
           ...userQuery,
-          ...(lastDocRef.current[jobsPostingStatusParam] && !isRefresh
-            ? [startAfter(lastDocRef.current[jobsPostingStatusParam])]
+          ...(lastDocRef.current && !isRefresh
+            ? [startAfter(lastDocRef.current)]
             : []),
           limit(PAGE_SIZE + 1),
         );
@@ -171,34 +116,30 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
         }));
 
         if (collectionRes.length > PAGE_SIZE) {
-          lastDocRefByStatus = querySnapshot.docs.at(-2);
+          if (querySnapshot.docs.at(-2)) {
+            lastDocRef.current = querySnapshot.docs.at(-2);
+          }
+
           collectionRes.pop();
-          setHasMore((prev) => ({
-            ...prev,
-            [jobsPostingStatusParam]: true,
-          }));
+          setHasMore(true);
         } else {
-          setHasMore((prev) => ({
-            ...prev,
-            [jobsPostingStatusParam]: false,
-          }));
-          lastDocRefByStatus = querySnapshot.docs.at(-1);
+          setHasMore(false);
+          lastDocRefResult = querySnapshot.docs.at(-1);
         }
 
-        if (
-          hasMore[jobsPostingStatusParam] === 'initial' ||
-          hasMore[jobsPostingStatusParam] === true
-        ) {
+        if (hasMore === 'initial' || hasMore === true) {
+          if (reset) {
+            console.log('RESETTTT');
+            setJobPostings(collectionRes);
+            return;
+          }
           setJobPostings((prev) => {
             // A simpler fix for now:
             // If isRefresh is true, we should filter out the current status from 'prev'
             // and then add the new 'collectionRes'.
 
             if (isRefresh) {
-              const otherStatusJobs = prev.filter(
-                (job) => job.status !== jobsPostingStatusParam,
-              );
-              return [...otherStatusJobs, ...collectionRes];
+              return [...prev, ...collectionRes];
             }
             // return [...prev, ...collectionRes];
             // 2. Handle Load More (The Safety Net 🕸️)
@@ -214,19 +155,13 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
       } catch (error) {
         console.log(error);
         console.log('error fetching job Postings');
-        setErrors((prev) => ({
-          ...prev,
-          [jobsPostingStatusParam]: {
-            error: true,
-            message: 'Error fetching job postings',
-          },
-        }));
+        setError({
+          error: true,
+          message: 'Error fetching job postings',
+        });
       } finally {
-        setLoading((prev) => ({ ...prev, [jobsPostingStatusParam]: false }));
-        lastDocRef.current = {
-          ...lastDocRef.current,
-          [jobsPostingStatusParam]: lastDocRefByStatus,
-        };
+        setLoading(false);
+        lastDocRef.current = lastDocRefResult;
       }
     },
     [user],
@@ -236,7 +171,7 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
     loadJobPostings,
     jobPostings,
     loading,
-    errors,
+    error,
     lastDocRef,
     hasMore,
     addLocalJob,
@@ -247,4 +182,4 @@ export const useGetJobPostings = ({ user }: useGetJobPostingsProps) => {
   };
 };
 
-export default useGetJobPostings;
+export default useGetJobPostingsForProfessional;

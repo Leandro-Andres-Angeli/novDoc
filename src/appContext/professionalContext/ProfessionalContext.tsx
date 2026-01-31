@@ -1,27 +1,29 @@
-import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
+import {
+  DocumentData,
+  DocumentSnapshot,
+  QueryDocumentSnapshot,
+} from 'firebase/firestore';
 import { createContext, PropsWithChildren, useContext } from 'react';
-import useGetJobPostings, {
-  Error,
-  jobPostingsArr,
-} from 'src/hooks/useGetJobPostings';
+
 import {
   IJobPosting,
   IJobPostingDB,
   jobPostingStatus,
 } from 'src/types/dbTypes/IJobOffer';
 import { AuthContext } from '../authContext/AuthContext';
+import useGetJobPostingsForProfessional, {
+  jobPostingsArr,
+  Error,
+} from 'src/hooks/useGetJobPostingsForProfessional';
 
 export interface ProfessionalContextInterface {
   jobPostings: jobPostingsArr;
 
-  loading: Record<jobPostingStatus, boolean>;
+  loading: boolean;
 
-  errors: Record<jobPostingStatus, Error>;
-  loadJobPostings: (
-    jobsPostingStatusParam: jobPostingStatus,
-    isRefresh?: boolean,
-  ) => Promise<void>;
-  hasMore: Record<jobPostingStatus, 'initial' | boolean>;
+  error: Error;
+  loadJobPostings: (isRefresh?: boolean, reset?: boolean) => Promise<void>;
+  hasMore: boolean | 'initial';
   addLocalJob: (newJob: IJobPostingDB) => void;
   checkIsLoadingData: () => boolean;
   checkJobPostingsByUsersLength: () => Promise<void>;
@@ -30,10 +32,7 @@ export interface ProfessionalContextInterface {
     updatedJobData: Partial<IJobPosting> & { id: string },
   ) => void;
   lastDocRef: React.RefObject<
-    Record<
-      jobPostingStatus,
-      DocumentSnapshot<DocumentData, DocumentData> | null
-    >
+    QueryDocumentSnapshot<IJobPostingDB, DocumentData> | undefined
   >;
 }
 
@@ -56,7 +55,7 @@ export const ProfessionalContextProvider = (
     loadJobPostings,
     loading,
     jobPostings,
-    errors,
+    error,
     hasMore,
     lastDocRef,
     addLocalJob,
@@ -64,7 +63,7 @@ export const ProfessionalContextProvider = (
     hasJobPostings,
     checkJobPostingsByUsersLength,
     checkIsLoadingData,
-  } = useGetJobPostings({
+  } = useGetJobPostingsForProfessional({
     user,
   });
   return (
@@ -72,7 +71,7 @@ export const ProfessionalContextProvider = (
       value={{
         addLocalJob,
         updateLocalJob,
-        errors,
+        error,
         loading,
         jobPostings,
         loadJobPostings,

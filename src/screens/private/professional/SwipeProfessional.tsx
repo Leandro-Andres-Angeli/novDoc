@@ -13,17 +13,17 @@ import { Card } from 'react-native-paper';
 const SwipeProfessional = () => {
   const {
     authState: { user },
-    loading,
+    loading: authLoading,
   } = useContext(AuthContext);
 
   const {
     loadJobPostings,
-    loading: { activa: loadingJobPostings },
+    loading: loadingJobPostings,
     jobPostings,
-    errors,
+    error,
     hasMore,
   } = useContext(ProfessionalContext);
-  if (loading) {
+  if (authLoading) {
     return <AppLoading></AppLoading>;
   }
 
@@ -40,13 +40,13 @@ const SwipeProfessional = () => {
 
   const handleLoadJobPostingsForSkills = useCallback(() => {
     console.log('firing use callback');
-    return loadJobPostings(jobPostingStatus.ACTIVE);
+    return loadJobPostings(false, true);
   }, [user.skills]);
 
   useEffect(() => {
     console.log('INSIDE USE EFFECTTTT');
     // handleLoadJobPostingsForSkills();
-    loadJobPostings(jobPostingStatus.ACTIVE);
+    handleLoadJobPostingsForSkills();
   }, [user.skills]);
   // if (jobPostings.length === 0) {
   //   return <NoResultsForSkills></NoResultsForSkills>;

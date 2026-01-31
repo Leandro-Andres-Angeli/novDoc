@@ -10,7 +10,8 @@ import {
 import useGetJobPostings, {
   Error,
   jobPostingsArr,
-} from 'src/hooks/useGetJobPostings';
+  useGetJobPostingsForRecruiter,
+} from 'src/hooks/useGetJobPostingsForRecuiter';
 import { isRecruiter } from '@utils/checkUserType';
 
 export interface RecruiterContextInterface {
@@ -68,7 +69,7 @@ export const RecruiterContextProvider = (
     hasJobPostings,
     checkJobPostingsByUsersLength,
     checkIsLoadingData,
-  } = useGetJobPostings({
+  } = useGetJobPostingsForRecruiter({
     user,
   });
   return (
