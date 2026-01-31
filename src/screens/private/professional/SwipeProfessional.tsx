@@ -23,9 +23,6 @@ const SwipeProfessional = () => {
     error,
     hasMore,
   } = useContext(ProfessionalContext);
-  if (authLoading) {
-    return <AppLoading></AppLoading>;
-  }
 
   if (user?.role !== Role.PROFESSIONAL) {
     throw Error('Wrong kind of user');
@@ -50,9 +47,12 @@ const SwipeProfessional = () => {
     console.log('SKILSSS', user.skills);
     loadJobPostings(false, true);
   }, [user.skills]);
-  // if (jobPostings.length === 0) {
-  //   return <NoResultsForSkills></NoResultsForSkills>;
-  // }
+  if (jobPostings.length === 0 && !loadingJobPostings) {
+    return <NoResultsForSkills></NoResultsForSkills>;
+  }
+  if (authLoading || loadingJobPostings) {
+    return <AppLoading></AppLoading>;
+  }
   return (
     <View style={{ flex: 1 }}>
       <Text>SwipeProfessional</Text>
