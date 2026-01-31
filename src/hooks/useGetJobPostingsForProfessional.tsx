@@ -115,8 +115,6 @@ export const useGetJobPostingsForProfessional = ({
           id: doc.id,
         }));
         if (reset) {
-          console.log('COLLECTION RES', collectionRes);
-          console.log('RESETTTT');
           setJobPostings(collectionRes.slice(0, PAGE_SIZE));
           setHasMore(!!collectionRes.at(PAGE_SIZE + 1));
           lastDocRef.current = querySnapshot.docs.at(-2) ?? undefined;

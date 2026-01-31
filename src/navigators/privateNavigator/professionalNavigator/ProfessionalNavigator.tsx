@@ -48,8 +48,9 @@ const ProfessionalNavigator = () => {
           options={{
             headerShown: true,
             header: () => (
-              <AppHeaderWithSettingsLink title='Postulaciones'></AppHeaderWithSettingsLink>
+              <AppHeaderWithSettingsLink title='Ofertas'></AppHeaderWithSettingsLink>
             ),
+
             title: 'Postulaciones',
             tabBarLabel: 'Descubrir',
 

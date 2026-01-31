@@ -6,7 +6,6 @@ import AppLoading from '@ui/AppLoading';
 import NoSkillsOnProfile from '@components/private/professional/NoSkillsOnProfile';
 import NoResultsForSkills from '@components/private/professional/NoResultsForSkills';
 import { ProfessionalContext } from 'src/appContext/professionalContext/ProfessionalContext';
-import { jobPostingStatus } from 'src/types/dbTypes/IJobOffer';
 
 import { Card } from 'react-native-paper';
 
@@ -32,8 +31,6 @@ const SwipeProfessional = () => {
   if (!user.skills || user.skills.length === 0) {
     return <NoSkillsOnProfile></NoSkillsOnProfile>;
   }
-  // console.log(JSON.stringify(loadingJobPostings));
-  // console.log('jobps', jobPostings);
 
   const handleLoadJobPostingsForSkills = useCallback(() => {
     console.log('firing use callback');
@@ -41,10 +38,6 @@ const SwipeProfessional = () => {
   }, [user.skills]);
 
   useEffect(() => {
-    console.log('INSIDE USE EFFECTTTT');
-    // handleLoadJobPostingsForSkills();
-    // handleLoadJobPostingsForSkills();
-    console.log('SKILSSS', user.skills);
     loadJobPostings(false, true);
   }, [user.skills]);
   if (jobPostings.length === 0 && !loadingJobPostings) {
@@ -55,10 +48,10 @@ const SwipeProfessional = () => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Text>SwipeProfessional</Text>
+      {/* <Text>SwipeProfessional</Text>
       <Text>LENGTH {jobPostings.length}</Text>
       <Text>user skills {JSON.stringify(user.skills)}</Text>
-      <Text>{JSON.stringify(loadingJobPostings)}</Text>
+      <Text>{JSON.stringify(loadingJobPostings)}</Text> */}
       {/* <Text>{JSON.stringify(jobPostings)}</Text> */}
       {/* <Card >
                <CardContent>

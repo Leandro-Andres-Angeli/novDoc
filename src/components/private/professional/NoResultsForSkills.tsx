@@ -23,7 +23,7 @@ const NoResultsForSkills = () => {
         theme.colors.primaryDynamicOpacity(0.05),
         theme.colors.primaryDynamicOpacity(0.03),
       ]}
-      style={styles.container}
+      style={utilityStyles.flex}
     >
       <ScrollView
         contentContainerStyle={{

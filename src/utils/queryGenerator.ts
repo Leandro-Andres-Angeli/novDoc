@@ -10,10 +10,7 @@ import { query } from 'firebase/firestore';
 import { UserTypes } from '../types/authContextTypes/authContextTypes';
 import { Role } from 'src/types/authContextTypes/userRole';
 
-export const queryGeneratorProfessional = (
-  userId: string,
-  jobsPostingStatusParam: jobPostingStatus,
-) => {
+export const queryGeneratorProfessional = () => {
   console.log('here generating query ');
   return [
     where('status', '==', jobPostingStatus.ACTIVE),
