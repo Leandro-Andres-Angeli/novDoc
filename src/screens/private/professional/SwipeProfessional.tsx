@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, ScrollView } from 'react-native';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { Role } from 'src/types/authContextTypes/userRole';
@@ -46,18 +46,20 @@ const SwipeProfessional = () => {
   useEffect(() => {
     console.log('INSIDE USE EFFECTTTT');
     // handleLoadJobPostingsForSkills();
-    handleLoadJobPostingsForSkills();
+    // handleLoadJobPostingsForSkills();
+    console.log('SKILSSS', user.skills);
+    loadJobPostings(false, true);
   }, [user.skills]);
   // if (jobPostings.length === 0) {
   //   return <NoResultsForSkills></NoResultsForSkills>;
   // }
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text>SwipeProfessional</Text>
       <Text>LENGTH {jobPostings.length}</Text>
       <Text>user skills {JSON.stringify(user.skills)}</Text>
       <Text>{JSON.stringify(loadingJobPostings)}</Text>
-      <Text>{JSON.stringify(jobPostings)}</Text>
+      {/* <Text>{JSON.stringify(jobPostings)}</Text> */}
       {/* <Card >
                <CardContent>
                  <View key={p.id}>
@@ -68,7 +70,8 @@ const SwipeProfessional = () => {
           ))}
                </CardContent>
           </Card> */}
-      {/* <FlatList
+      <FlatList
+        scrollEnabled={true}
         data={jobPostings}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
@@ -82,7 +85,7 @@ const SwipeProfessional = () => {
             </Card>
           );
         }}
-      /> */}
+      />
     </View>
   );
 };

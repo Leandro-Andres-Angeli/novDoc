@@ -114,7 +114,14 @@ export const useGetJobPostingsForProfessional = ({
           ...doc.data(),
           id: doc.id,
         }));
-
+        if (reset) {
+          console.log('COLLECTION RES', collectionRes);
+          console.log('RESETTTT');
+          setJobPostings(collectionRes.slice(0, PAGE_SIZE));
+          setHasMore(!!collectionRes.at(PAGE_SIZE + 1));
+          lastDocRef.current = querySnapshot.docs.at(-2) ?? undefined;
+          return;
+        }
         if (collectionRes.length > PAGE_SIZE) {
           if (querySnapshot.docs.at(-2)) {
             lastDocRef.current = querySnapshot.docs.at(-2);
@@ -128,11 +135,6 @@ export const useGetJobPostingsForProfessional = ({
         }
 
         if (hasMore === 'initial' || hasMore === true) {
-          if (reset) {
-            console.log('RESETTTT');
-            setJobPostings(collectionRes);
-            return;
-          }
           setJobPostings((prev) => {
             // A simpler fix for now:
             // If isRefresh is true, we should filter out the current status from 'prev'
