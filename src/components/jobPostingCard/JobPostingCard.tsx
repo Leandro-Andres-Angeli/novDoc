@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import React, { PropsWithChildren } from 'react';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobPosting';
+
 import AppCardWrapper from '@ui/AppCardWrapper';
 import { Card, IconButton, Text, useTheme } from 'react-native-paper';
 
@@ -8,6 +8,7 @@ import jobPostingHasLocation from '@utils/jobPostingHasLocation';
 import { CustomTheme } from 'src/providers/PublicProviders';
 import dateFormatter from '@utils/dateFormatter ';
 import { getLocales } from 'expo-localization';
+import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 interface JobPostingCardProps {
   jobPosting: IJobPostingDB;
 }
