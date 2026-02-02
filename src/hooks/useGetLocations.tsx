@@ -89,6 +89,10 @@ const useGetLocations = <T, Q extends Record<string, any>>({
 }: UseGetLocationProps<T, Q>) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [locations, setLocations] = useState<T[]>([]);
+  const [locationError, setLocationError] = useState<{
+    error: boolean;
+    message: string;
+  }>({ error: false, message: '' });
 
   const isFetching = useRef(false);
   const getLocations = async () => {
@@ -102,12 +106,14 @@ const useGetLocations = <T, Q extends Record<string, any>>({
       }
 
       const { data } = await geoRefAxiosInstance.get<Q>(url);
-      const locations = data[key];
-      setLocations(locations);
-      setInitialLocation && setInitialLocation(locations.at(0));
+      const locations = data?.[key];
+
+      if (locations) {
+        setLocations(locations);
+        setInitialLocation && setInitialLocation(locations.at(0));
+      }
     } catch (error) {
-      console.log('errrr', error);
-      console.log('error obteniendo locaciones');
+      setLocationError({ error: true, message: 'error obteniendo locaciones' });
     } finally {
       setLoading(false);
     }
@@ -124,7 +130,7 @@ const useGetLocations = <T, Q extends Record<string, any>>({
     };
   }, dynamicParams);
 
-  return { loadingLocations: loading, locations, getLocations };
+  return { loadingLocations: loading, locations, getLocations, locationError };
 };
 
 export default useGetLocations;

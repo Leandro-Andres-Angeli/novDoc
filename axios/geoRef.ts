@@ -1,9 +1,14 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import axiosRetry from 'axios-retry';
 const geoRefAxiosInstance = axios.create({
   baseURL: 'https://apis.datos.gob.ar/georef/api',
-  timeout: 2000,
+  timeout: 2500,
 });
 
+axiosRetry(geoRefAxiosInstance, {
+  retries: 2,
+  retryDelay: axiosRetry.exponentialDelay,
+});
 export const geoRefAxiosInstanceEndpoints = {
   PROVINCES: '/provincias.json',
   MUNICIPIOS: (provinceId: string) =>

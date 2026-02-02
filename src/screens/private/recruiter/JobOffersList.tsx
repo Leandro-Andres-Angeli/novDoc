@@ -93,6 +93,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
       ></ProfileProfileJobPostingEmptyState>
     );
   }
+
   const handleEndReached = () => {
     if (jobPostingStatusLoading) return;
     if (!hasMore[jobPostingStatus]) return;
@@ -100,7 +101,7 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     loadJobPostings(jobPostingStatus);
   };
 
-  if (jobPostingStatusLoading) {
+  if (jobPostingStatusLoading && hasMore[jobPostingStatus] === 'initial') {
     return <AppLoading></AppLoading>;
   }
 
@@ -108,8 +109,17 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
+          ListHeaderComponent={
+            (jobPostingStatusLoading && (
+              <AppLoading styles={{ backgroundColor: 'red' }}></AppLoading>
+            )) ||
+            null
+          }
           ListFooterComponent={
-            (hasMore[jobPostingStatus] && <AppLoading></AppLoading>) || null
+            (jobPostingStatusLoading && (
+              <AppLoading styles={{ backgroundColor: 'red' }}></AppLoading>
+            )) ||
+            null
           }
           onEndReachedThreshold={0.9}
           onEndReached={() => handleEndReached()}
