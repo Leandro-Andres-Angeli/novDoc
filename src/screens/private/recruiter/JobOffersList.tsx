@@ -109,18 +109,11 @@ const JobPostingsList = ({ route }: jobPostingsListProps) => {
     <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
       <View style={[utilityStyles.container, utilityStyles.flex]}>
         <GenericList<IJobPostingDB>
-          ListHeaderComponent={
-            (jobPostingStatusLoading && (
-              <AppLoading styles={{ backgroundColor: 'red' }}></AppLoading>
-            )) ||
-            null
-          }
+          //TODO NOT DISPLAYING  THIS TO CHECK LATER
           ListFooterComponent={
-            (jobPostingStatusLoading && (
-              <AppLoading styles={{ backgroundColor: 'red' }}></AppLoading>
-            )) ||
-            null
+            (jobPostingStatusLoading && <AppLoading></AppLoading>) || null
           }
+          //TODO NOT DISPLAYING  THIS TO CHECK LATER
           onEndReachedThreshold={0.9}
           onEndReached={() => handleEndReached()}
           refreshControl={
