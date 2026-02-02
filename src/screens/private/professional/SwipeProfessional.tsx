@@ -1,5 +1,5 @@
-import { View, Text, FlatList, ScrollView } from 'react-native';
-import React, { useCallback, useContext, useEffect } from 'react';
+import { View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { Role } from 'src/types/authContextTypes/userRole';
 import AppLoading from '@ui/AppLoading';
@@ -7,12 +7,9 @@ import NoSkillsOnProfile from '@components/private/professional/NoSkillsOnProfil
 import NoResultsForSkills from '@components/private/professional/NoResultsForSkills';
 import { ProfessionalContext } from 'src/appContext/professionalContext/ProfessionalContext';
 
-import { Card } from 'react-native-paper';
 import utilityStyles from 'src/styles/utilityStyles';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
-import { jobPostingsArr } from '../../../hooks/useGetJobPostingsForProfessional';
-import JobPostingCard from '@components/jobPostingCard/JobPostingCard';
+
 import SwipeJobPostingCard from '@components/jobPostingCard/SwipeJobPostingCard';
 
 const SwipeProfessional = () => {
@@ -53,44 +50,17 @@ const SwipeProfessional = () => {
     return <AppLoading></AppLoading>;
   }
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ ...utilityStyles.flex }}>
       {/* <Text>SwipeProfessional</Text>
       <Text>LENGTH {jobPostings.length}</Text>
       <Text>user skills {JSON.stringify(user.skills)}</Text>
       <Text>{JSON.stringify(loadingJobPostings)}</Text> */}
-      {/* <Text>{JSON.stringify(jobPostings)}</Text> */}
-      {/* <Card >
-               <CardContent>
-                 <View key={p.id}>
-          <Text> {p.title}</Text>
-          <Text>Skills </Text>
-          {p.skills.map((el) => (
-            <Text key={el.name}>{el.name}</Text>
-          ))}
-               </CardContent>
-          </Card> */}
-      {/*      <FlatList
-        scrollEnabled={true}
-        data={jobPostings}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          return (
-            <Card>
-              <Card.Title title={item.title}> </Card.Title>
-              <Text>Skills </Text>
-              {item.skills.map((el) => (
-                <Text key={el.name}>{el.name}</Text>
-              ))}
-            </Card>
-          );
-        }}
-      /> */}
+
       <View style={{ ...utilityStyles.flex }}>
         <Carousel
           width={500}
           style={{
             minHeight: '100%',
-            backgroundColor: 'red',
           }}
           data={jobPostings}
           renderItem={({ item, index }) => {
@@ -99,13 +69,6 @@ const SwipeProfessional = () => {
                 jobPosting={item}
                 key={index}
               ></SwipeJobPostingCard>
-              // <Card>
-              //   <Card.Title title={item.title}> </Card.Title>
-              //   <Text>Skills </Text>
-              //   {item.skills.map((el) => (
-              //     <Text key={el.name}>{el.name}</Text>
-              //   ))}
-              // </Card>
             );
           }}
         ></Carousel>
