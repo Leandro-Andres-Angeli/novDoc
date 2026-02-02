@@ -48,12 +48,22 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
       >
         <Card.Content>
           {/* Job Title */}
-          <Text variant='headlineSmall' style={styles.jobTitle}>
+          <Text
+            variant='headlineSmall'
+            style={{ ...styles.jobTitle, textTransform: 'capitalize' }}
+          >
             {jobPosting.title}
           </Text>
 
           {/* Company Name */}
-          <Text variant='bodyMedium' style={styles.companyName}>
+          <Text
+            variant='bodyMedium'
+            style={{
+              ...styles.companyName,
+              color: theme.colors.primary,
+              textTransform: 'capitalize',
+            }}
+          >
             {jobPosting.company}
           </Text>
 
@@ -90,32 +100,6 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
               user.skills.map((el) => el.name),
             )}
           ></FlatList>
-          {/* <View style={styles.skillsContainer}>
-            <Chip
-              mode="outlined"
-              style={styles.skillChip}
-              textStyle={styles.skillText}
-              icon="check"
-            >
-              React
-            </Chip>
-            <Chip
-              mode="outlined"
-              style={styles.skillChip}
-              textStyle={styles.skillText}
-              icon="check"
-            >
-              TypeScript
-            </Chip>
-            <Chip
-              mode="outlined"
-              style={styles.skillChip}
-              textStyle={styles.skillText}
-              icon="check"
-            >
-              Node.js
-            </Chip>
-          </View> */}
 
           {/* Additional Info */}
           <View style={styles.infoContainer}>
@@ -131,13 +115,16 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailItem}>
               <Icon source='cash' size={18} color='#333' />
-              <Text variant='bodyMedium' style={styles.detailText}>
+              <Text variant='bodyMedium' style={{ ...styles.detailText }}>
                 {currencyFormatter().format(jobPosting.salary)}
               </Text>
             </View>
             <View style={styles.detailItem}>
               <Icon source='map-marker-outline' size={18} color='#333' />
-              <Text variant='bodyMedium' style={styles.detailText}>
+              <Text
+                variant='bodyMedium'
+                style={{ ...styles.detailText, textTransform: 'capitalize' }}
+              >
                 {jobPosting.jobLocation}
               </Text>
             </View>
@@ -216,7 +203,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   companyName: {
-    color: '#5C6BC0',
     fontWeight: '500',
     marginBottom: 12,
   },
