@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import React from 'react';
 import { IconButton, Surface, useTheme } from 'react-native-paper';
 import { CustomTheme } from 'src/providers/PublicProviders';
