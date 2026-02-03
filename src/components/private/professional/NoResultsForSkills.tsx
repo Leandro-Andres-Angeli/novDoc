@@ -28,7 +28,8 @@ const NoResultsForSkills = () => {
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          padding: 24,
+          paddingHorizontal: 24,
+          paddingTop: 8,
           alignItems: 'center',
         }}
         showsVerticalScrollIndicator={false}
@@ -136,16 +137,16 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingHorizontal: 22,
+    paddingHorizontal: 16,
     paddingVertical: 36,
     backgroundColor: '#FFFFFF',
   },
   iconContainer: {
-    marginBottom: 32,
+    marginBottom: 10,
   },
   iconBackground: {
-    width: 140,
-    height: 140,
+    width: 100,
+    height: 100,
     borderRadius: 70,
     backgroundColor: '#EEF2FF',
     alignItems: 'center',
@@ -155,30 +156,29 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     color: '#1A1A1A',
-    marginBottom: 16,
-    paddingHorizontal: 20,
+    marginBottom: 8,
+    paddingHorizontal: 10,
   },
   description: {
     textAlign: 'center',
     color: '#6B6B6B',
     lineHeight: 22,
-    marginBottom: 40,
-    paddingHorizontal: 10,
+
+    paddingHorizontal: 5,
   },
   sectionTitle: {
     fontWeight: '600',
     color: '#1A1A1A',
     alignSelf: 'flex-start',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   actionContainer: {
     width: '100%',
-    marginBottom: 32,
   },
   actionItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   bulletContainer: {
     marginTop: 4,

@@ -16,6 +16,7 @@ import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { ISkill, skillsLists } from '../../types/dbTypes/ISkills';
 import { isProfessional, isRecruiter } from '@utils/checkUserType';
 import currencyFormatter from '@utils/currencyFormatter';
+import AppSwipeActions from '../shared/AppSwipeActions';
 
 interface SwipeJobPostingCardProps {
   jobPosting: IJobPostingDB;
@@ -131,39 +132,7 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
           </View>
         </Card.Content>
       </Card>
-
-      {/* Action Buttons */}
-      <View style={styles.actionsContainer}>
-        <Surface
-          style={[styles.actionButton, styles.rejectButton]}
-          elevation={1}
-        >
-          <IconButton
-            icon='close'
-            iconColor='#FF4458'
-            size={28}
-            onPress={() => console.log('Reject')}
-          />
-        </Surface>
-
-        <Surface style={[styles.actionButton, styles.likeButton]} elevation={2}>
-          <IconButton
-            icon='heart'
-            iconColor='#FFFFFF'
-            size={32}
-            onPress={() => console.log('Like')}
-          />
-        </Surface>
-
-        <Surface style={[styles.actionButton, styles.starButton]} elevation={1}>
-          <IconButton
-            icon='star'
-            iconColor='#FFA726'
-            size={28}
-            onPress={() => console.log('Star')}
-          />
-        </Surface>
-      </View>
+      <AppSwipeActions></AppSwipeActions>
     </Surface>
   );
 };
@@ -259,29 +228,6 @@ const styles = StyleSheet.create({
   detailText: {
     color: '#333333',
     fontWeight: '500',
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 20,
-  },
-  actionButton: {
-    borderRadius: 50,
-    backgroundColor: '#FFFFFF',
-  },
-  rejectButton: {
-    width: 56,
-    height: 56,
-  },
-  likeButton: {
-    width: 64,
-    height: 64,
-    backgroundColor: '#5C6BC0',
-  },
-  starButton: {
-    width: 56,
-    height: 56,
   },
 });
 
