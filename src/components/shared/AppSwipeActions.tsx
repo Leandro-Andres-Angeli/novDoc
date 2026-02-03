@@ -12,6 +12,7 @@ const AppSwipeActions = () => {
         ...localStyles.actionsContainer,
         maxWidth: width,
         marginTop: 'auto',
+        marginBottom: 15,
       }}
     >
       <Surface
