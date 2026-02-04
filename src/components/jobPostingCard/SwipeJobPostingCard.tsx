@@ -43,107 +43,105 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
   }
 
   return (
-    <Animated.View
-      entering={FadeInDown.duration(300)}
+    <Surface
       style={{
-        ...utilityStyles.flex,
+        ...styles.container,
       }}
+      elevation={0}
     >
-      <Surface style={{ ...styles.container }} elevation={0}>
-        <Card
-          style={{
-            ...styles.card,
-            backgroundColor: theme.colors.background,
-            width: '100%',
-          }}
-        >
-          <Card.Content>
-            {/* Job Title */}
-            <Text
-              variant='headlineSmall'
-              style={{ ...styles.jobTitle, textTransform: 'capitalize' }}
-            >
-              {jobPosting.title}
-            </Text>
+      <Card
+        style={{
+          ...styles.card,
+          backgroundColor: theme.colors.background,
+          width: '100%',
+        }}
+      >
+        <Card.Content>
+          {/* Job Title */}
+          <Text
+            variant='headlineSmall'
+            style={{ ...styles.jobTitle, textTransform: 'capitalize' }}
+          >
+            {jobPosting.title}
+          </Text>
 
-            {/* Company Name */}
-            <Text
-              variant='bodyMedium'
-              style={{
-                ...styles.companyName,
-                color: theme.colors.primary,
-                textTransform: 'capitalize',
-              }}
-            >
-              {jobPosting.company}
-            </Text>
+          {/* Company Name */}
+          <Text
+            variant='bodyMedium'
+            style={{
+              ...styles.companyName,
+              color: theme.colors.primary,
+              textTransform: 'capitalize',
+            }}
+          >
+            {jobPosting.company}
+          </Text>
 
-            {/* Job Description */}
-            <Text variant='bodyMedium' style={styles.description}>
-              {jobPosting.description}
-              {/* Buscamos a un experto en React para desarrollar nuestras plataformas digitales de próxima generación. Trabajarás en un... */}
-            </Text>
+          {/* Job Description */}
+          <Text variant='bodyMedium' style={styles.description}>
+            {jobPosting.description}
+            {/* Buscamos a un experto en React para desarrollar nuestras plataformas digitales de próxima generación. Trabajarás en un... */}
+          </Text>
 
-            {/* Skills Section */}
-            <Text variant='labelSmall' style={styles.skillsLabel}>
-              TUS SKILLS COINCIDEN
-            </Text>
-            <FlatList
-              style={styles.skillsContainer}
-              horizontal={true}
-              renderItem={({ item }) => (
-                <Chip
-                  mode='outlined'
-                  style={styles.skillChip}
-                  icon='check'
-                  textStyle={{
-                    ...styles.skillText,
-                    color: theme.colors.primary,
-                    textTransform: 'capitalize',
-                    flexShrink: 1,
-                  }}
-                >
-                  {item.name}{' '}
-                </Chip>
-              )}
-              keyExtractor={(item) => item.name}
-              data={jobPostingSkillsThatMatchesUser(
-                user.skills.map((el) => el.name),
-              )}
-            ></FlatList>
+          {/* Skills Section */}
+          <Text variant='labelSmall' style={styles.skillsLabel}>
+            TUS SKILLS COINCIDEN
+          </Text>
+          <FlatList
+            style={styles.skillsContainer}
+            horizontal={true}
+            renderItem={({ item }) => (
+              <Chip
+                mode='outlined'
+                style={styles.skillChip}
+                icon='check'
+                textStyle={{
+                  ...styles.skillText,
+                  color: theme.colors.primary,
+                  textTransform: 'capitalize',
+                  flexShrink: 1,
+                }}
+              >
+                {item.name}{' '}
+              </Chip>
+            )}
+            keyExtractor={(item) => item.name}
+            data={jobPostingSkillsThatMatchesUser(
+              user.skills.map((el) => el.name),
+            )}
+          ></FlatList>
 
-            {/* Additional Info */}
-            <View style={styles.infoContainer}>
-              <View style={styles.infoItem}>
-                <Icon source='briefcase-outline' size={16} color='#666' />
-                <Text variant='bodySmall' style={styles.infoText}>
-                  +2 años
-                </Text>
-              </View>
+          {/* Additional Info */}
+          <View style={styles.infoContainer}>
+            <View style={styles.infoItem}>
+              <Icon source='briefcase-outline' size={16} color='#666' />
+              <Text variant='bodySmall' style={styles.infoText}>
+                +2 años
+              </Text>
             </View>
+          </View>
 
-            {/* Salary and Location */}
-            <View style={styles.detailsContainer}>
-              <View style={styles.detailItem}>
-                <Icon source='cash' size={18} color='#333' />
-                <Text variant='bodyMedium' style={{ ...styles.detailText }}>
-                  {currencyFormatter().format(jobPosting.salary)}
-                </Text>
-              </View>
-              <View style={styles.detailItem}>
-                <Icon source='map-marker-outline' size={18} color='#333' />
-                <Text
-                  variant='bodyMedium'
-                  style={{ ...styles.detailText, textTransform: 'capitalize' }}
-                >
-                  {jobPosting.jobLocation}
-                </Text>
-              </View>
+          {/* Salary and Location */}
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailItem}>
+              <Icon source='cash' size={18} color='#333' />
+              <Text variant='bodyMedium' style={{ ...styles.detailText }}>
+                {currencyFormatter().format(jobPosting.salary)}
+              </Text>
             </View>
-          </Card.Content>
-        </Card>
-      </Surface>
-    </Animated.View>
+            <View style={styles.detailItem}>
+              <Icon source='map-marker-outline' size={18} color='#333' />
+              <Text
+                variant='bodyMedium'
+                style={{ ...styles.detailText, textTransform: 'capitalize' }}
+              >
+                {jobPosting.jobLocation}
+              </Text>
+            </View>
+          </View>
+        </Card.Content>
+      </Card>
+    </Surface>
   );
 };
 

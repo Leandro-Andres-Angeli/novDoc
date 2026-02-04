@@ -99,6 +99,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import COLORS from 'src/constants/COLORS';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import AuthContextProvider from 'src/appContext/authContext/AuthContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import PublicProviders from 'src/providers/PublicProviders';
 
 export type CustomTheme = MD3Theme &
@@ -134,22 +135,24 @@ const PublicProviders = ({ children }: PropsWithChildren) => {
 
   const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
   return (
-    <AuthContextProvider>
-      <PaperProvider theme={CombinedDefaultTheme}>
-        <NavigationContainer theme={CombinedDefaultTheme}>
-          <KeyboardProvider>
-            <ToastProvider>
-              <SafeAreaView
-                edges={['right', 'left', 'top']}
-                style={{ height: Dimensions.get('window').height, flex: 1 }}
-              >
-                {children}
-              </SafeAreaView>
-            </ToastProvider>
-          </KeyboardProvider>
-        </NavigationContainer>
-      </PaperProvider>
-    </AuthContextProvider>
+    <GestureHandlerRootView>
+      <AuthContextProvider>
+        <PaperProvider theme={CombinedDefaultTheme}>
+          <NavigationContainer theme={CombinedDefaultTheme}>
+            <KeyboardProvider>
+              <ToastProvider>
+                <SafeAreaView
+                  edges={['right', 'left', 'top']}
+                  style={{ height: Dimensions.get('window').height, flex: 1 }}
+                >
+                  {children}
+                </SafeAreaView>
+              </ToastProvider>
+            </KeyboardProvider>
+          </NavigationContainer>
+        </PaperProvider>
+      </AuthContextProvider>
+    </GestureHandlerRootView>
   );
 };
 export default PublicProviders;

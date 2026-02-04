@@ -1,5 +1,5 @@
 import { Dimensions, View } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { Role } from 'src/types/authContextTypes/userRole';
 import AppLoading from '@ui/AppLoading';
@@ -19,7 +19,9 @@ import {
   interpolate,
   useSharedValue,
 } from 'react-native-reanimated';
+import { Swiper, type SwiperCardRefType } from 'rn-swiper-list';
 import AppSwipeActions from '@components/shared/AppSwipeActions';
+import { Text } from 'react-native-paper';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('screen').width;
 const SwipeProfessional = () => {
@@ -52,7 +54,7 @@ const SwipeProfessional = () => {
   const headerHeight = 100;
   const PAGE_WIDTH = width;
   const PAGE_HEIGHT = height - headerHeight;
-
+  const ref = useRef<SwiperCardRefType>(null);
   const directionAnimVal = useSharedValue(0);
 
   const animationStyle: TAnimationStyle = React.useCallback(
@@ -72,12 +74,12 @@ const SwipeProfessional = () => {
 
       const scale = interpolate(value, [0, 1], [1, 0.95]);
 
-      // const opacity = interpolate(
-      //   value,
-      //   [-1, -0.8, 0, 1],
-      //   [0, 0.9, 1, 0.85],
-      //   Extrapolation.EXTEND,
-      // );
+      const opacity = interpolate(
+        value,
+        [-1, -0.8, 0, 1],
+        [0, 0.9, 1, 0.85],
+        Extrapolation.EXTEND,
+      );
 
       return {
         transform: [
@@ -87,7 +89,7 @@ const SwipeProfessional = () => {
           { scale },
         ],
         zIndex,
-        // opacity,
+        opacity,
       };
     },
     [PAGE_HEIGHT, PAGE_WIDTH],
@@ -103,48 +105,81 @@ const SwipeProfessional = () => {
   }
 
   return (
-    <View style={{ ...utilityStyles.flex }}>
-      {/* <Text>SwipeProfessional</Text>
-      <Text>LENGTH {jobPostings.length}</Text>
-      <Text>user skills {JSON.stringify(user.skills)}</Text>
-      <Text>{JSON.stringify(loadingJobPostings)}</Text> */}
-
-      <Carousel
-        width={width}
-        loop={true}
+    <>
+      <View
         style={{
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT * 0.7,
-        }}
-        onConfigurePanGesture={(g) => {
-          console.log('GGG', g);
+          ...utilityStyles.container,
+          ...utilityStyles.flex,
 
-          g.onChange((e) => {
-            'worklet';
-            console.log('eee', e);
-
-            // directionAnimVal.value = Math.sign(e.translationX);
-            directionAnimVal.value = Math.sign(e.translationX);
-          });
+          display: 'flex',
         }}
-        // fixedDirection='negative'
-        defaultIndex={0}
-        customAnimation={animationStyle}
-        windowSize={5}
-        vertical={false}
-        data={jobPostings}
-        renderItem={({ item, index }) => {
-          return (
+      >
+        <Swiper
+          ref={ref}
+          keyExtractor={(item) => item.id.toString()}
+          data={jobPostings}
+          renderCard={(item, index) => (
             <SwipeJobPostingCard
               jobPosting={item}
               key={index}
             ></SwipeJobPostingCard>
-          );
-        }}
-      ></Carousel>
-
-      <AppSwipeActions></AppSwipeActions>
-    </View>
+          )}
+          cardStyle={{ width: '100%', height: '100%' }}
+          initialIndex={0}
+          disableTopSwipe={true}
+          disableBottomSwipe={true}
+          // overlayLabelContainerStyle={{ backgroundColor: 'blue' }}
+          onIndexChange={(index) => {
+            console.log('Current Active index', index);
+          }}
+          onSwipeRight={(cardIndex) => {
+            console.log('cardIndex', cardIndex);
+          }}
+          onPress={() => {
+            console.log('onPress');
+          }}
+          onSwipedAll={() => {
+            console.log('onSwipedAll');
+          }}
+          // FlippedContent={renderFlippedCard}
+          onSwipeLeft={(cardIndex) => {
+            console.log('onSwipeLeft', cardIndex);
+          }}
+          onSwipeTop={(cardIndex) => {
+            console.log('onSwipeTop', cardIndex);
+          }}
+          onSwipeBottom={(cardIndex) => {
+            console.log('onSwipeBottom', cardIndex);
+          }}
+          OverlayLabelRight={() => (
+            <View>
+              <Text>Match</Text>
+            </View>
+          )}
+          OverlayLabelLeft={() => (
+            <View>
+              <Text>No Match</Text>
+            </View>
+          )}
+          // OverlayLabelTop={OverlayLabelTop}
+          // OverlayLabelBottom={OverlayLabelBottom}
+          // onSwipeActive={() => {
+          //   console.log('onSwipeActive');
+          // }}
+          onSwipeStart={function () {
+            console.log('onSwipeStart');
+          }}
+          onSwipeEnd={() => {
+            console.log('onSwipeEnd');
+          }}
+        ></Swiper>
+      </View>
+      <AppSwipeActions
+        handleReject={() => ref.current?.swipeLeft()}
+        handleMatch={() => ref.current?.swipeRight()}
+        handleAddToFavorites={() => ref.current?.swipeTop()}
+      ></AppSwipeActions>
+    </>
   );
 };
 

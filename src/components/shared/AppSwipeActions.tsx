@@ -4,7 +4,16 @@ import { IconButton, Surface, useTheme } from 'react-native-paper';
 import { CustomTheme } from 'src/providers/PublicProviders';
 
 const width = Dimensions.get('screen').width;
-const AppSwipeActions = () => {
+interface AppSwipeActionsProps {
+  handleMatch: () => void;
+  handleReject: () => void;
+  handleAddToFavorites: () => void;
+}
+const AppSwipeActions = ({
+  handleMatch,
+  handleReject,
+  handleAddToFavorites,
+}: AppSwipeActionsProps) => {
   const theme = useTheme<CustomTheme>();
   return (
     <View
@@ -23,7 +32,7 @@ const AppSwipeActions = () => {
           icon='close'
           iconColor='#FF4458'
           size={28}
-          onPress={() => console.log('Reject')}
+          onPress={handleMatch}
         />
       </Surface>
 
@@ -35,7 +44,7 @@ const AppSwipeActions = () => {
           icon='star'
           iconColor='#FFA726'
           size={28}
-          onPress={() => console.log('Star')}
+          onPress={handleAddToFavorites}
         />
       </Surface>
 
@@ -53,7 +62,7 @@ const AppSwipeActions = () => {
           icon='heart'
           iconColor='#FFFFFF'
           size={32}
-          onPress={() => console.log('Like')}
+          onPress={handleReject}
         />
       </Surface>
     </View>
