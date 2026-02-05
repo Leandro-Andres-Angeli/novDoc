@@ -166,95 +166,13 @@ const SwipeProfessional = () => {
     return <AppLoading></AppLoading>;
   }
 
-  /* return (
-    <>
-      <View
-        style={{
-          ...utilityStyles.container,
-          ...utilityStyles.flex,
-
-          display: 'flex',
-        }}
-      >
-        <Swiper
-          loop={true}
-          ref={ref}
-          keyExtractor={(item) => item.id.toString()}
-          data={jobPostings}
-          renderCard={(item, index) => (
-            <SwipeJobPostingCard
-              jobPosting={item}
-              key={index}
-            ></SwipeJobPostingCard>
-          )}
-          cardStyle={{ width: '100%', height: '100%' }}
-          initialIndex={0}
-          disableTopSwipe={true}
-          disableBottomSwipe={true}
-          swipeBottomSpringConfig={{ velocity: 0 }}
-          swipeTopSpringConfig={{ velocity: 0 }}
-          // overlayLabelContainerStyle={{ backgroundColor: 'blue' }}
-          onIndexChange={(index) => {
-            console.log('Current Active index', index);
-          }}
-          onSwipeRight={(cardIndex) => {
-            console.log('cardIndex', cardIndex);
-          }}
-          onPress={() => {
-            console.log('onPress');
-          }}
-          onSwipedAll={() => {
-            console.log('onSwipedAll');
-          }}
-          // FlippedContent={renderFlippedCard}
-          onSwipeLeft={(cardIndex) => {
-            console.log('onSwipeLeft', cardIndex);
-          }}
-          onSwipeTop={(cardIndex) => {
-            console.log('onSwipeTop', cardIndex);
-          }}
-          onSwipeBottom={(cardIndex) => {
-            console.log('onSwipeBottom', cardIndex);
-          }}
-          OverlayLabelRight={() => (
-            <View>
-              <Text>Match</Text>
-            </View>
-          )}
-          OverlayLabelLeft={() => (
-            <View>
-              <Text>No Match</Text>
-            </View>
-          )}
-          // OverlayLabelTop={OverlayLabelTop}
-          // OverlayLabelBottom={OverlayLabelBottom}
-          // onSwipeActive={() => {
-          //   console.log('onSwipeActive');
-          // }}
-
-          onSwipeStart={function () {
-            console.log('onSwipeStart');
-          }}
-          onSwipeEnd={() => {
-            console.log('onSwipeEnd');
-          }}
-          translateXRange={[0, 0]}
-        ></Swiper>
-      </View>
-      <AppSwipeActions
-        handleReject={() => ref.current?.swipeLeft()}
-        handleMatch={() => ref.current?.swipeRight()}
-        handleAddToFavorites={() => ref.current?.swipeTop()}
-      ></AppSwipeActions>
-    </>
-  ); */
   return (
     <>
       <View
         style={{
           ...utilityStyles.container,
           ...utilityStyles.flex,
-          backgroundColor: 'green',
+
           display: 'flex',
 
           ...{
@@ -278,10 +196,6 @@ const SwipeProfessional = () => {
           customAnimation={animationStyle}
           onConfigurePanGesture={(g) => {
             g.activeOffsetX([-10, 10]);
-            g.onChange((e) => {
-              'worklet';
-              directionAnimVal.value = Math.sign(e.translationX * -1);
-            });
           }}
           renderItem={({ item, index }) => (
             <SwipeJobPostingCard

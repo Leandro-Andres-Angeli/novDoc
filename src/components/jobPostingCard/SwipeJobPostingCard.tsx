@@ -49,11 +49,11 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
   }
 
   return (
-    <ScrollView onScroll={(e) => console.log('scrolling', e)}>
+    <ScrollView>
       <Surface
         style={{
           ...styles.container,
-          position: 'relative',
+
           overflow: 'scroll',
           minHeight: '100%',
         }}
@@ -64,7 +64,7 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
             ...styles.card,
             backgroundColor: theme.colors.background,
             width: '100%',
-            position: 'absolute',
+
             overflow: 'scroll',
             height: '95%',
           }}
