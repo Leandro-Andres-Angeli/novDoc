@@ -51,13 +51,17 @@ const SwipeProfessional = () => {
   //   console.log('firing use callback');
   //   return loadJobPostings(false, true);
   // }, [user.skills]);
+
+  // const ref = useRef<SwiperCardRefType>(null);
+  const ref = useRef<ICarouselInstance>(null);
+
   const headerHeight = 100;
-  const PAGE_WIDTH = width;
-  const PAGE_HEIGHT = height - headerHeight;
-  const ref = useRef<SwiperCardRefType>(null);
+  const PAGE_WIDTH = Dimensions.get('window').width;
+  const PAGE_HEIGHT = Dimensions.get('window').width - headerHeight;
+
   const directionAnimVal = useSharedValue(0);
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  /* const animationStyle: TAnimationStyle = React.useCallback(
     (value: number, index: number) => {
       'worklet';
       const translateY = interpolate(value, [0, 1], [0, -18]);
@@ -93,7 +97,65 @@ const SwipeProfessional = () => {
       };
     },
     [PAGE_HEIGHT, PAGE_WIDTH],
-  );
+  ); */
+  const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+    'worklet';
+
+    const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+    const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
+    const rotateZ = `${interpolate(value, [-1, 0, 1], [-15, 0, 15])}deg`;
+
+    const translateX = interpolate(
+      value,
+      [-1, 0, 1],
+      [-PAGE_WIDTH, 0, PAGE_WIDTH],
+    );
+    const opacity = interpolate(value, [-0.75, 0, 1], [0, 1, 0]);
+
+    return {
+      transform: [{ scale }, { rotateZ }, { translateX }],
+      zIndex,
+      opacity,
+    };
+  }, []);
+
+  /*  const animationStyle: TAnimationStyle = React.useCallback(
+    (value: number, index: number) => {
+      'worklet';
+      const translateY = interpolate(value, [0, 1], [0, -18]);
+
+      const translateX =
+        interpolate(value, [-1, 0], [PAGE_WIDTH, 0], Extrapolation.CLAMP) *
+        directionAnimVal.value;
+
+      const rotateZ =
+        interpolate(value, [-1, 0], [15, 0], Extrapolation.CLAMP) *
+        directionAnimVal.value;
+
+      const zIndex = -10 * index;
+
+      const scale = interpolate(value, [0, 1], [1, 0.95]);
+
+      const opacity = interpolate(
+        value,
+        [-1, -0.8, 0, 1],
+        [0, 0.9, 1, 0.85],
+        Extrapolation.EXTEND,
+      );
+
+      return {
+        transform: [
+          { translateY },
+          { translateX },
+          { rotateZ: `${rotateZ}deg` },
+          { scale },
+        ],
+        zIndex,
+        opacity,
+      };
+    },
+    [PAGE_HEIGHT, PAGE_WIDTH],
+  ); */
   useEffect(() => {
     loadJobPostings(false, true);
   }, [user.skills]);
@@ -104,7 +166,7 @@ const SwipeProfessional = () => {
     return <AppLoading></AppLoading>;
   }
 
-  return (
+  /* return (
     <>
       <View
         style={{
@@ -115,6 +177,7 @@ const SwipeProfessional = () => {
         }}
       >
         <Swiper
+          loop={true}
           ref={ref}
           keyExtractor={(item) => item.id.toString()}
           data={jobPostings}
@@ -128,6 +191,8 @@ const SwipeProfessional = () => {
           initialIndex={0}
           disableTopSwipe={true}
           disableBottomSwipe={true}
+          swipeBottomSpringConfig={{ velocity: 0 }}
+          swipeTopSpringConfig={{ velocity: 0 }}
           // overlayLabelContainerStyle={{ backgroundColor: 'blue' }}
           onIndexChange={(index) => {
             console.log('Current Active index', index);
@@ -166,18 +231,77 @@ const SwipeProfessional = () => {
           // onSwipeActive={() => {
           //   console.log('onSwipeActive');
           // }}
+
           onSwipeStart={function () {
             console.log('onSwipeStart');
           }}
           onSwipeEnd={() => {
             console.log('onSwipeEnd');
           }}
+          translateXRange={[0, 0]}
         ></Swiper>
       </View>
       <AppSwipeActions
         handleReject={() => ref.current?.swipeLeft()}
         handleMatch={() => ref.current?.swipeRight()}
         handleAddToFavorites={() => ref.current?.swipeTop()}
+      ></AppSwipeActions>
+    </>
+  ); */
+  return (
+    <>
+      <View
+        style={{
+          ...utilityStyles.container,
+          ...utilityStyles.flex,
+          backgroundColor: 'green',
+          display: 'flex',
+
+          ...{
+            width: PAGE_WIDTH,
+            height: height,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        }}
+      >
+        <Carousel
+          width={width}
+          loop={true}
+          ref={ref}
+          // keyExtractor={(item) => item.id.toString()}
+          style={{
+            ...utilityStyles.flex,
+          }}
+          vertical={false}
+          data={jobPostings}
+          customAnimation={animationStyle}
+          onConfigurePanGesture={(g) => {
+            g.activeOffsetX([-10, 10]);
+            g.onChange((e) => {
+              'worklet';
+              directionAnimVal.value = Math.sign(e.translationX * -1);
+            });
+          }}
+          renderItem={({ item, index }) => (
+            <SwipeJobPostingCard
+              jobPosting={item}
+              key={index}
+            ></SwipeJobPostingCard>
+          )}
+        ></Carousel>
+      </View>
+      <AppSwipeActions
+        handleReject={() => ref.current?.next()}
+        handleMatch={() => ref.current?.next()}
+        handleAddToFavorites={() => ref.current?.next()}
+        style={{
+          zIndex: 2,
+          position: 'absolute',
+          bottom: 0,
+          left: width / 2,
+          right: width / 2,
+        }}
       ></AppSwipeActions>
     </>
   );

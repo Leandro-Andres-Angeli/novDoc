@@ -2,9 +2,10 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import React from 'react';
 import { IconButton, Surface, useTheme } from 'react-native-paper';
 import { CustomTheme } from 'src/providers/PublicProviders';
+import { ViewProps } from 'react-native';
 
 const width = Dimensions.get('screen').width;
-interface AppSwipeActionsProps {
+interface AppSwipeActionsProps extends ViewProps {
   handleMatch: () => void;
   handleReject: () => void;
   handleAddToFavorites: () => void;
@@ -13,11 +14,14 @@ const AppSwipeActions = ({
   handleMatch,
   handleReject,
   handleAddToFavorites,
+  ...props
 }: AppSwipeActionsProps) => {
   const theme = useTheme<CustomTheme>();
   return (
     <View
+      {...props}
       style={{
+        ...StyleSheet.flatten(props.style),
         ...localStyles.actionsContainer,
         maxWidth: width,
         marginTop: 'auto',
