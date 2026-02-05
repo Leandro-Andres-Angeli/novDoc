@@ -1,5 +1,5 @@
 import { Dimensions, View } from 'react-native';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { Role } from 'src/types/authContextTypes/userRole';
 import AppLoading from '@ui/AppLoading';
@@ -22,6 +22,7 @@ import {
 import { Swiper, type SwiperCardRefType } from 'rn-swiper-list';
 import AppSwipeActions from '@components/shared/AppSwipeActions';
 import { Text } from 'react-native-paper';
+import { useScrollToTop } from '@react-navigation/native';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('screen').width;
 const SwipeProfessional = () => {
@@ -46,58 +47,12 @@ const SwipeProfessional = () => {
   if (!user.skills || user.skills.length === 0) {
     return <NoSkillsOnProfile></NoSkillsOnProfile>;
   }
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  // const handleLoadJobPostingsForSkills = useCallback(() => {
-  //   console.log('firing use callback');
-  //   return loadJobPostings(false, true);
-  // }, [user.skills]);
-
-  // const ref = useRef<SwiperCardRefType>(null);
   const ref = useRef<ICarouselInstance>(null);
 
-  const headerHeight = 100;
   const PAGE_WIDTH = Dimensions.get('window').width;
-  const PAGE_HEIGHT = Dimensions.get('window').width - headerHeight;
 
-  const directionAnimVal = useSharedValue(0);
-
-  /* const animationStyle: TAnimationStyle = React.useCallback(
-    (value: number, index: number) => {
-      'worklet';
-      const translateY = interpolate(value, [0, 1], [0, -18]);
-
-      const translateX =
-        interpolate(value, [-1, 0], [PAGE_WIDTH, 0], Extrapolation.CLAMP) *
-        directionAnimVal.value;
-
-      const rotateZ =
-        interpolate(value, [-1, 0], [15, 0], Extrapolation.CLAMP) *
-        directionAnimVal.value;
-
-      const zIndex = -10 * index;
-
-      const scale = interpolate(value, [0, 1], [1, 0.95]);
-
-      const opacity = interpolate(
-        value,
-        [-1, -0.8, 0, 1],
-        [0, 0.9, 1, 0.85],
-        Extrapolation.EXTEND,
-      );
-
-      return {
-        transform: [
-          { translateY },
-          { translateX },
-          { rotateZ: `${rotateZ}deg` },
-          { scale },
-        ],
-        zIndex,
-        opacity,
-      };
-    },
-    [PAGE_HEIGHT, PAGE_WIDTH],
-  ); */
   const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
     'worklet';
 
@@ -119,43 +74,6 @@ const SwipeProfessional = () => {
     };
   }, []);
 
-  /*  const animationStyle: TAnimationStyle = React.useCallback(
-    (value: number, index: number) => {
-      'worklet';
-      const translateY = interpolate(value, [0, 1], [0, -18]);
-
-      const translateX =
-        interpolate(value, [-1, 0], [PAGE_WIDTH, 0], Extrapolation.CLAMP) *
-        directionAnimVal.value;
-
-      const rotateZ =
-        interpolate(value, [-1, 0], [15, 0], Extrapolation.CLAMP) *
-        directionAnimVal.value;
-
-      const zIndex = -10 * index;
-
-      const scale = interpolate(value, [0, 1], [1, 0.95]);
-
-      const opacity = interpolate(
-        value,
-        [-1, -0.8, 0, 1],
-        [0, 0.9, 1, 0.85],
-        Extrapolation.EXTEND,
-      );
-
-      return {
-        transform: [
-          { translateY },
-          { translateX },
-          { rotateZ: `${rotateZ}deg` },
-          { scale },
-        ],
-        zIndex,
-        opacity,
-      };
-    },
-    [PAGE_HEIGHT, PAGE_WIDTH],
-  ); */
   useEffect(() => {
     loadJobPostings(false, true);
   }, [user.skills]);
@@ -197,10 +115,14 @@ const SwipeProfessional = () => {
           onConfigurePanGesture={(g) => {
             g.activeOffsetX([-10, 10]);
           }}
+          onSnapToItem={(e) => {
+            setCurrentIndex(e);
+          }}
           renderItem={({ item, index }) => (
             <SwipeJobPostingCard
               jobPosting={item}
               key={index}
+              currentIndex={currentIndex}
             ></SwipeJobPostingCard>
           )}
         ></Carousel>

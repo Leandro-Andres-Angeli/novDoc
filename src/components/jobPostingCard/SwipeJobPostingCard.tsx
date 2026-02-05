@@ -5,7 +5,7 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { IJobPostingDB } from 'src/types/dbTypes/IJobOffer';
 import {
   Card,
@@ -23,15 +23,20 @@ import { ISkill, skillsLists } from '../../types/dbTypes/ISkills';
 import { isProfessional, isRecruiter } from '@utils/checkUserType';
 import currencyFormatter from '@utils/currencyFormatter';
 import AppSwipeActions from '../shared/AppSwipeActions';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, scrollTo } from 'react-native-reanimated';
 import utilityStyles from 'src/styles/utilityStyles';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 interface SwipeJobPostingCardProps {
   jobPosting: IJobPostingDB;
+  currentIndex: number;
 }
-const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
+const SwipeJobPostingCard = ({
+  jobPosting,
+  currentIndex,
+}: SwipeJobPostingCardProps) => {
   const theme = useTheme<CustomTheme>();
   const {
     authState: { user },
@@ -47,13 +52,20 @@ const SwipeJobPostingCard = ({ jobPosting }: SwipeJobPostingCardProps) => {
   function jobPostingSkillsThatMatchesUser(userSkillsNames: Array<string>) {
     return jobPosting.skills.filter((el) => userSkillsNames.includes(el.name));
   }
-
+  const scrollViewRef = useRef<ScrollView>(null);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+      }
+    }, [currentIndex]),
+  );
   return (
-    <ScrollView>
+    <ScrollView ref={scrollViewRef}>
       <Surface
         style={{
           ...styles.container,
-
+          backgroundColor: theme.colors.background,
           overflow: 'scroll',
           minHeight: '100%',
         }}
