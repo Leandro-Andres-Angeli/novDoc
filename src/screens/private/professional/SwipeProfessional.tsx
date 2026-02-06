@@ -1,4 +1,4 @@
-import { Dimensions, View } from 'react-native';
+import { Dimensions, View, RefreshControl, ScrollView } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from 'src/appContext/authContext/AuthContext';
 import { Role } from 'src/types/authContextTypes/userRole';
@@ -48,7 +48,8 @@ const SwipeProfessional = () => {
     return <NoSkillsOnProfile></NoSkillsOnProfile>;
   }
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [canRefresh, setCanRefresh] = useState(false);
   const ref = useRef<ICarouselInstance>(null);
 
   const PAGE_WIDTH = Dimensions.get('window').width;
@@ -84,10 +85,34 @@ const SwipeProfessional = () => {
     return <AppLoading></AppLoading>;
   }
 
+  const handleRefresh = () => {
+    console.log('refreshing');
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  const handleSetCanRefresh = () => {
+    setCanRefresh(true);
+    setTimeout(() => {
+      setCanRefresh(false);
+    }, 2000);
+  };
   return (
     <>
-      <View
-        style={{
+      <ScrollView
+        onScroll={(e) => console.log('SCROLL', e)}
+        refreshControl={
+          canRefresh ? (
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            ></RefreshControl>
+          ) : undefined
+        }
+        // refreshControl={isRefreshing}
+        contentContainerStyle={{
           ...utilityStyles.container,
           ...utilityStyles.flex,
 
@@ -113,20 +138,21 @@ const SwipeProfessional = () => {
           data={jobPostings}
           customAnimation={animationStyle}
           onConfigurePanGesture={(g) => {
-            g.activeOffsetX([-10, 10]);
+            g.activeOffsetX([-15, 15]);
           }}
           onSnapToItem={(e) => {
             setCurrentIndex(e);
           }}
           renderItem={({ item, index }) => (
             <SwipeJobPostingCard
+              {...{ handleSetCanRefresh }}
               jobPosting={item}
               key={index}
               currentIndex={currentIndex}
             ></SwipeJobPostingCard>
           )}
         ></Carousel>
-      </View>
+      </ScrollView>
       <AppSwipeActions
         handleReject={() => ref.current?.next()}
         handleMatch={() => ref.current?.next()}

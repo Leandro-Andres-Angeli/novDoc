@@ -32,10 +32,12 @@ const height = Dimensions.get('window').height;
 interface SwipeJobPostingCardProps {
   jobPosting: IJobPostingDB;
   currentIndex: number;
+  handleSetCanRefresh: () => void;
 }
 const SwipeJobPostingCard = ({
   jobPosting,
   currentIndex,
+  handleSetCanRefresh,
 }: SwipeJobPostingCardProps) => {
   const theme = useTheme<CustomTheme>();
   const {
@@ -52,16 +54,26 @@ const SwipeJobPostingCard = ({
   function jobPostingSkillsThatMatchesUser(userSkillsNames: Array<string>) {
     return jobPosting.skills.filter((el) => userSkillsNames.includes(el.name));
   }
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollView>({} as ScrollView);
   useFocusEffect(
     React.useCallback(() => {
       if (scrollViewRef.current) {
-        scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+        setTimeout(() => {
+          scrollViewRef?.current?.scrollTo({ x: 0, y: 0, animated: true });
+        }, 0);
       }
+      return () => {};
     }, [currentIndex]),
   );
   return (
-    <ScrollView ref={scrollViewRef}>
+    <ScrollView
+      scrollViewRef={scrollViewRef}
+      onScrollToTop={(e) => {
+        handleSetCanRefresh();
+        console.log('eee', e);
+        e.stopPropagation();
+      }}
+    >
       <Surface
         style={{
           ...styles.container,
